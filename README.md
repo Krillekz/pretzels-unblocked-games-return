@@ -6,6 +6,8 @@
 > so expect rough edges, missing pieces and the odd broken frame. Nothing here is final.
 > Judge it as a test build, and report what breaks instead of scoring it as a release.
 
+**Live test build:** https://krillekz.github.io/pretzels-unblocked-games-return/
+
 A local-first arcade shell: a frame-verified game library, three offline AI personas, a sandboxed
 browser and a settings panel — all static files, no accounts, no telemetry, no server.
 

@@ -4,14 +4,20 @@ This document serves as the historical record and update ledger for **Pretzel's 
 
 ---
 
-### 📦 Current Lifecycle Stage: v0.1.0-alpha (Foundational Shell)
-*   **Status:** Architectural Blueprint Active
+### 📦 Current Lifecycle Stage: v0.1.0-alpha (Public Test Phase)
+*   **Status:** Published as a public **Test Phase** build — see https://krillekz.github.io/pretzels-unblocked-games-return/
 *   **Branch:** `main`
 *   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`Electron .exe`)
 
 ---
 
 ### 📅 Version History
+
+#### 2026-10-29 — Published: GitHub Test Phase
+*   **Added:** Public repository `Krillekz/pretzels-unblocked-games-return` with GitHub Pages serving `main` at https://krillekz.github.io/pretzels-unblocked-games-return/.
+*   **Added:** A fixed 30px **Test Phase** banner across the top of the app stating that this is an unfinished preview, plus a README lead notice, an explicit "what works / what is still in progress" table and a repo description that opens with TEST PHASE.
+*   **Changed:** `.app` height now offsets the banner via `--testbar-h`; the compact trays and tray scrim start below it.
+*   **Added:** `.gitignore` for workspace metadata (`.freebuff/`), dependencies, logs and OS noise.
 
 #### 2026-10-29 — Customization Pass: Settings, Scrolling & Open Roster
 *   **Added:** Settings panel (`js/settings.js` + schema-driven renderer) with six sections and 36 rows — accents, density, tile size, glow, motion, chrome toggles, sort control, default filters, AI weights and depth, search engine, home URL, watchdog timing, proxy overrides and log behaviour.
