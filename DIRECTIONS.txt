@@ -1,0 +1,30 @@
+# EXECUTION ROUTING: FreeBuff File Ingestion & Project Sequencing Order
+
+This document dictates the precise operational roadmap and sequencing priority that FreeBuff AI must follow when loading, parsing, and executing the text files within the project workspace. 
+
+---
+
+### 📡 Master File Ingestion Order (Top to Bottom)
+
+FreeBuff AI must initialize its system memory by reading and establishing context from these files strictly in the following sequential order:
+
+1.  **`C:\Users\pknet\Desktop\Unblocked Games\Changelog.txt`**
+    *   *Purpose:* Establishes the historical log, current development phase version (`v0.1.0-alpha`), and specific sprint parameters.
+2.  **`C:\Users\pknet\Desktop\Unblocked Games\Credits.txt`**
+    *   *Purpose:* Identifies the specific team member names and system engineering roles responsible for individual application sub-modules.
+3.  **`C:\Users\pknet\Desktop\Unblocked Games\ExtraInfo.txt`**
+    *   *Purpose:* Outlines structural code constraints, the interactive questionnaire domains, and development discovery guides.
+4.  **`C:\Users\pknet\Desktop\Unblocked Games\AboutPretzel.txt`**
+    *   *Purpose:* Supplies core context on the primary director, background project vision, and project design philosophy.
+5.  **`C:\Users\pknet\Desktop\Unblocked Games\ReadMe.txt`**
+    *   *Purpose:* **The Primary Core Specification Master Blueprint.** This file commands the final system constraints, environment file configurations, and locks in the mandatory design interview step.
+
+---
+
+### 📋 Sequential Execution Protocol for FreeBuff AI
+
+Upon parsing all files from top to bottom, FreeBuff AI must immediately pause and execute the following runtime loop:
+
+*   **Step 1: Context Consolidation:** Anchor all system behaviors to the active project path `C:\Users\pknet\Desktop\Unblocked Games`.
+*   **Step 2: Initialize Design Interview:** Halt all code generation entirely. FreeBuff AI must read the consolidated rules in `ReadMe.txt` and instantly present the structured design, layout, and framework questions directly to the user in the chat interface.
+*   **Step 3: Document Updates:** As the user answers the interview questions, FreeBuff AI must systematically log the finalized layout decisions directly into `C:\Users\pknet\Desktop\Unblocked Games\ReadMe.txt`.

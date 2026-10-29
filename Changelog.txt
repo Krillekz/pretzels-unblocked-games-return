@@ -1,0 +1,91 @@
+# CHANGELOG: Project Evolution & Development Ledger
+
+This document serves as the historical record and update ledger for **Pretzel's Unblocked Games: RETURN**. It tracks system versioning, feature adjustments, security updates, and upcoming development goals determined through user interviews.
+
+---
+
+### 📦 Current Lifecycle Stage: v0.1.0-alpha (Foundational Shell)
+*   **Status:** Architectural Blueprint Active
+*   **Branch:** `main`
+*   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`Electron .exe`)
+
+---
+
+### 📅 Version History
+
+#### 2026-10-29 — Customization Pass: Settings, Scrolling & Open Roster
+*   **Added:** Settings panel (`js/settings.js` + schema-driven renderer) with six sections and 36 rows — accents, density, tile size, glow, motion, chrome toggles, sort control, default filters, AI weights and depth, search engine, home URL, watchdog timing, proxy overrides and log behaviour.
+*   **Added:** Settings Export / Import / Reset all, persisting to `localStorage` under `pretzel.settings.v1` and applying live without a reload.
+*   **Added:** Browser **Home** button bound to the configurable home destination.
+*   **Fixed:** The library grid could stop scrolling — `scroll-behavior: smooth` stalled when animation frames were throttled, and nothing guaranteed the wheel reached the grid. Instant scrolling plus an explicit wheel handler, keyboard scrolling (`↑ ↓ PageUp PageDown Space Home End`) and an edge fade now cover it.
+*   **Fixed:** Short windows clipped the game viewport to a strip; the player column scrolls and the frame holds a 320px minimum.
+*   **Added:** Universal fighter support in the Debate Matrix — any name resolves to a deterministic scout estimate, labelled SCOUT CARD, so no character is "not on the roster" any more.
+*   **Added:** `or` / `against` as matchup separators and "who wins," / "who would win," prefix handling.
+*   **Fixed:** A stale cached page could open Settings with an empty body — the panel now re-renders itself when activated while empty, and shows an explicit error card (with a reset action) if `js/settings.js` is missing instead of staying blank.
+*   **Added:** Version query strings on the stylesheets and scripts (`?v=4`) so browsers stop mixing a cached script with a newer page.
+*   **Added:** Build tag in the stage bar (`v0.1.0-alpha · b4`) that reads the cache key off the loaded `app.js`, so the badge itself proves which build is running; it is mirrored in the boot log and the Settings About row.
+
+#### 2026-10-29 — Design Refresh: Crest & Shell
+*   **Changed:** Crest rebuilt as one continuous knot with twisted ends, a gradient amber stroke, soft outer glow and a crimson controller medallion seated in the knot; optically centred and kept in sync between the inline sprite and `assets/pretzel-crest.svg`.
+*   **Added:** Stage chrome bar with a workspace breadcrumb and three status LEDs (engines, proxy, catalog count) wired to live state.
+*   **Changed:** Dock rebuilt at 236px with a Workspace label, 42px targets, crest hover tilt and a clearer active state.
+*   **Changed:** Library header gained a subtitle, the filters became a unified toolbar, tiles grew a hover **Play** affordance, and the grid column minimum rose to 198px.
+*   **Changed:** AI modes became a segmented control, the send action became an icon button, and the transcript spacing was retuned.
+*   **Changed:** Browser address bar gained a globe mark and the empty state a low-opacity crest watermark.
+*   **Changed:** Diagnostics log now uses level chips; cards and spacing follow the new scale.
+*   **Changed:** Ink scale retuned for the darker substrate — small labels measure 4.67:1 and body copy 6.9–7.3:1.
+*   **Fixed:** Tiles collapsed to glyph size because the button's flex children were not stretching, and grid rows compressed to the container when tile overflow was hidden (latent since Phase 2).
+
+#### 2026-10-29 — Phase 3b: Proxy Gateway
+*   **Added:** `proxy/vercel/api/proxy.js` + `vercel.json` — free edge-function adapter that strips `X-Frame-Options`/CSP framing headers, drops cookies and encoding headers, injects a `<base>` tag, and exposes a JSON health route.
+*   **Added:** `proxy/cloudflare/worker.js` — single-file Worker adapter with the same contract for `npx wrangler deploy`.
+*   **Added:** `proxy/README.md` — deployment steps for both hosts, config wiring, security notes and the real limits of document proxying.
+*   **Added:** `tools/proxy-dev.js` — local `127.0.0.1:8788` gateway mirroring the contract for testing without deploying.
+*   **Added:** `proxy.endpoint` / `proxy.health` / `proxy.token` / `proxy.label` in `data/config.json`, with a `{url}` template placeholder and prefix-append fallback.
+*   **Added:** Diagnostics **Test proxy** button and a Proxy node card reporting Unconfigured / Checking / Reachable / Unreachable, probed at boot and on demand.
+*   **Added:** `needsProxy` games route through the gateway with a **Proxied** badge in the viewport bar, and show a notice with a direct-load escape hatch when no gateway is configured.
+*   **Fixed:** the local dev proxy bound to port 0 when the environment defined `PORT=0`.
+*   **Fixed:** retrying the proxy on an already-proxied URL double-wrapped the request; it is now refused with a clear message, and block dialogs show the real host with a `(via proxy)` marker.
+
+#### 2026-10-29 — Phase 3: Persona Engines & Verified Catalog
+*   **Added:** `js/ai.js` — three deterministic, offline persona engines exposed as `window.PretzelAI.respond(mode, text)`; no API keys, no network calls.
+*   **Added:** Anime Debate Matrix with a 19-fighter roster, weighted stat/hax/speed resolution, ability interactions, verdict bands and a route-to-win line for the loser.
+*   **Added:** Academic Assistant with essay outlines, five-session study plans, note passes and comparison frameworks; it refuses to invent facts or citations.
+*   **Added:** Pretzel Chef with snack builds, post-loss reset routine and a pun library.
+*   **Added:** Sixteen frame-verified games replacing the Phase 2 samples, covering Puzzle, Arcade, Strategy, Racing, Shooter and Typing across HTML5 and WebGL.
+*   **Fixed:** Speed tiers were ranked backwards (S scored as slowest), which inverted matchups such as Goku vs Naruto.
+*   **Fixed:** Verdicts compressed toward 50–50 and the losing route ignored stat advantages; margins now widen with the score gap and the route respects the stat sheet.
+*   **Removed:** Candidate hosts that refuse framing (`play2048.co`, `play.js13kgames.com`, `cardgames.io`, `patorjk.com`, `jakesgordon.com`, `tic80.com`, `geoguessr.com`).
+*   **Note:** Proxy tunnel remains the outstanding Phase 3 item.
+
+#### 2026-10-29 — Phase 2: Foundational Shell Delivered
+*   **Added:** Static shell (`index.html`, `css/theme.css`, `css/app.css`, `js/app.js`) implementing the locked Phase 1 decisions — dark neon arcade palette, locally bundled display face, left command dock, fluid panel transitions, and glassmorphism library tiles.
+*   **Added:** Game library renderer with genre/platform/proxy filters and title search, driven by `data/library.json`.
+*   **Added:** Viewport control bar with refresh, native fullscreen and close; the frame stays mounted across tab switches.
+*   **Added:** Multi-mode AI panel shell with per-persona accents, per-mode local chat threads and a clear-history control.
+*   **Added:** Sandbox browser with smart address parsing, frame watchdog and a block panel offering proxy retry or external open.
+*   **Added:** Diagnostics hub (session, breakpoint, catalog count, proxy node, stored messages, renderer) with a severity-tagged lifecycle log.
+*   **Added:** Runtime config asset (`data/config.json`) for search engine, proxy endpoint, `Alt+1…4` hotkeys and watchdog timing.
+*   **Added:** Responsive trays below 900px with scrim, explicit close and Escape handling; layout reconciles on resize.
+*   **Fixed:** Window shrink while an overlay panel was active could leave a blank stage — panel/tray state is now reconciled on every breakpoint change.
+*   **Fixed:** Renderer status misreported "Electron" inside plain browsers; it now keys off the Phase 4 preload bridge.
+*   **Note:** Catalog entries are unverified samples pending Phase 3 payload injection.
+
+#### v0.1.0-alpha (Current Development Sprint)
+*   **Added:** Initial project workspace file configuration targets for `C:\Users\pknet\Desktop\Unblocked Games`.
+*   **Added:** Mandatory Phase 1 Interactive Design Interview protocol for FreeBuff AI.
+*   **Added:** Structural design scope guidelines for the dynamic Game Library array container.
+*   **Added:** Technical framework rules for the 3-mode custom AI companion utility (Anime Debate Matrix, Academic Assistant, Casual Pretzel Chef).
+*   **Added:** Operational sandboxing bounds for the clientless secure private browser window.
+*   **Added:** Development blueprint step for a separate management dashboard standalone executable manager application.
+*   **Added:** Project project credit manifesto dedicating development roles to core team members.
+
+---
+
+### 🚀 Upcoming Feature Backlog (Future Sprints)
+The following modifications are slated for integration during subsequent development sprints following the design interview phase:
+
+*   **Database Payload Injections:** Populating the data array engine once library storage choices are verified by the user. *(Delivered in Phase 3 — 16 verified entries in `data/library.json`.)*
+*   **Electron Dependency Compilation:** Initializing `package.json` configurations and packaging files to export the base desktop application layer.
+*   **Manager App File Hooks:** Coding the read/write logic allowing the testing dashboard executable to dynamically adjust main system elements.
+*   **Network Bypass Tests:** Researching framework rules to automatically clean out frame disruption warnings when loading legacy domains inside the sandboxed viewport window. *(Delivered in Phase 3b — header stripping plus configurable proxy gateway.)*

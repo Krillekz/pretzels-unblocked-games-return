@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>Pretzel's Unblocked Games: RETURN</title>
+<link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
+<link rel="stylesheet" href="css/theme.css?v=5" />
+<link rel="stylesheet" href="css/app.css?v=5" />
+</head>
+<body data-panel="library">
+
+<div class="test-bar" role="status">
+  <strong>Test Phase</strong>
+  <span>v0.1.0-alpha — unfinished preview. Games, proxy routing and the AI personas are still in progress, so expect rough edges and report them rather than judging the finished product.</span>
+</div>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="crest-stroke" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#ffd88a" />
+      <stop offset="0.45" stop-color="#ffb020" />
+      <stop offset="1" stop-color="#c47c0d" />
+    </linearGradient>
+    <filter id="crest-glow" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <symbol id="crest" viewBox="0 0 64 64">
+    <g transform="translate(0 -3.5)" fill="none" stroke="url(#crest-stroke)" stroke-linecap="round" stroke-linejoin="round">
+      <!-- knot body: two upper loops, centre fold, closed base -->
+      <path d="M32 50.5C24.5 50.5 17.4 47 14.4 39.4 11.4 31.8 16 22.4 24 21.4c4.5-.6 7 3 8 7.6 1-4.6 3.5-8.2 8-7.6 8 1 12.6 10.4 9.6 18-3 7.6-10.1 11.1-17.6 11.1Z"
+            stroke-width="3.4" filter="url(#crest-glow)" />
+      <!-- twisted ends -->
+      <path d="M25.4 48.2c-3.6 3.2-6.2 5.5-8.9 7.2" stroke-width="3" />
+      <path d="M38.6 48.2c3.6 3.2 6.2 5.5 8.9 7.2" stroke-width="3" />
+    </g>
+    <!-- controller medallion sitting in the knot -->
+    <g transform="translate(0 -3.5)">
+      <rect x="24.4" y="39.6" width="15.2" height="8.8" rx="4.4" fill="#100c09" stroke="#f0455c" stroke-width="1.5" />
+      <circle cx="28.6" cy="44" r="1.1" fill="#f0455c" />
+      <circle cx="35.4" cy="44" r="1.1" fill="#f0455c" />
+      <path d="M32 41.8v4.4" stroke="#f0455c" stroke-width="1.1" stroke-linecap="round" opacity="0.55" />
+    </g>
+  </symbol>
+
+  <symbol id="i-library" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="3.2" y="3.2" width="7.4" height="7.4" rx="1.8" />
+      <rect x="13.4" y="3.2" width="7.4" height="7.4" rx="1.8" />
+      <rect x="3.2" y="13.4" width="7.4" height="7.4" rx="1.8" />
+      <rect x="13.4" y="13.4" width="7.4" height="7.4" rx="1.8" />
+    </g>
+  </symbol>
+
+  <symbol id="i-ai" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 11.6a8.3 8.3 0 0 1-12.1 7.4L4.2 20.5l1.4-4.4A8.3 8.3 0 1 1 20.8 11.6Z" />
+      <path d="M8.6 11h.01M12 11h.01M15.4 11h.01" stroke-width="2.3" />
+    </g>
+  </symbol>
+
+  <symbol id="i-browser" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.8" />
+      <path d="M3.2 12h17.6M12 3.2c2.5 2.4 3.9 5.5 3.9 8.8s-1.4 6.4-3.9 8.8c-2.5-2.4-3.9-5.5-3.9-8.8S9.5 5.6 12 3.2Z" />
+    </g>
+  </symbol>
+
+  <symbol id="i-diagnostics" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2.8 12h3.9l2.4-6.4 3.9 12.8 2.4-6.4h5.8" />
+    </g>
+  </symbol>
+
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="10.8" cy="10.8" r="6.6" />
+      <path d="m15.8 15.8 4.4 4.4" />
+    </g>
+  </symbol>
+
+  <symbol id="i-refresh" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 12a8 8 0 1 1-2.5-5.8" />
+      <path d="M20 4v5h-5" />
+    </g>
+  </symbol>
+
+  <symbol id="i-expand" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 9V4h5M20 15v5h-5M15 4h5v5M9 20H4v-5" />
+    </g>
+  </symbol>
+
+  <symbol id="i-close" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </g>
+  </symbol>
+
+  <symbol id="i-send" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 12 20 4.5 15.5 20l-3.6-6.1L4.5 12Z" />
+    </g>
+  </symbol>
+
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.1" />
+      <path d="M19.4 13.6a7.6 7.6 0 0 0 0-3.2l2-1.5-2-3.5-2.4 1a7.6 7.6 0 0 0-2.8-1.6L13.8 2h-3.6l-.4 2.8A7.6 7.6 0 0 0 7 6.4l-2.4-1-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3.2l-2 1.5 2 3.5 2.4-1a7.6 7.6 0 0 0 2.8 1.6l.4 2.8h3.6l.4-2.8a7.6 7.6 0 0 0 2.8-1.6l2.4 1 2-3.5-2-1.5Z" />
+    </g>
+  </symbol>
+</svg>
+
+<div class="app">
+  <aside class="dock" aria-label="Primary">
+    <button class="brand" data-nav="library" aria-label="Pretzel's Unblocked Games, go to library">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+      <span class="brand-text">
+        <strong>PRETZEL'S</strong>
+        <small>UNBLOCKED GAMES</small>
+      </span>
+    </button>
+
+    <div class="dock-group">
+      <p class="dock-label">Workspace</p>
+      <nav class="dock-nav">
+        <button class="dock-btn is-active" data-nav="library" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library" /></svg>
+          <span>Library</span>
+        </button>
+        <button class="dock-btn" data-nav="ai">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ai" /></svg>
+          <span>AI Panel</span>
+        </button>
+        <button class="dock-btn" data-nav="browser">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
+          <span>Browser</span>
+        </button>
+        <button class="dock-btn" data-nav="diagnostics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-diagnostics" /></svg>
+          <span>Diagnostics</span>
+        </button>
+        <button class="dock-btn" data-nav="settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings" /></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="dock-foot">
+      <span class="dock-build">v0.1.0-alpha</span>
+      <span class="dock-status" id="dock-status">LIBRARY</span>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <header class="stage-bar">
+      <div class="stage-crumb">
+        <span class="crumb-root">Workspace</span>
+        <span class="crumb-sep">/</span>
+        <span id="stage-crumb">Library</span>
+      </div>
+      <div class="stage-meta">
+        <span class="build-tag" id="build-tag" title="Running build">v0.1.0-alpha · b0</span>
+        <div class="stage-leds">
+          <span class="led" data-state="ok"><i aria-hidden="true"></i>Engines</span>
+          <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
+          <span class="led" id="led-games" data-state="ok"><i aria-hidden="true"></i><b id="led-games-count">0</b> games</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="stage-body">
+
+      <!-- ============ GAME LIBRARY ============ -->
+      <section class="panel is-active" id="panel-library" data-panel="library" aria-labelledby="library-title">
+        <header class="panel-head">
+          <div class="panel-title">
+            <p class="eyebrow">Foundational shell</p>
+            <h1 id="library-title">Game Library</h1>
+            <p class="panel-sub">Frame-verified games that open right here. No installs, no accounts, no telemetry.</p>
+          </div>
+          <div class="head-tools">
+            <label class="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+              <input id="lib-search" type="search" placeholder="Search titles…" autocomplete="off" aria-label="Search games" />
+            </label>
+          </div>
+        </header>
+
+        <div class="toolbar" id="lib-filters">
+          <div class="chip-group" data-filter-group="genre" aria-label="Filter by genre"></div>
+          <span class="toolbar-sep" aria-hidden="true"></span>
+          <div class="chip-group" data-filter-group="platform" aria-label="Filter by platform"></div>
+          <button class="chip chip-toggle" id="filter-proxy" aria-pressed="false">Needs proxy</button>
+          <span class="result-count" id="lib-count"></span>
+        </div>
+
+        <div class="view-grid" id="lib-grid" tabindex="0" role="region" aria-label="Game library"></div>
+
+        <div class="view-player is-hidden" id="lib-player">
+          <div class="frame-bar">
+            <div class="frame-id">
+              <span class="frame-title-row">
+                <strong id="frame-title">&mdash;</strong>
+                <span class="frame-badge is-hidden" id="frame-badge">Proxied</span>
+              </span>
+              <span id="frame-url" class="frame-url"></span>
+            </div>
+            <div class="frame-actions">
+              <button class="btn ghost" id="frame-refresh">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh" /></svg>
+                <span class="btn-label">Refresh</span>
+              </button>
+              <button class="btn ghost" id="frame-fullscreen">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expand" /></svg>
+                <span class="btn-label">Fullscreen</span>
+              </button>
+              <button class="btn danger" id="frame-close">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+                <span class="btn-label">Close</span>
+              </button>
+            </div>
+          </div>
+          <div class="frame-wrap" id="frame-wrap">
+            <iframe id="game-frame" title="Game viewport" allow="fullscreen; autoplay; gamepad" referrerpolicy="no-referrer"></iframe>
+
+            <div class="block-panel is-hidden" id="frame-notice">
+              <div class="block-icon" aria-hidden="true">&#9888;</div>
+              <h2>Proxy required for this entry</h2>
+              <p class="block-copy" id="frame-notice-copy">This game is flagged <code>needsProxy</code>, but no proxy gateway is configured.</p>
+              <div class="block-actions">
+                <button class="btn ghost" id="frame-direct">Load direct anyway</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ AI PANEL ============ -->
+      <section class="panel" id="panel-ai" data-panel="ai" data-mode="debate" aria-labelledby="ai-title">
+        <header class="panel-head">
+          <div class="panel-title">
+            <p class="eyebrow">Local personas</p>
+            <h1 id="ai-title">AI Panel</h1>
+            <p class="panel-sub">Debate, study and snack logic — rule-based, offline, no keys.</p>
+          </div>
+          <div class="head-tools">
+            <button class="btn ghost" id="ai-clear">Clear history</button>
+            <button class="btn icon tray-close" data-tray-close aria-label="Close tray">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="mode-strip" role="group" aria-label="Assistant mode">
+          <button class="mode is-active" data-mode="debate" aria-pressed="true">Anime Debate Matrix</button>
+          <button class="mode" data-mode="academic" aria-pressed="false">Academic Assistant</button>
+          <button class="mode" data-mode="chef" aria-pressed="false">Pretzel Chef</button>
+        </div>
+
+        <div class="chat" id="chat-log" aria-live="polite"></div>
+
+        <form class="composer" id="chat-form">
+          <textarea id="chat-input" rows="1" placeholder="Name two fighters and the ruleset…" aria-label="Message"></textarea>
+          <button class="btn primary icon send" type="submit" aria-label="Send message">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send" /></svg>
+          </button>
+        </form>
+        <p class="footnote">Local engines &middot; no network calls &middot; history stored per mode</p>
+      </section>
+
+      <!-- ============ SANDBOX BROWSER ============ -->
+      <section class="panel" id="panel-browser" data-panel="browser" aria-labelledby="browser-title">
+        <header class="panel-head">
+          <div class="panel-title">
+            <p class="eyebrow">Isolated frame</p>
+            <h1 id="browser-title">Sandbox Browser</h1>
+            <p class="panel-sub">Load anything that allows framing. Blocked sites can retry through your own gateway.</p>
+          </div>
+          <div class="head-tools">
+            <button class="btn ghost" id="browser-home">Home</button>
+            <button class="btn ghost" id="browser-clear">Unload frame</button>
+          </div>
+        </header>
+
+        <form class="addrbar" id="addr-form">
+          <svg class="addr-globe" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
+          <input id="addr-input" type="text" spellcheck="false" autocomplete="off"
+                 placeholder="Enter a URL or search…" aria-label="Address or search" />
+          <button class="btn primary" type="submit">Open</button>
+        </form>
+        <p class="addr-hint" id="addr-hint"><span id="addr-hint-text">Bare domains get https:// &middot; anything else becomes a search.</span>
+          <button type="button" class="linkish" id="block-manual">Site won't embed?</button>
+        </p>
+
+        <div class="browser-stage">
+          <div class="browser-empty" id="browser-empty">
+            <svg class="watermark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+            <div class="empty-inner">
+              <h2>No destination loaded</h2>
+              <p>Enter an address above. If a site refuses framing, retry it through your proxy gateway or open it externally.</p>
+            </div>
+          </div>
+
+          <iframe id="browser-frame" class="is-hidden" title="Sandboxed browser frame"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+                  referrerpolicy="no-referrer"></iframe>
+
+          <div class="block-panel is-hidden" id="block-panel">
+            <div class="block-icon" aria-hidden="true">&#9888;</div>
+            <h2>This site won't load in a frame</h2>
+            <p class="block-host" id="block-host">&mdash;</p>
+            <p class="block-copy">The site sends an <code>X-Frame-Options</code> or CSP <code>frame-ancestors</code> header that blocks embedding. Nothing is wrong with your connection.</p>
+            <div class="block-actions">
+              <button class="btn primary" id="block-proxy">Retry through proxy</button>
+              <button class="btn ghost" id="block-external">Open externally</button>
+            </div>
+            <p class="block-note" id="block-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ DIAGNOSTICS ============ -->
+      <section class="panel" id="panel-diagnostics" data-panel="diagnostics" aria-labelledby="diag-title">
+        <header class="panel-head">
+          <div class="panel-title">
+            <p class="eyebrow">Lifecycle &amp; frame telemetry</p>
+            <h1 id="diag-title">System Diagnostics</h1>
+            <p class="panel-sub">What the shell is doing right now, in order.</p>
+          </div>
+          <div class="head-tools">
+            <button class="btn ghost" id="diag-proxy-test">Test proxy</button>
+            <button class="btn ghost" id="diag-clear">Clear log</button>
+            <button class="btn icon tray-close" data-tray-close aria-label="Close tray">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="diag-grid">
+          <div class="diag-card"><span>Session</span><strong id="diag-session">&mdash;</strong></div>
+          <div class="diag-card"><span>Breakpoint</span><strong id="diag-breakpoint">&mdash;</strong></div>
+          <div class="diag-card"><span>Games loaded</span><strong id="diag-games">&mdash;</strong></div>
+          <div class="diag-card"><span>Proxy node</span><strong id="diag-proxy">Unconfigured</strong></div>
+          <div class="diag-card"><span>Stored messages</span><strong id="diag-storage">0</strong></div>
+          <div class="diag-card"><span>Renderer</span><strong id="diag-renderer">Browser</strong></div>
+        </div>
+
+        <div class="log" id="diag-log" role="log" aria-live="polite"></div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="panel" id="panel-settings" data-panel="settings" aria-labelledby="settings-title">
+        <header class="panel-head">
+          <div class="panel-title">
+            <p class="eyebrow">Customization</p>
+            <h1 id="settings-title">Settings</h1>
+            <p class="panel-sub">Every switch applies instantly and saves to this device.</p>
+          </div>
+          <div class="head-tools">
+            <button class="btn ghost" id="settings-export">Export</button>
+            <button class="btn ghost" id="settings-import">Import</button>
+            <button class="btn danger" id="settings-reset">Reset all</button>
+            <input type="file" id="settings-file" class="is-hidden" accept="application/json,.json" />
+          </div>
+        </header>
+
+        <div class="settings" id="settings-body"></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="tray-scrim" id="tray-scrim" hidden></div>
+
+<script src="js/settings.js?v=5" defer></script>
+<script src="js/ai.js?v=5" defer></script>
+<script src="js/app.js?v=5" defer></script>
+</body>
+</html>

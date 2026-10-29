@@ -1,0 +1,47 @@
+# DEVELOPMENT PLAN: Design Discovery & System Customization Guide
+
+This document is a dedicated reference guide for **FreeBuff AI** to parse alongside the primary architecture blueprint. It details the exact topical domains, technical specifications, and system integration points that FreeBuff AI must investigate by asking the user clarifying questions. 
+
+---
+
+### 📋 Architectural Discovery Questionnaire Framework
+
+FreeBuff AI must present these questions in a structured, conversational manner, tackling them section by section rather than generating code upfront.
+
+#### 1. Core Visual Aesthetic & Branding Theme
+*   **Color Profile Structure:** Should the dashboard use a high-contrast dark neon scheme (e.g., cyber-neon amber, dark cocoa, crimson highlights), a sleek modern minimalist palette, or a traditional clean arcade theme?
+*   **The Pretzel Logo Identity:** How should the custom pretzel logo be stylized? Should it be an abstract, geometric twisting lines layout, an inline typographic emblem, or a neon vector gaming crest?
+*   **Typography Preferences:** Do we use aggressive, boxy futuristic font treatments, clean system-default typography (`-apple-system`, `Segoe UI`), or custom importing rules for display headers?
+
+#### 2. Layout, Navigation, & UX Architecture
+*   **Navigation Matrix Configuration:** Should the navigation buttons be configured as a fixed header anchor across the top of the viewport, or a full vertical navigation command dock aligned to the left side?
+*   **Layout Component Transitions:** Should changing tabs use snappy, instant container switching logic, or fluid CSS keyframe transitions (e.g., fade-in, slide-over blurs)?
+*   **Responsive Scaling Breakpoints:** How should the interface collapse components when running inside small Electron desktop windows versus full-screen web views? Should panels become toggleable trays?
+
+#### 3. Game Library & Viewport Customization
+*   **Database Management Array:** How should the dynamic game indexing array handle layout tags (e.g., categorizing by genre, emulator type, proxy requirements)?
+*   **Grid Presentation Styles:** Should the library slots look like raw terminal code containers, glassmorphism tiles with cover art slots, or a dense text-based system directory layout?
+*   **Iframe Viewport Interaction:** How should the active game iframe frame control bar handle overlays? Do we include native buttons for quick-refreshing the frame, toggling a native full-screen state, or closing the active thread?
+
+#### 4. Multi-Mode AI Panel Engineering
+*   **Text Processing Presentation:** Do we render the conversational interface like a standard messaging app (asymmetric chat bubbles), or a system console log terminal layout?
+*   **Debate Matrix Parameters:** What metrics should the Anime Debate mode emphasize when parsing prompts? Should it focus heavily on categorical stats, conceptual immunities, or speed brackets?
+*   **Local Caching Logic:** Should user chat history be written locally into volatile page state variables, or persist across launches using browser local storage protocols?
+
+#### 5. Sandboxed Private Browser Network Configuration
+*   **Header and Parameter Blocks:** Should the address bar support full protocol validation arrays (catching malformed search queries vs direct domain requests), or simple absolute URL strings?
+*   **Proxy Node Integrations:** How should the error alert box behave when hitting frame restriction blockers? Should it provide options to route requests through automated proxy worker gateways?
+
+#### 6. Management Dashboard Exe (`Manager.exe`) Configuration
+*   **File Interfacing Rules:** How should the separate management dashboard application communicate with the main web app directories? Should it directly parse and overwrite `app.js` data arrays, or write to a global shared local `.json` file?
+*   **Test Environment Framework:** What tools should the testing dashboard expose? Do we include runtime toggle buttons to simulate network dropouts, frame crashes, or layout stress tests?
+
+---
+
+### 💡 Brainstorming Points & Extra Additions
+
+If FreeBuff AI evaluates the system parameters and recommends additional scope, the following brainstorming vectors should be explored collaboratively with the user:
+
+*   **Offline Fallback Mode:** Developing a service-worker caching blueprint that lets the app's base utility panels (AI engine, layout dashboard, diagnostic logs) boot completely offline inside the local Electron desktop environment.
+*   **Panics & Stealth Switches:** Designing custom hardware hotkey combinations or layout camouflage buttons (e.g., an instant "switch to blank doc" panel) to rapidly cloak active frames.
+*   **Automated Mirror Generatives:** A tool inside the Management Dashboard utility designed to automatically rewrite routing targets if a specific deployment branch hits blocklists.

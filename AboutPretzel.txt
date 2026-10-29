@@ -1,0 +1,25 @@
+# ABOUT THE CREATOR: Pretzel & Project Core Info
+
+This document provides background context regarding the lead creator behind the platform, along with critical supplementary runtime notes for the development workspace.
+
+---
+
+### 🥨 About the Creator: Pretzel
+
+**Pretzel** is the primary visionary, lead conceptual designer, and driving force behind the architecture of the **Pretzel's Unblocked Games: RETURN** ecosystem. 
+
+*   **Role:** Project Director & Lead Conceptual Designer
+*   **Philosophy:** Passionate about building modular, accessible, and user-centric open-source desktop environments. Pretzel focuses on creating unique, thematic user experiences that seamlessly merge functional utility—like sandboxed network frames and customized AI engines—with stylized design elements.
+*   **Core Focus:** Overseeing the collaborative development lifecycle alongside the engineering team (Krillekz, Raevik, LuxLoop, and Kyrtop) to ensure the platform remains lightweight, secure, and entirely responsive across all distribution methods.
+
+---
+
+### 💡 Supplementary Project Information
+
+#### 1. Environmental Variables & Desktop Execution
+*   **Directory Integrity:** The application architecture relies strictly on absolute path resolving relative to the main workspace anchor at `C:\Users\pknet\Desktop\Unblocked Games`.
+*   **Local Partitioning:** When executing through the compiled Electron environment, all user session preferences, AI context states, and local storage fragments are held within an isolated workspace cache directory to guarantee system portability.
+
+#### 2. Architecture Modularity
+*   **Decoupled Frontend Structure:** The interface architecture separates functional processing logic entirely from visual rendering presentation layers. This allows the layout styling options determined in user interviews to modify the theme without destabilizing the background AI data array routing hooks.
+*   **Static Server Compatibility:** The entire system avoids server-side database requirements. This engineering choice permits the app to deliver high performance when served straight out of local file protocols (`file://`) or serverless static GitHub hosting nodes (`username.github.io`).

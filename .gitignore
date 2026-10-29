@@ -1,0 +1,15 @@
+# workspace metadata
+.freebuff/
+.freebuff*
+
+# dependencies
+node_modules/
+
+# logs and local artifacts
+*.log
+tmp/
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini

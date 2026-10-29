@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "updated": "2026-10-29",
+  "games": [
+    {
+      "id": "2048",
+      "title": "2048",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://gabrielecirulli.github.io/2048/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "numbers",
+        "classic",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "react-tetris",
+      "title": "React Tetris",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://chvin.github.io/react-tetris/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "blocks",
+        "retro",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "astray",
+      "title": "Astray",
+      "genre": "Puzzle",
+      "platform": "WebGL",
+      "url": "https://wwwtyro.github.io/Astray/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "maze",
+        "3d",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "tower-of-hanoi",
+      "title": "Tower of Hanoi",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/towerofhanoi.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "logic",
+        "classic",
+        "mouse"
+      ]
+    },
+    {
+      "id": "minesweeper",
+      "title": "Minesweeper",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/minesweeper.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "logic",
+        "classic",
+        "mouse"
+      ]
+    },
+    {
+      "id": "untrusted",
+      "title": "Untrusted",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://untrustedgame.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "coding",
+        "meta",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "pacman",
+      "title": "Pac-Man",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://pacman.platzh1rsch.ch/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "maze",
+        "retro",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "clumsy-bird",
+      "title": "Clumsy Bird",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://ellisonleao.github.io/clumsy-bird/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "one-button",
+        "endless"
+      ]
+    },
+    {
+      "id": "floppy-bird",
+      "title": "Floppy Bird",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://nebez.github.io/floppybird/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "one-button",
+        "endless"
+      ]
+    },
+    {
+      "id": "sinuous",
+      "title": "Sinuous",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://hakim.se/sinuous/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "dodge",
+        "minimal",
+        "mouse"
+      ]
+    },
+    {
+      "id": "snake",
+      "title": "Snake",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/snake.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "classic",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "ztype",
+      "title": "ZType",
+      "genre": "Typing",
+      "platform": "HTML5",
+      "url": "https://zty.pe/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "typing",
+        "keyboard",
+        "space"
+      ]
+    },
+    {
+      "id": "chess",
+      "title": "Chess",
+      "genre": "Strategy",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/chess.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "classic",
+        "board",
+        "mouse"
+      ]
+    },
+    {
+      "id": "pokemon-showdown",
+      "title": "Pokemon Showdown",
+      "genre": "Strategy",
+      "platform": "HTML5",
+      "url": "https://play.pokemonshowdown.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "battle",
+        "multiplayer",
+        "turn-based"
+      ]
+    },
+    {
+      "id": "hexgl",
+      "title": "HexGL",
+      "genre": "Racing",
+      "platform": "WebGL",
+      "url": "https://hexgl.bkcore.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "futuristic",
+        "fast",
+        "keyboard"
+      ]
+    },
+    {
+      "id": "bananabread",
+      "title": "BananaBread",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://kripken.github.io/BananaBread/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "fps",
+        "3d",
+        "keyboard"
+      ]
+    }
+  ]
+}

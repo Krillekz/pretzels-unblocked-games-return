@@ -1,0 +1,32 @@
+# CREDITS: Pretzel's Unblocked Games: RETURN
+
+This document acknowledges the core developers, designers, and contributors who conceptualized, engineered, and brought the framework for **Pretzel's Unblocked Games: RETURN** to life.
+
+---
+
+### 👑 Core Project Contributors
+
+*   **Pretzel**
+    *   *Project Visionary & Namesake*
+    *   Conceptualized the overarching platform foundation, core brand identity, and the dynamic multi-mode AI utility layout.
+
+*   **Krillekz**
+    *   *Systems Architecture & Core Logic*
+    *   Engineered the initial local data engine configurations and organized the project's static web pipeline protocols.
+
+*   **Raevik**
+    *   *Workspace Foundation & Deployment Lead*
+    *   Developed the structural layout blueprints and coordinated the framework environments for Electron desktop packaging and automated deployment networks.
+
+*   **LuxLoop**
+    *   *UI/UX Mechanics & Sandboxing*
+    *   Designed the operational specifications for the sandboxed network frame boundaries and the multi-panel client navigation routing.
+
+*   **Kyrtop**
+    *   *Diagnostics & Utility Engineering*
+    *   Architected the blueprint rules for the separate management/testing dashboard executable engine and lifecycle tracking portals.
+
+---
+
+### 📜 Technical Attribution
+This architecture was scaffolded locally utilizing AI design-interview collaborative engines, built to operate as a completely free, open-source, and decentralized local desktop software environment and serverless static web application.

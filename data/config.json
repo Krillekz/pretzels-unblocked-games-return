@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "search": {
+    "label": "DuckDuckGo",
+    "endpoint": "https://duckduckgo.com/?q="
+  },
+  "proxy": {
+    "label": "Unconfigured",
+    "endpoint": "",
+    "health": "",
+    "token": ""
+  },
+  "hotkeys": {
+    "library": "1",
+    "ai": "2",
+    "browser": "3",
+    "diagnostics": "4",
+    "settings": "5"
+  },
+  "features": {
+    "offlineFallback": false,
+    "frameWatchdogMs": 8000
+  }
+}
