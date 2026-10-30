@@ -673,7 +673,7 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
     characteristics, and has a "be nice" switch for when it lands badly.
 *   **Conspiracy Corner** extracts a subject from a question, builds a three-step case from fabricated
     evidence, escalates on `more`, and breaks character on `is this true`.
-*   **Labels.** `v1.3.1-beta`, `b17`, cache `pretzel-shell-v6`, asset query `?v=b17`.
+*   **Labels.** `v1.3.1-beta`, `b17`, cache `pretzel-shell-v7`, asset query `?v=b17`.
 
 ### Repairs found while building it
 
@@ -692,7 +692,7 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
 *   A returning visitor could run the new markup against the previous engine: the worker precached an
     unversioned `js/ai.js` while the CDN still served the old copy, and its cache-first match ignored the
     `?v=` query, so `ai.js?v=b17` resolved to the cached b15 engine. Shell JS and CSS are now
-    network-first (fonts and images stay cache-first), the cache moved to `pretzel-shell-v6`, and the
+    network-first (fonts and images stay cache-first), the cache moved to `pretzel-shell-v7`, and the
     page reloads once on `controllerchange` so a mixed build cannot be left on screen. Found by checking
     the live site in a browser that had already visited it — a fresh profile looked perfect.
 
@@ -706,7 +706,7 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
     headline, interactions, rounds, a numeric score and a verdict; the royale ranks Sukuna > Toji > Levi;
     the tier list reports 66 sheets; `18 * 7 + 4 = 130`; the president question gets the honest answer;
     "be explicit" is refused; `roast my friend tyler` targets Tyler; the conspiracy file is labelled
-    100% fabricated; Settings lists exactly the five new personas; cache is `pretzel-shell-v6`.
+    100% fabricated; Settings lists exactly the five new personas; cache is `pretzel-shell-v7`.
 *   Console clean apart from the pre-existing sandbox and CSP warnings Electron always prints in dev.
 
 ### Left open
