@@ -14,7 +14,7 @@ no telemetry, no server.
 
 ## Release status
 
-- **Now live:** `v1.3.1-beta` — **1.3.1 BETA**, "The AI Rehaul", this repository and the Pages build linked above, running build tag **b16** with **56 games** and **five AI engines**.
+- **Now live:** `v1.3.1-beta` — **1.3.1 BETA**, "The AI Rehaul", this repository and the Pages build linked above, running build tag **b17** with **56 games** and **five AI engines**.
 - **Previous:** `v1.3.0-beta` (`b15`) — 56 games and the paged catalog; `v1.2.0-beta` (`b13`) — the deck layout, suggestions and the admin inbox.
 - **Next:** a fix pass on whatever the beta reports. Patch notes inside the app track each build.
 

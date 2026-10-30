@@ -196,15 +196,33 @@ async function runSmoke() {
       );
     });
 
-    await mainWindow.webContents.executeJavaScript(`
-      new Promise((resolve, reject) => {
-        const start = Date.now();
-        const tick = setInterval(() => {
-          if (window.__pretzelReady) { clearInterval(tick); resolve(true); }
-          else if (Date.now() - start > 15000) { clearInterval(tick); reject(new Error("Shell never signalled ready")); }
-        }, 100);
-      })
-    `);
+    /* When a new service worker claims the page, the shell reloads itself once
+       so it cannot stay on a mixed build. That is real behaviour, so this waits
+       through the reload instead of failing on a destroyed frame. */
+    const waitForReady = async () => {
+      for (let attempt = 0; attempt < 6; attempt += 1) {
+        try {
+          const ready = await mainWindow.webContents.executeJavaScript(`
+            new Promise((resolve) => {
+              const start = Date.now();
+              const tick = setInterval(() => {
+                if (window.__pretzelReady) { clearInterval(tick); resolve(true); }
+                else if (Date.now() - start > 12000) { clearInterval(tick); resolve(false); }
+              }, 100);
+            })
+          `);
+          if (ready) return;
+        } catch {
+          /* the update reload replaced the frame; wait and try again */
+        }
+        await new Promise((resolve) => setTimeout(resolve, 700));
+      }
+      throw new Error("Shell never signalled ready");
+    };
+
+    await waitForReady();
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    await waitForReady();
 
     const shell = await mainWindow.webContents.executeJavaScript(`(() => ({
       title: document.title,

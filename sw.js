@@ -2,13 +2,13 @@
    Pretzel's Unblocked Games: RETURN — offline shell cache
    Caches the local shell, data and assets only. Game frames and any
    third-party request stay on the network and are never intercepted.
-   Bump CACHE when a cached runtime file changes. v5 = the 1.3.1 BETA shell
-   with the AI Rehaul engines and the 18+ age gate.
+   Bump CACHE when a cached runtime file changes. v6 = the 1.3.1 BETA shell
+   with the AI Rehaul engines, the 18+ age gate and network-first code.
    ===================================================================== */
 
 "use strict";
 
-const CACHE = "pretzel-shell-v5";
+const CACHE = "pretzel-shell-v6";
 const SHELL = [
   "./",
   "./index.html",
@@ -89,6 +89,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   if (url.pathname.endsWith("/data/config.json") || url.pathname.endsWith("/data/library.json")) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+  /* Code and styles are network-first: a cache-first match on an unversioned
+     precached copy served a stale engine after a deploy. Fonts and images can
+     stay cache-first because they rarely change and are not executable. */
+  if (/\.(?:js|css)$/.test(url.pathname)) {
     event.respondWith(networkFirst(request));
     return;
   }

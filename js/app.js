@@ -3371,12 +3371,26 @@
     return state.cloaked;
   }
 
+  /* A new worker claims the page mid-session, so the markup and the engine can
+     briefly disagree (new persona list, old personas). Reload once, after the
+     new controller takes over, so a returning visitor cannot run a mixed build. */
+  function watchWorkerUpdates() {
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloading) return;
+      reloading = true;
+      log("info", "New offline cache active — reloading for a clean build");
+      window.location.reload();
+    });
+  }
+
   async function registerOfflineCache() {
     if (!("serviceWorker" in navigator)) {
       state.offlineCache = "unsupported";
       log("warn", "Offline cache unavailable — this browser has no service worker support");
       return;
     }
+    watchWorkerUpdates();
     try {
       const registration = await navigator.serviceWorker.register("sw.js");
       state.offlineCache = registration.active ? "ready" : "installing";
