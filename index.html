@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="dark" />
 <meta name="robots" content="noindex" />
-<title>Pretzel's Unblocked Games: RETURN — 1.3 BETA</title>
+<title>Pretzel's Unblocked Games: RETURN — 1.3.1 BETA</title>
 <link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
-<link rel="stylesheet" href="css/shell.css?v=b15" />
+<link rel="stylesheet" href="css/shell.css?v=b16" />
 </head>
 <body data-route="library" data-panel="library" data-view="grid">
 
 <div class="ribbon" role="status">
-  <span class="ribbon-pill">1.3 BETA</span>
-  <span class="ribbon-copy">Live build — 50+ titles, a fresh shelf and a faster catalog.</span>
+  <span class="ribbon-pill">1.3.1 BETA</span>
+  <span class="ribbon-copy">The AI Rehaul — a far deeper debate matrix and four new personas.</span>
   <button class="ribbon-link" type="button" id="whatsnew-open">What's new</button>
 </div>
 
@@ -228,7 +228,7 @@
       <span>Jump to…</span>
       <kbd>Ctrl K</kbd>
     </button>
-    <span class="build-chip" id="build-chip" title="Running build">1.3 BETA · b15</span>
+    <span class="build-chip" id="build-chip" title="Running build">1.3.1 BETA · b16</span>
     <div class="leds" aria-label="Status">
       <span class="led" id="led-ai" data-state="ok"><i aria-hidden="true"></i>Engines</span>
       <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
@@ -489,26 +489,34 @@
       <aside class="ai-side">
         <p class="kicker">Local personas</p>
         <h1>AI Panel</h1>
-        <p class="panel-sub">Three offline engines. No keys, no network, no accounts.</p>
+        <p class="panel-sub">Five offline engines. No keys, no network, no accounts.</p>
 
         <div class="mode-list" role="group" aria-label="Assistant mode">
           <button class="mode is-active" type="button" data-mode="debate" aria-pressed="true">
             <span class="mode-index">01</span>
-            <span class="mode-copy"><strong>Anime Debate Matrix</strong><small>Matchups, stat sheets, tier calls</small></span>
+            <span class="mode-copy"><strong>Anime Debate Matrix</strong><small>64 sheets, rounds, royales, tiers</small></span>
           </button>
-          <button class="mode" type="button" data-mode="academic" aria-pressed="false">
+          <button class="mode" type="button" data-mode="normal" aria-pressed="false">
             <span class="mode-index">02</span>
-            <span class="mode-copy"><strong>Academic Assistant</strong><small>Outlines, study plans, note passes</small></span>
+            <span class="mode-copy"><strong>Normal</strong><small>Just a conversation</small></span>
           </button>
-          <button class="mode" type="button" data-mode="chef" aria-pressed="false">
+          <button class="mode" type="button" data-mode="spicy" aria-pressed="false">
             <span class="mode-index">03</span>
-            <span class="mode-copy"><strong>Pretzel Chef</strong><small>Snacks, resets and puns</small></span>
+            <span class="mode-copy"><strong>Spicy <em class="mode-flag">18+</em></strong><small>Flirty banter · age gated</small></span>
+          </button>
+          <button class="mode" type="button" data-mode="roast" aria-pressed="false">
+            <span class="mode-index">04</span>
+            <span class="mode-copy"><strong>Roast Pit</strong><small>Playful destruction</small></span>
+          </button>
+          <button class="mode" type="button" data-mode="conspiracy" aria-pressed="false">
+            <span class="mode-index">05</span>
+            <span class="mode-copy"><strong>Conspiracy Corner</strong><small>Confident nonsense</small></span>
           </button>
         </div>
 
         <div class="ai-note">
-          <p id="ai-note-title">Every character works</p>
-          <p id="ai-note-copy">19 curated sheets, and any other name gets a scout estimate marked as such. Try “Baki vs Ohma” or “Gojo against Makima”.</p>
+          <p id="ai-note-title">64 curated sheets</p>
+          <p id="ai-note-copy">An interaction matrix, round-by-round reads, battle royales and tier lists. Any other name gets a scouted estimate, marked as such.</p>
         </div>
       </aside>
 
@@ -822,7 +830,7 @@
 <dialog class="sheet" id="whatsnew">
   <div class="sheet-head">
     <div>
-      <p class="kicker">1.3 BETA · live</p>
+      <p class="kicker">1.3.1 BETA · live</p>
       <h2>What's new in this deck</h2>
     </div>
     <button class="icon-btn" type="button" id="whatsnew-close" aria-label="Close">
@@ -831,19 +839,15 @@
   </div>
   <div class="sheet-body">
     <ul class="news">
-      <li><strong>40 new games</strong><span>The catalog goes from 16 titles to 56 across 12 genres, every one checked for HTTP status and framing headers before it was added.</span></li>
-      <li><strong>New shelf</strong><span>A fifth row lists what arrived in this build, and those cards carry a small New flag so they are easy to spot while browsing.</span></li>
-      <li><strong>Quick genre chips</strong><span>A one-tap genre strip above the cards filters without reaching for the rail. The rail still works, and both stay in sync.</span></li>
-      <li><strong>A catalog that pages</strong><span>Cards render 24 at a time with a Show more button and an honest Showing X of Y line, so a big catalog paints fast and the scroll stays short.</span></li>
-      <li><strong>Per-title cover art</strong><span>Each cover now takes its glow from a hash of the game id, so 56 cards read as distinct tiles instead of one repeated placeholder.</span></li>
-      <li><strong>An honest play clock</strong><span>Time in frame stops counting while the window is hidden or unfocused, so a background tab no longer inflates your totals.</span></li>
-      <li><strong>Settings backups that validate</strong><span>Import checks every key against the schema and drops what it does not recognise, instead of writing whatever the file contained.</span></li>
-      <li><strong>Suggestion bundles</strong><span>The admin inbox can import another device's exported JSON, so an inbox can be carried between browsers.</span></li>
-      <li><strong>Local gateway preset</strong><span>Settings → Proxy has a one-click preset for the bundled dev gateway, with the URL shape it actually expects.</span></li>
-      <li><strong>Settings tabs</strong><span>One section opens at a time, and the left rail switches between them instead of scrolling a long page. Patch notes and About are tabs too.</span></li>
-      <li><strong>Admin inbox and replies</strong><span>Password-gated, with search, status and category filters, stats, replies, export and delete. Replies post a huge, randomly colored update on the public card.</span></li>
-      <li><strong>Command palette</strong><span>Ctrl/Cmd+K jumps to any game, panel or action. Tab now stays inside the palette.</span></li>
-      <li><strong>Where this build lives</strong><span>1.3 BETA is published to GitHub Pages. The 1.2 test deck is still reachable from the repo's release history.</span></li>
+      <li><strong>Debate Matrix rebuilt</strong><span>64 curated sheets (up from 19), a 20-rule interaction matrix, round-by-round reads, win conditions for both sides, difficulty ratings and an auditable score breakdown.</span></li>
+      <li><strong>New commands</strong><span>“A vs B vs C” ranks a battle royale, plus “tier list”, “top 10”, “random” and “Naruto roster”. Long-press nothing — it is all typed input.</span></li>
+      <li><strong>Normal</strong><span>Plain conversation with no persona: questions, a real arithmetic evaluator, planning help, jokes, and an honest “I don't know” when it doesn't.</span></li>
+      <li><strong>Spicy · 18+</strong><span>Flirty banter and adult humour behind a one-time age gate. Suggestive at most, never explicit, and it stops the moment you ask it to.</span></li>
+      <li><strong>Roast Pit</strong><span>Playful roasting, comebacks and backhanded hype. It goes after what you do, never who you are, and backs off if it lands badly.</span></li>
+      <li><strong>Conspiracy Corner</strong><span>Absurd theories with total confidence and zero evidence. Ask “is this true” and it breaks character immediately.</span></li>
+      <li><strong>Two personas retired</strong><span>Academic Assistant and Pretzel Chef are gone, replaced by the four above. The settings tab now lists all five new personas.</span></li>
+      <li><strong>Catalog and design</strong><span>Carried over from 1.3: 56 games, the New shelf, genre chips, paged cards and per-title cover art.</span></li>
+      <li><strong>Where this build lives</strong><span>1.3.1 BETA is published to GitHub Pages. Patch notes inside Settings carry the full list.</span></li>
     </ul>
   </div>
   <div class="sheet-foot">
@@ -852,12 +856,37 @@
   </div>
 </dialog>
 
+<dialog class="sheet agegate" id="agegate">
+  <div class="sheet-head">
+    <div>
+      <p class="kicker">18+ gate</p>
+      <h2>Spicy mode is for adults</h2>
+    </div>
+    <button class="icon-btn" type="button" id="agegate-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <p class="agegate-lead">This persona is flirty, uses adult humour and talks about dating like an adult. Nothing explicit, no images — tone, not content.</p>
+    <ul class="news">
+      <li><strong>What it does</strong><span>Innuendo, compliments, date ideas, jokes, and calling you out when your flirting is bad.</span></li>
+      <li><strong>What it won't do</strong><span>Explicit sexual content, anything involving minors, or anything you can't talk your way out of with “stop”.</span></li>
+      <li><strong>What this gate is</strong><span>A one-time confirmation saved in this browser. It is a tone check, not proof of age and not real security.</span></li>
+    </ul>
+    <p class="suggest-disclaimer">Confirm you are 18 or older. You can leave the mode at any time from the persona list.</p>
+  </div>
+  <div class="sheet-foot">
+    <button class="btn ghost" type="button" id="agegate-cancel">Take me back</button>
+    <button class="btn primary" type="button" id="agegate-confirm">I'm 18 or older</button>
+  </div>
+</dialog>
+
 <div class="cloak" id="cloak" hidden aria-hidden="true">
   <p class="cloak-title">Pretzel's Unblocked Games: RETURN</p>
 </div>
 
-<script src="js/settings.js?v=b15" defer></script>
-<script src="js/ai.js?v=b15" defer></script>
-<script src="js/app.js?v=b15" defer></script>
+<script src="js/settings.js?v=b16" defer></script>
+<script src="js/ai.js?v=b16" defer></script>
+<script src="js/app.js?v=b16" defer></script>
 </body>
 </html>

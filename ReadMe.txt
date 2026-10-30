@@ -643,3 +643,68 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
 *   Framing is verified at header level. A host can still refuse to paint through script behaviour or a
     login wall, which is what the block card and the frame watchdog are for.
 *   Suggestions remain per-browser; there is still no server endpoint for them.
+
+---
+
+## 1.3.1 BETA — "The AI Rehaul" (b16, published)
+
+### What changed
+
+*   **Anime Debate Matrix rebuilt.** 66 curated sheets across 22 series, up from 19. The sheet row is
+    `name, series, tier, speedTier, strength, durability, ap, hax, iq, tags, kit, weak spots` — tags are
+    the part that matters, because the engine reads them.
+*   **A real interaction matrix.** 20 rules (`INTERACTIONS`) replace the old ad-hoc `sideBonus`. Each rule
+    is `tag beats [tags] weight why`, and the `why` sentence is reused verbatim in the report so the
+    reasoning is auditable rather than decorative. Nullification suppresses other tags' bonuses.
+*   **The report argues.** HEADLINE (with a difficulty label), STAT EDGE, ABILITY INTERACTIONS, ROUNDS
+    (early / mid / late / who dictates), WIN CONDITIONS for both sides, SCORE with the weights shown, and
+    a VERDICT. Concise mode still drops to verdict-only.
+*   **New commands.** `A vs B vs C` runs a battle royale ranking plus a focus-fire read; `tier list`,
+    `top N` / "strongest", `random`, and `<series> roster`.
+*   **Four new personas replace two.** Normal, Spicy (18+ gated), Roast Pit and Conspiracy Corner replace
+    Academic Assistant and Pretzel Chef. Each has its own intent set, its own refusal path and its own
+    boundary rules rather than being a reskin.
+*   **Normal** has a hand-written recursive-descent arithmetic evaluator. No `eval`, no `Function`, only
+    numbers, brackets and four operators. It answers `18 * 7 + 4 = 130` and refuses to invent facts.
+*   **Spicy** is behind `#agegate`: a dialog that states what the persona does, what it will not do, and
+    that the confirmation is a tone check stored as `pretzel.v13.agegate`, not authentication. Explicit
+    requests are refused in character; "stop" or "not comfortable" drops the flirting.
+*   **Roast Pit** parses targets (`roast my friend Tyler` → Tyler), never touches protected
+    characteristics, and has a "be nice" switch for when it lands badly.
+*   **Conspiracy Corner** extracts a subject from a question, builds a three-step case from fabricated
+    evidence, escalates on `more`, and breaks character on `is this true`.
+*   **Labels.** `v1.3.1-beta`, `b16`, cache `pretzel-shell-v5`, asset query `?v=b16`.
+
+### Repairs found while building it
+
+*   The sheet mapper dropped the `speed` column during the rewrite. Every score became `NaN`, so every
+    verdict read "Too close to call — NaN–NaN" and the royale ranking fell back to input order. Caught in
+    the engine sweep; speed is now derived per tier with a stable per-name spread.
+*   The interaction list emitted one line per victim tag, printing six near-identical ability lines in a
+    single matchup. It now de-duplicates per side, sorts by weight and caps at four.
+*   Roast targets kept the possessive ("friend tyler") and conspiracy headings produced
+    "THE THE MOON CONSPIRACY". Both were fixed, and a doubled regex escape that silently stopped the
+    `my` → `your` substitution was repaired at byte level after a control-character scan.
+*   A saved default persona that no longer exists would have rendered a dead engine. The shell now falls
+    back to the debate matrix, and an unconfirmed Spicy default falls back to Normal instead of opening
+    the gate at launch.
+*   Settings → Reset all now re-arms the 18+ gate.
+
+### Verification performed
+
+*   `npm run check` exits 0 for every shell, engine, worker and Electron file.
+*   Throwaway Electron harness (`tmp/`, git-ignored, deleted after the run): five persona buttons in the
+    right order; engine reports version 2.0 with 66 fighters; Spicy opens the gate and leaves the panel
+    on debate with nothing stored; cancel keeps it locked; confirm unlocks, stores the flag and lands on
+    "Spicy · 18+"; the second visit skips the gate; a 1098-character matchup report carries the
+    headline, interactions, rounds, a numeric score and a verdict; the royale ranks Sukuna > Toji > Levi;
+    the tier list reports 66 sheets; `18 * 7 + 4 = 130`; the president question gets the honest answer;
+    "be explicit" is refused; `roast my friend tyler` targets Tyler; the conspiracy file is labelled
+    100% fabricated; Settings lists exactly the five new personas; cache is `pretzel-shell-v5`.
+*   Console clean apart from the pre-existing sandbox and CSP warnings Electron always prints in dev.
+
+### Left open
+
+*   The packaged `PretzelGames.exe` on disk was not rebuilt; it still carries an older label.
+*   Engines remain rule-based and stateless within a reply — no model weights, no memory beyond the
+    stored thread, and no factual knowledge. That is a design limit, not a bug to patch quietly.

@@ -11,7 +11,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const VERSION = "v1.3.0-beta";
+  const VERSION = "v1.3.1-beta";
   const BUILD = (() => {
     const tag = document.querySelector('script[src*="js/app.js"]');
     const match = tag && String(tag.getAttribute("src") || "").match(/[?&]v=([A-Za-z0-9._-]+)/);
@@ -89,26 +89,41 @@
     debate: {
       label: "Anime Debate Matrix",
       noteTitle: "Every character works",
-      noteCopy:
-        "19 curated sheets, and any other name gets a scout estimate marked as such. Try “Baki vs Ohma” or “Gojo against Makima”.",
-      greeting: `Matrix loaded — ${window.PretzelAI ? window.PretzelAI.fighterCount : 19} curated sheets, and any other character gets a scout estimate on the spot. Name two with “vs” for a full breakdown, or one for its stat card.`,
+      noteCopy: `${window.PretzelAI ? window.PretzelAI.fighterCount : 64} curated sheets, an interaction matrix, round-by-round reads, battle royales and tier lists. Any other name gets a scouted estimate, marked as such.`,
+      greeting: `Matrix loaded — ${window.PretzelAI ? window.PretzelAI.fighterCount : 64} curated sheets with a full interaction matrix. “A vs B” gives rounds, win conditions and a score. One name gives the card. “A vs B vs C” ranks the royale. “tier list”, “top 10”, “random”, or “Naruto roster” also work.`,
       placeholder: "Goku vs Saitama"
     },
-    academic: {
-      label: "Academic Assistant",
-      noteTitle: "Structure, not invention",
-      noteCopy: "Ask for an outline or a study plan, or paste a passage for a note pass. It builds structure from your text and never invents sources.",
+    normal: {
+      label: "Normal",
+      noteTitle: "No gimmick",
+      noteCopy: "Plain conversation: questions, arithmetic, planning, a joke when you want one. It says so when it does not know something.",
       greeting:
-        "Assistant ready. Ask for an outline or a study plan, or paste a passage for a note pass. I build structure from your material — I never invent facts.",
-      placeholder: "Outline an essay on…"
+        "Hey. Normal mode — no persona, no bit.\n\nAsk a question, give me maths (“what is 18 * 7 + 4”), think something through out loud, or ask for a joke.",
+      placeholder: "What's on your mind?"
     },
-    chef: {
-      label: "Pretzel Chef",
-      noteTitle: "Kitchen open",
-      noteCopy: "Snacks, a reset after a rough queue, or a pun. Ask for a mood and it picks something quick.",
+    spicy: {
+      label: "Spicy · 18+",
+      noteTitle: "Adults only",
+      noteCopy: "Flirty banter, compliments with teeth and adult humour. Suggestive at most — never explicit — and you can walk out any time.",
       greeting:
-        "Yo. Pretzel Chef in the kitchen. Ask for a quick snack, a reset after a rough queue, or a pun — I'll keep it casual.",
-      placeholder: "Ask the chef anything…"
+        "So you found the door.\n\nFlirty banter, date ideas that end in trouble, and jokes your parents wouldn't approve of. Suggestive at most, never explicit, and the flirting stops the moment you say so.",
+      placeholder: "Flirt with me…"
+    },
+    roast: {
+      label: "Roast Pit",
+      noteTitle: "Enter at your own risk",
+      noteCopy: "Playful roasting, comebacks and backhanded hype. It goes after what you do, never who you are.",
+      greeting:
+        "The Pit is open.\n\nSay “roast me” if you're brave, “roast my friend Tyler” if you're a coward, or “give me a comeback” if you're losing an argument in real time.",
+      placeholder: "roast me"
+    },
+    conspiracy: {
+      label: "Conspiracy Corner",
+      noteTitle: "Nothing here is true",
+      noteCopy: "Absurd theories with total confidence and zero evidence, on any topic you name. Ask “is this true” and it breaks character.",
+      greeting:
+        "Welcome to Conspiracy Corner. Nothing here is true — that's the entire bit.\n\nGive me a topic: “the moon”, “why my Wi-Fi drops”, “who moved my keys”. Ask for “more” to escalate.",
+      placeholder: "Why does my Wi-Fi drop?"
     }
   };
 
@@ -1932,6 +1947,27 @@
 
   const aiKey = (mode) => AI_PREFIX + mode;
   const threadCache = {};
+  const AGE_KEY = "pretzel.v13.agegate";
+  let pendingMode = null;
+
+  /* Adult mode is behind a one-time confirmation, stored per browser. It is a
+     tone gate, not authentication — the copy says as much. */
+  function adultCleared() {
+    return readStore(AGE_KEY, false) === true;
+  }
+
+  function openAgeGate() {
+    if (!els.agegate) return;
+    if (typeof els.agegate.showModal === "function") els.agegate.showModal();
+    else els.agegate.open = true;
+    log("event", "Age gate opened for Spicy mode");
+  }
+
+  function closeAgeGate() {
+    if (!els.agegate) return;
+    if (typeof els.agegate.close === "function") els.agegate.close();
+    else els.agegate.open = false;
+  }
 
   function loadThread(mode) {
     if (!state.aiKeepHistory) return threadCache[mode] || null;
@@ -1980,6 +2016,11 @@
 
   function setMode(mode, opts = {}) {
     if (!PERSONAS[mode]) return;
+    if (mode === "spicy" && !adultCleared() && !opts.force) {
+      pendingMode = mode;
+      openAgeGate();
+      return;
+    }
     state.mode = mode;
     els.panelAi.dataset.mode = mode;
     $$(".mode").forEach((btn) => {
@@ -2557,10 +2598,32 @@
      the persona engines. */
   const PATCHES = [
     {
-      version: "v1.3.0-beta",
+      version: "v1.3.1-beta",
       date: "30 Oct 2026",
       tag: "Published · BETA",
       current: true,
+      summary: "“The AI Rehaul” — the debate matrix rebuilt with 66 sheets and real interaction rules, plus four new personas in place of the two that were retired.",
+      points: [
+        "Anime Debate Matrix: 19 curated sheets became 66 across 30 series, and every matchup now runs through a 20-rule interaction matrix instead of a flat stat comparison.",
+        "The matchup report grew up: headline call, stat edge, ability interactions, round-by-round read, win conditions for both sides, difficulty rating and an auditable score breakdown.",
+        "New debate commands — “A vs B vs C” ranks a battle royale, plus “tier list”, “top 10”, “random” and a series roster such as “Naruto roster”.",
+        "Normal — plain conversation with no persona: questions, a real arithmetic evaluator, planning help, jokes, and an honest “I don't know” instead of invented facts.",
+        "Spicy · 18+ — flirty banter and adult humour behind a one-time age gate, with a hard stop on explicit content and an instant dial-down if you ask.",
+        "Roast Pit — playful roasting, a comeback generator and backhanded hype. It targets what you do, never who you are, and backs off if it lands badly.",
+        "Conspiracy Corner — absurd theories with total confidence and zero evidence, on any topic, with an “is this true” escape hatch that breaks character.",
+        "Academic Assistant and Pretzel Chef are retired. The persona list and the Settings default now offer the five current engines only."
+      ],
+      fixes: [
+        "A saved default persona that no longer exists would have left the panel on a dead engine; the shell now falls back to the debate matrix, and an unconfirmed Spicy default falls back to Normal instead of opening the age gate at launch.",
+        "Settings → Reset all re-arms the 18+ gate, so a shared machine cannot stay unlocked simply because it was confirmed once.",
+        "The age gate is a tone check stored per browser, and the dialog says so — it is not authentication and does not pretend to be."
+      ]
+    },
+    {
+      version: "v1.3.0-beta",
+      date: "30 Oct 2026",
+      tag: "Previous · BETA",
+      current: false,
       summary: "40 new games, a New shelf, one-tap genre chips and a catalog that pages. Published to GitHub Pages as 1.3 BETA.",
       points: [
         "The catalog grew from 16 titles to 56 across 12 genres. Every URL was checked for HTTP status and for `X-Frame-Options` / `frame-ancestors` before it went in, so no entry is a guess.",
@@ -3191,6 +3254,7 @@
     els.chatInput = $("#chat-input");
     els.chatForm = $("#chat-form");
     els.aiModeLabel = $("#ai-mode-label");
+    els.agegate = $("#agegate");
     els.aiNoteTitle = $("#ai-note-title");
     els.aiNoteCopy = $("#ai-note-copy");
 
@@ -3475,6 +3539,31 @@
 
     /* AI */
     $$(".mode").forEach((btn) => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+
+    if (els.agegate) {
+      $("#agegate-confirm").addEventListener("click", () => {
+        writeStore(AGE_KEY, true);
+        closeAgeGate();
+        const mode = pendingMode || "spicy";
+        pendingMode = null;
+        setMode(mode, { force: true });
+        toast("Adult mode unlocked for this browser");
+      });
+      $("#agegate-cancel").addEventListener("click", () => {
+        pendingMode = null;
+        closeAgeGate();
+        toast("Stayed on the safe side");
+      });
+      $("#agegate-close").addEventListener("click", () => {
+        pendingMode = null;
+        closeAgeGate();
+      });
+      els.agegate.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        pendingMode = null;
+        closeAgeGate();
+      });
+    }
     els.chatForm.addEventListener("submit", (event) => {
       event.preventDefault();
       sendChat();
@@ -3602,6 +3691,8 @@
     $("#settings-reset").addEventListener("click", () => {
       if (!window.confirm("Reset every setting to its default and reload?")) return;
       PretzelSettings.reset();
+      /* Defaults include the safe start, so the adult gate is re-armed too. */
+      writeStore(AGE_KEY, false);
       log("warn", "Settings restored to defaults");
       toast("Defaults restored — reloading");
       location.reload();
@@ -3887,7 +3978,8 @@
     renderSuggestions();
     updateStats();
 
-    if (PERSONAS[saved.aiMode]) setMode(saved.aiMode, { silent: true });
+    const startMode = saved.aiMode === "spicy" && !adultCleared() ? "normal" : saved.aiMode;
+    if (PERSONAS[startMode]) setMode(startMode, { silent: true });
     else renderThread(state.mode);
 
     const parsed = parseHash();

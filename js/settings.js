@@ -276,11 +276,13 @@
           key: "aiMode",
           type: "select",
           label: "Default persona",
-          hint: "Which mode the panel opens on.",
+          hint: "Which persona the panel opens on. Spicy still asks for the 18+ confirmation.",
           options: [
             { value: "debate", label: "Anime Debate Matrix" },
-            { value: "academic", label: "Academic Assistant" },
-            { value: "chef", label: "Pretzel Chef" }
+            { value: "normal", label: "Normal" },
+            { value: "spicy", label: "Spicy (18+, age gated)" },
+            { value: "roast", label: "Roast Pit" },
+            { value: "conspiracy", label: "Conspiracy Corner" }
           ]
         },
         { key: "aiWeights.stats", type: "range", label: "Weight · stats", hint: "Strength, durability and attack potency.", min: 0, max: 100, step: 1, suffix: "%" },

@@ -1,6 +1,6 @@
 # Pretzel's Unblocked Games: RETURN
 
-> ## ⚠️ 1.3 BETA — TEST PHASE
+> ## ⚠️ 1.3.1 BETA — TEST PHASE
 > **This is an unfinished test build, not a finished product.**
 > The catalog, the suggestion inbox, the proxy routing and the desktop packaging are all
 > still in progress, so expect rough edges, missing pieces and the odd game that refuses to frame.
@@ -14,11 +14,21 @@ no telemetry, no server.
 
 ## Release status
 
-- **Now live:** `v1.3.0-beta` — **1.3 BETA**, this repository and the Pages build linked above, running build tag **b15** with **56 games**.
-- **Previous:** `v1.2.0-beta` (build `b13`) — the deck layout, suggestions and the admin inbox. `v0.1.0-alpha` was the first Test Phase shell with the left dock.
+- **Now live:** `v1.3.1-beta` — **1.3.1 BETA**, "The AI Rehaul", this repository and the Pages build linked above, running build tag **b16** with **56 games** and **five AI engines**.
+- **Previous:** `v1.3.0-beta` (`b15`) — 56 games and the paged catalog; `v1.2.0-beta` (`b13`) — the deck layout, suggestions and the admin inbox.
 - **Next:** a fix pass on whatever the beta reports. Patch notes inside the app track each build.
 
-### 1.3 BETA
+### 1.3.1 BETA — The AI Rehaul
+
+- **The Anime Debate Matrix was rebuilt, not retuned** — 19 curated sheets became **66 across 22 series**, and every matchup runs through a **20-rule interaction matrix** instead of comparing flat numbers.
+- **Matchups now argue their case** — headline with a difficulty rating, stat-by-stat edge list, named ability interactions, a round-by-round read, win conditions for both sides, and a score line showing the weights used.
+- **New commands** — `A vs B vs C` ranks a battle royale, plus `tier list`, `top 10`, `random` and `<series> roster`.
+- **Normal** — plain conversation, no persona: questions, real arithmetic, planning help, jokes, and an honest "no knowledge base" answer instead of invented facts.
+- **Spicy · 18+** — flirty banter and adult humour behind a one-time confirmation. Suggestive at most, never explicit, and it stops when asked.
+- **Roast Pit** and **Conspiracy Corner** — playful roasting with a comeback generator, and confident nonsense with an `is this true` escape hatch.
+- **Academic Assistant and Pretzel Chef are retired**, replaced by the four engines above.
+
+### 1.3 BETA — 56 games
 
 - **40 new games** — the catalog goes from 16 titles to 56 across 12 genres. Every URL was checked for HTTP status and for `X-Frame-Options` / CSP `frame-ancestors` before it was added; nothing in the catalog is an unverified guess.
 - **A catalog that pages** — cards render 24 at a time with a Show more button and a Showing X of Y line, so a 56-title grid paints quickly and the scroll stays short.
@@ -53,7 +63,7 @@ The deck replaces the old dock layout entirely.
 | --- | --- |
 | Game library | 56 entries across 12 genres, paged 24 at a time, genre chips, genre/platform/proxy filters, search, sorting, shelves, grid/list, keyboard scrolling |
 | Game viewport | Sandboxed iframe with refresh, fullscreen, focus mode and close; `needsProxy` routing |
-| AI panel | Three deterministic local engines: Anime Debate Matrix (curated roster + scout estimates for any name), Academic Assistant, Pretzel Chef |
+| AI panel | Five deterministic local engines: Anime Debate Matrix (66 sheets, interaction matrix, royales, tiers), Normal, Spicy (18+ gated), Roast Pit, Conspiracy Corner — any unknown fighter name still gets a scouted estimate |
 | Sandbox browser | Smart address parsing (URL vs search), configurable engine and home page, block dialog with proxy retry, quick links |
 | Suggestions | Public form with categories and optional name/build, per-browser storage, oversized color-coded admin updates |
 | Admin inbox | Session password gate, four stat cards, search, status/category filters, sorting, replies, copy, export, delete |
@@ -139,6 +149,8 @@ structured so the storage calls can be replaced without touching the layout.
 ## Known limits
 
 - **The admin password is a test gate, not authentication.** Do not treat the inbox as private.
+- **The 18+ gate is a tone check, not age verification.** It stores one confirmation in this browser and says so in the dialog; Settings → Reset all re-arms it.
+- **The AI engines have no knowledge base.** They are local rule-based text generators: the debate matrix uses curated sheets you can read in `js/ai.js`, and the other personas are deterministic templates. Nothing is fetched, nothing is learned, and factual questions get referred to the Browser panel rather than guessed.
 - **Suggestions are per-browser.** Different devices see different submissions.
 - **Proxy routing is unconfigured by default.** Set `proxy.endpoint` in `data/config.json` (or in
   Settings) after deploying an adapter; until then a `needsProxy` title shows its block card.
@@ -156,7 +168,7 @@ structured so the storage calls can be replaced without touching the layout.
 index.html            shell markup (command deck, rail, inspector, player, panels)
 css/shell.css         the 1.3 design system and responsive rules
 js/app.js             routing, catalog, shelves, player, browser, suggestions, settings, patches
-js/ai.js              three local persona engines
+js/ai.js              five local persona engines (debate matrix, normal, spicy, roast, conspiracy)
 js/settings.js        settings store + schema
 data/library.json     game catalog
 data/config.json      runtime config (search, proxy, hotkeys, features)
