@@ -14,7 +14,7 @@ no telemetry, no server.
 
 ## Release status
 
-- **Now live:** `v1.3.1-beta` — **1.3.1 BETA**, "The AI Rehaul", this repository and the Pages build linked above, running build tag **b17** with **56 games** and **five AI engines**.
+- **Now live:** `v1.3.1-beta` — **1.3.1 BETA**, "The AI Rehaul", this repository and the Pages build linked above, running build tag **b18** with **56 games** and **five AI engines**.
 - **Previous:** `v1.3.0-beta` (`b15`) — 56 games and the paged catalog; `v1.2.0-beta` (`b13`) — the deck layout, suggestions and the admin inbox.
 - **Next:** a fix pass on whatever the beta reports. Patch notes inside the app track each build.
 
@@ -24,7 +24,7 @@ no telemetry, no server.
 - **Matchups now argue their case** — headline with a difficulty rating, stat-by-stat edge list, named ability interactions, a round-by-round read, win conditions for both sides, and a score line showing the weights used.
 - **New commands** — `A vs B vs C` ranks a battle royale, plus `tier list`, `top 10`, `random` and `<series> roster`.
 - **Normal** — plain conversation, no persona: questions, real arithmetic, planning help, jokes, and an honest "no knowledge base" answer instead of invented facts.
-- **Spicy · 18+** — flirty banter and adult humour behind a one-time confirmation. Suggestive at most, never explicit, and it stops when asked.
+- **After Hours · 18+** — flirty banter and adult humour behind a one-time confirmation. Suggestive at most, never explicit, and it stops when asked.
 - **Roast Pit** and **Conspiracy Corner** — playful roasting with a comeback generator, and confident nonsense with an `is this true` escape hatch.
 - **Academic Assistant and Pretzel Chef are retired**, replaced by the four engines above.
 
@@ -63,7 +63,7 @@ The deck replaces the old dock layout entirely.
 | --- | --- |
 | Game library | 56 entries across 12 genres, paged 24 at a time, genre chips, genre/platform/proxy filters, search, sorting, shelves, grid/list, keyboard scrolling |
 | Game viewport | Sandboxed iframe with refresh, fullscreen, focus mode and close; `needsProxy` routing |
-| AI panel | Five deterministic local engines: Anime Debate Matrix (66 sheets, interaction matrix, royales, tiers), Normal, Spicy (18+ gated), Roast Pit, Conspiracy Corner — any unknown fighter name still gets a scouted estimate |
+| AI panel | Five deterministic local engines: Anime Debate Matrix (66 sheets, interaction matrix, royales, tiers), Normal, After Hours (18+ gated), Roast Pit, Conspiracy Corner — any unknown fighter name still gets a scouted estimate |
 | Sandbox browser | Smart address parsing (URL vs search), configurable engine and home page, block dialog with proxy retry, quick links |
 | Suggestions | Public form with categories and optional name/build, per-browser storage, oversized color-coded admin updates |
 | Admin inbox | Session password gate, four stat cards, search, status/category filters, sorting, replies, copy, export, delete |

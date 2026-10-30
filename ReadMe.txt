@@ -646,7 +646,7 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
 
 ---
 
-## 1.3.1 BETA — "The AI Rehaul" (b17, published)
+## 1.3.1 BETA — "The AI Rehaul" (b18, published)
 
 ### What changed
 
@@ -661,19 +661,19 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
     a VERDICT. Concise mode still drops to verdict-only.
 *   **New commands.** `A vs B vs C` runs a battle royale ranking plus a focus-fire read; `tier list`,
     `top N` / "strongest", `random`, and `<series> roster`.
-*   **Four new personas replace two.** Normal, Spicy (18+ gated), Roast Pit and Conspiracy Corner replace
+*   **Four new personas replace two.** Normal, After Hours (18+ gated), Roast Pit and Conspiracy Corner replace
     Academic Assistant and Pretzel Chef. Each has its own intent set, its own refusal path and its own
     boundary rules rather than being a reskin.
 *   **Normal** has a hand-written recursive-descent arithmetic evaluator. No `eval`, no `Function`, only
     numbers, brackets and four operators. It answers `18 * 7 + 4 = 130` and refuses to invent facts.
-*   **Spicy** is behind `#agegate`: a dialog that states what the persona does, what it will not do, and
+*   **After Hours** is behind `#agegate`: a dialog that states what the persona does, what it will not do, and
     that the confirmation is a tone check stored as `pretzel.v13.agegate`, not authentication. Explicit
     requests are refused in character; "stop" or "not comfortable" drops the flirting.
 *   **Roast Pit** parses targets (`roast my friend Tyler` → Tyler), never touches protected
     characteristics, and has a "be nice" switch for when it lands badly.
 *   **Conspiracy Corner** extracts a subject from a question, builds a three-step case from fabricated
     evidence, escalates on `more`, and breaks character on `is this true`.
-*   **Labels.** `v1.3.1-beta`, `b17`, cache `pretzel-shell-v7`, asset query `?v=b17`.
+*   **Labels.** `v1.3.1-beta`, `b18`, cache `pretzel-shell-v8`, asset query `?v=b18`.
 
 ### Repairs found while building it
 
@@ -686,13 +686,19 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
     "THE THE MOON CONSPIRACY". Both were fixed, and a doubled regex escape that silently stopped the
     `my` → `your` substitution was repaired at byte level after a control-character scan.
 *   A saved default persona that no longer exists would have rendered a dead engine. The shell now falls
-    back to the debate matrix, and an unconfirmed Spicy default falls back to Normal instead of opening
+    back to the debate matrix, and an unconfirmed After Hours default falls back to Normal instead of opening
     the gate at launch.
 *   Settings → Reset all now re-arms the 18+ gate.
+*   Renamed the 18+ persona from "Spicy" to **After Hours** without changing its gate, its boundaries or
+    its stored key, so existing confirmations still hold.
+*   Added a build guard in `index.html`: on load, and on any click of a persona the engine does not know,
+    it compares the markup's persona count with `PretzelAI.modes`, then unregisters the worker, clears the
+    caches and reloads once per session. This is the repair for the "stuck on the anime bot" report, where
+    fresh buttons sat on a cached engine and every click did nothing.
 *   A returning visitor could run the new markup against the previous engine: the worker precached an
     unversioned `js/ai.js` while the CDN still served the old copy, and its cache-first match ignored the
-    `?v=` query, so `ai.js?v=b17` resolved to the cached b15 engine. Shell JS and CSS are now
-    network-first (fonts and images stay cache-first), the cache moved to `pretzel-shell-v7`, and the
+    `?v=` query, so `ai.js?v=b18` resolved to the cached b15 engine. Shell JS and CSS are now
+    network-first (fonts and images stay cache-first), the cache moved to `pretzel-shell-v8`, and the
     page reloads once on `controllerchange` so a mixed build cannot be left on screen. Found by checking
     the live site in a browser that had already visited it — a fresh profile looked perfect.
 
@@ -700,13 +706,13 @@ committed to `main` and published at https://krillekz.github.io/pretzels-unblock
 
 *   `npm run check` exits 0 for every shell, engine, worker and Electron file.
 *   Throwaway Electron harness (`tmp/`, git-ignored, deleted after the run): five persona buttons in the
-    right order; engine reports version 2.0 with 66 fighters; Spicy opens the gate and leaves the panel
+    right order; engine reports version 2.0 with 66 fighters; After Hours opens the gate and leaves the panel
     on debate with nothing stored; cancel keeps it locked; confirm unlocks, stores the flag and lands on
-    "Spicy · 18+"; the second visit skips the gate; a 1098-character matchup report carries the
+    "After Hours · 18+"; the second visit skips the gate; a 1098-character matchup report carries the
     headline, interactions, rounds, a numeric score and a verdict; the royale ranks Sukuna > Toji > Levi;
     the tier list reports 66 sheets; `18 * 7 + 4 = 130`; the president question gets the honest answer;
     "be explicit" is refused; `roast my friend tyler` targets Tyler; the conspiracy file is labelled
-    100% fabricated; Settings lists exactly the five new personas; cache is `pretzel-shell-v7`.
+    100% fabricated; Settings lists exactly the five new personas; cache is `pretzel-shell-v8`.
 *   Console clean apart from the pre-existing sandbox and CSP warnings Electron always prints in dev.
 
 ### Left open

@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex" />
 <title>Pretzel's Unblocked Games: RETURN — 1.3.1 BETA</title>
 <link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
-<link rel="stylesheet" href="css/shell.css?v=b17" />
+<link rel="stylesheet" href="css/shell.css?v=b18" />
 </head>
 <body data-route="library" data-panel="library" data-view="grid">
 
@@ -228,7 +228,7 @@
       <span>Jump to…</span>
       <kbd>Ctrl K</kbd>
     </button>
-    <span class="build-chip" id="build-chip" title="Running build">1.3.1 BETA · b17</span>
+    <span class="build-chip" id="build-chip" title="Running build">1.3.1 BETA · b18</span>
     <div class="leds" aria-label="Status">
       <span class="led" id="led-ai" data-state="ok"><i aria-hidden="true"></i>Engines</span>
       <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
@@ -502,7 +502,7 @@
           </button>
           <button class="mode" type="button" data-mode="spicy" aria-pressed="false">
             <span class="mode-index">03</span>
-            <span class="mode-copy"><strong>Spicy <em class="mode-flag">18+</em></strong><small>Flirty banter · age gated</small></span>
+            <span class="mode-copy"><strong>After Hours <em class="mode-flag">18+</em></strong><small>Adults only · age gated</small></span>
           </button>
           <button class="mode" type="button" data-mode="roast" aria-pressed="false">
             <span class="mode-index">04</span>
@@ -842,7 +842,7 @@
       <li><strong>Debate Matrix rebuilt</strong><span>64 curated sheets (up from 19), a 20-rule interaction matrix, round-by-round reads, win conditions for both sides, difficulty ratings and an auditable score breakdown.</span></li>
       <li><strong>New commands</strong><span>“A vs B vs C” ranks a battle royale, plus “tier list”, “top 10”, “random” and “Naruto roster”. Long-press nothing — it is all typed input.</span></li>
       <li><strong>Normal</strong><span>Plain conversation with no persona: questions, a real arithmetic evaluator, planning help, jokes, and an honest “I don't know” when it doesn't.</span></li>
-      <li><strong>Spicy · 18+</strong><span>Flirty banter and adult humour behind a one-time age gate. Suggestive at most, never explicit, and it stops the moment you ask it to.</span></li>
+      <li><strong>After Hours · 18+</strong><span>Flirty banter and adult humour behind a one-time age gate. Suggestive at most, never explicit, and it stops the moment you ask it to.</span></li>
       <li><strong>Roast Pit</strong><span>Playful roasting, comebacks and backhanded hype. It goes after what you do, never who you are, and backs off if it lands badly.</span></li>
       <li><strong>Conspiracy Corner</strong><span>Absurd theories with total confidence and zero evidence. Ask “is this true” and it breaks character immediately.</span></li>
       <li><strong>Two personas retired</strong><span>Academic Assistant and Pretzel Chef are gone, replaced by the four above. The settings tab now lists all five new personas.</span></li>
@@ -860,7 +860,7 @@
   <div class="sheet-head">
     <div>
       <p class="kicker">18+ gate</p>
-      <h2>Spicy mode is for adults</h2>
+      <h2>After Hours is for adults</h2>
     </div>
     <button class="icon-btn" type="button" id="agegate-close" aria-label="Close">
       <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
@@ -885,8 +885,91 @@
   <p class="cloak-title">Pretzel's Unblocked Games: RETURN</p>
 </div>
 
-<script src="js/settings.js?v=b17" defer></script>
-<script src="js/ai.js?v=b17" defer></script>
-<script src="js/app.js?v=b17" defer></script>
+<script src="js/settings.js?v=b18" defer></script>
+<script src="js/ai.js?v=b18" defer></script>
+<script src="js/app.js?v=b18" defer></script>
+<script>
+/* Build guard. If the markup and the engine disagree — fresh HTML in front of a
+   script the browser cached from the previous build — the persona buttons look
+   dead: they highlight nothing and the console stays on whatever it opened on.
+   Detect that once per session, drop the caches and reload instead of leaving
+   someone stranded on a mixed build. */
+(function () {
+  var KEY = "pretzel.build.guard";
+
+  function alreadyTried() {
+    try { return sessionStorage.getItem(KEY) === "1"; } catch (error) { return false; }
+  }
+
+  function markTried() {
+    try { sessionStorage.setItem(KEY, "1"); } catch (error) { /* storage blocked */ }
+  }
+
+  function hardReload() {
+    var jobs = [];
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+      jobs.push(
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          return Promise.all(registrations.map(function (registration) { return registration.unregister(); }));
+        })
+      );
+    }
+    if (window.caches && window.caches.keys) {
+      jobs.push(
+        window.caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (key) { return window.caches.delete(key); }));
+        })
+      );
+    }
+    Promise.all(jobs)
+      .catch(function () { /* nothing else to try */ })
+      .then(function () { window.location.reload(); });
+  }
+
+  function engineModes() {
+    var engine = window.PretzelAI;
+    return engine && Array.isArray(engine.modes) ? engine.modes : null;
+  }
+
+  function mismatched() {
+    var buttons = document.querySelectorAll(".mode").length;
+    var modes = engineModes();
+    if (!buttons) return false;
+    return !modes || modes.length !== buttons;
+  }
+
+  function recover() {
+    if (alreadyTried()) return;
+    markTried();
+    hardReload();
+  }
+
+  window.addEventListener("load", function () {
+    window.setTimeout(function () {
+      if (!mismatched()) {
+        try { sessionStorage.removeItem(KEY); } catch (error) { /* storage blocked */ }
+        return;
+      }
+      recover();
+    }, 700);
+  });
+
+  /* A persona button the engine has never heard of is the same symptom, so the
+     click itself can repair the page instead of doing nothing. */
+  document.addEventListener(
+    "click",
+    function (event) {
+      var button = event.target && event.target.closest ? event.target.closest(".mode") : null;
+      if (!button) return;
+      var modes = engineModes();
+      if (modes && modes.indexOf(button.dataset.mode) !== -1) return;
+      event.preventDefault();
+      event.stopPropagation();
+      recover();
+    },
+    true
+  );
+})();
+</script>
 </body>
 </html>

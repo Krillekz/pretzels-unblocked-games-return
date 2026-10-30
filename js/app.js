@@ -102,7 +102,7 @@
       placeholder: "What's on your mind?"
     },
     spicy: {
-      label: "Spicy · 18+",
+      label: "After Hours",
       noteTitle: "Adults only",
       noteCopy: "Flirty banter, compliments with teeth and adult humour. Suggestive at most — never explicit — and you can walk out any time.",
       greeting:
@@ -1960,7 +1960,7 @@
     if (!els.agegate) return;
     if (typeof els.agegate.showModal === "function") els.agegate.showModal();
     else els.agegate.open = true;
-    log("event", "Age gate opened for Spicy mode");
+    log("event", "Age gate opened for After Hours");
   }
 
   function closeAgeGate() {
@@ -2608,13 +2608,13 @@
         "The matchup report grew up: headline call, stat edge, ability interactions, round-by-round read, win conditions for both sides, difficulty rating and an auditable score breakdown.",
         "New debate commands — “A vs B vs C” ranks a battle royale, plus “tier list”, “top 10”, “random” and a series roster such as “Naruto roster”.",
         "Normal — plain conversation with no persona: questions, a real arithmetic evaluator, planning help, jokes, and an honest “I don't know” instead of invented facts.",
-        "Spicy · 18+ — flirty banter and adult humour behind a one-time age gate, with a hard stop on explicit content and an instant dial-down if you ask.",
+        "After Hours (18+) — flirty banter and adult humour behind a one-time age gate, with a hard stop on explicit content and an instant dial-down if you ask.",
         "Roast Pit — playful roasting, a comeback generator and backhanded hype. It targets what you do, never who you are, and backs off if it lands badly.",
         "Conspiracy Corner — absurd theories with total confidence and zero evidence, on any topic, with an “is this true” escape hatch that breaks character.",
         "Academic Assistant and Pretzel Chef are retired. The persona list and the Settings default now offer the five current engines only."
       ],
       fixes: [
-        "A saved default persona that no longer exists would have left the panel on a dead engine; the shell now falls back to the debate matrix, and an unconfirmed Spicy default falls back to Normal instead of opening the age gate at launch.",
+        "A saved default persona that no longer exists would have left the panel on a dead engine; the shell now falls back to the debate matrix, and an unconfirmed After Hours default falls back to Normal instead of opening the age gate at launch.",
         "Settings → Reset all re-arms the 18+ gate, so a shared machine cannot stay unlocked simply because it was confirmed once.",
         "The age gate is a tone check stored per browser, and the dialog says so — it is not authentication and does not pretend to be."
       ]

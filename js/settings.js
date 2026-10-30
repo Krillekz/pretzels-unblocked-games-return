@@ -276,11 +276,11 @@
           key: "aiMode",
           type: "select",
           label: "Default persona",
-          hint: "Which persona the panel opens on. Spicy still asks for the 18+ confirmation.",
+          hint: "Which persona the panel opens on. After Hours still asks for the 18+ confirmation.",
           options: [
             { value: "debate", label: "Anime Debate Matrix" },
             { value: "normal", label: "Normal" },
-            { value: "spicy", label: "Spicy (18+, age gated)" },
+            { value: "spicy", label: "After Hours (18+, age gated)" },
             { value: "roast", label: "Roast Pit" },
             { value: "conspiracy", label: "Conspiracy Corner" }
           ]
