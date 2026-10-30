@@ -5,8 +5,7 @@ const path = require("path");
 
 const EXPECTED = [
   { relative: "index.html", label: "Games shell", category: "Shell", required: true },
-  { relative: "css/theme.css", label: "Design tokens", category: "Shell", required: true },
-  { relative: "css/app.css", label: "Shell layout", category: "Shell", required: true },
+  { relative: "css/shell.css", label: "Shell design system", category: "Shell", required: true },
   { relative: "js/app.js", label: "Shell logic", category: "Shell", required: true },
   { relative: "js/ai.js", label: "Persona engines", category: "Engines", required: true },
   { relative: "js/settings.js", label: "Settings store", category: "Engines", required: true },
@@ -21,7 +20,7 @@ const EXPECTED = [
   { relative: "proxy/README.md", label: "Proxy guide", category: "Proxy", required: false },
   { relative: "tools/proxy-dev.js", label: "Local dev gateway", category: "Proxy", required: false },
   { relative: "README.md", label: "Repository README", category: "Docs", required: false },
-  { relative: "v1.1/index.html", label: "v1.1 test deck", category: "Preview", required: false },
+  { relative: "sw.js", label: "Offline cache worker", category: "Shell", required: false },
 ];
 
 async function inspectFile(root, entry) {
@@ -91,9 +90,6 @@ async function checkDeploymentAssets(root) {
 
   const brokenReferences = [];
   const referenceTargets = [{ page: "index.html", base: "" }];
-  if (items.find((item) => item.relative === "v1.1/index.html" && item.exists)) {
-    referenceTargets.push({ page: "v1.1/index.html", base: "v1.1" });
-  }
 
   for (const target of referenceTargets) {
     let html = "";

@@ -2,17 +2,16 @@
    Pretzel's Unblocked Games: RETURN — offline shell cache
    Caches the local shell, data and assets only. Game frames and any
    third-party request stay on the network and are never intercepted.
-   Bump CACHE when a cached runtime file changes.
+   Bump CACHE when a cached runtime file changes. v2 = the 1.2 BETA shell.
    ===================================================================== */
 
 "use strict";
 
-const CACHE = "pretzel-shell-v1";
+const CACHE = "pretzel-shell-v2";
 const SHELL = [
   "./",
   "./index.html",
-  "./css/theme.css",
-  "./css/app.css",
+  "./css/shell.css",
   "./js/app.js",
   "./js/settings.js",
   "./js/ai.js",

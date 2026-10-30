@@ -1,12 +1,12 @@
 /* =====================================================================
-   Pretzel's Unblocked Games: RETURN — settings store
-   Defaults, accent presets, search engines and the schema the Settings
-   panel renders. Values persist in localStorage and apply live.
+   Pretzel's Unblocked Games: RETURN — 1.2 BETA settings store
+   Own namespace so a cached v0.1 shell cannot overwrite these preferences.
+   Values persist in localStorage and are applied to the live DOM.
    ===================================================================== */
 (() => {
   "use strict";
 
-  const KEY = "pretzel.settings.v1";
+  const KEY = "pretzel.settings.v11";
 
   const ACCENTS = {
     amber: { label: "Neon amber", main: "#ffb020", bright: "#ffd37a", deep: "#c47c0d" },
@@ -28,12 +28,19 @@
     /* appearance */
     accent: "amber",
     density: "comfortable",
-    tileSize: 198,
+    tileSize: 190,
     glow: "full",
     motion: true,
-    showStageBar: true,
-    showLeds: true,
-    dockLabels: true,
+    showShelves: true,
+    showStatus: true,
+    navLabels: true,
+
+    /* interface */
+    view: "grid",
+    inspector: true,
+    toasts: true,
+    startRoute: "library",
+    confirmExit: false,
 
     /* library */
     sort: "title",
@@ -61,11 +68,6 @@
     proxyEndpoint: "",
     proxyHealth: "",
     proxyToken: "",
-
-    /* stealth + offline */
-    stealthHotkey: "CommandOrControl+Shift+H",
-    cloakHint: true,
-    offlineCache: true,
 
     /* diagnostics */
     logLevel: "all",
@@ -119,7 +121,7 @@
   }
 
   function hexToRgb(hex) {
-    const clean = hex.replace("#", "");
+    const clean = String(hex).replace("#", "");
     return {
       r: parseInt(clean.slice(0, 2), 16),
       g: parseInt(clean.slice(2, 4), 16),
@@ -139,26 +141,75 @@
     root.style.setProperty("--amber-soft", `rgba(${r}, ${g}, ${b}, 0.12)`);
     root.style.setProperty("--amber-line", `rgba(${r}, ${g}, ${b}, 0.34)`);
     root.style.setProperty("--amber-glow", `rgba(${r}, ${g}, ${b}, 0.4)`);
-    root.style.setProperty("--tile-min", `${Number(s.tileSize) || 198}px`);
+    root.style.setProperty("--tile-min", `${Number(s.tileSize) || 190}px`);
 
-    const body = document.body.classList;
-    body.toggle("density-compact", s.density === "compact");
-    body.toggle("density-roomy", s.density === "roomy");
-    body.toggle("glow-soft", s.glow === "soft");
-    body.toggle("glow-off", s.glow === "off");
-    body.toggle("no-motion", !s.motion);
-    body.toggle("hide-stage-bar", !s.showStageBar);
-    body.toggle("hide-leds", !s.showLeds);
-    body.toggle("dock-icons", !s.dockLabels);
-    body.toggle("hide-tags", !s.showTags);
-    body.toggle("log-no-time", !s.logTimestamps);
+    const body = document.body;
+    const classes = body.classList;
+    classes.toggle("density-compact", s.density === "compact");
+    classes.toggle("density-roomy", s.density === "roomy");
+    classes.toggle("glow-soft", s.glow === "soft");
+    classes.toggle("glow-off", s.glow === "off");
+    classes.toggle("no-motion", !s.motion);
+    classes.toggle("hide-shelves", !s.showShelves);
+    classes.toggle("hide-status", !s.showStatus);
+    classes.toggle("nav-icons", !s.navLabels);
+    classes.toggle("hide-tags", !s.showTags);
+    classes.toggle("log-no-time", !s.logTimestamps);
+    body.dataset.view = s.view === "list" ? "list" : "grid";
   }
 
   const SECTIONS = [
     {
+      id: "interface",
+      title: "Interface",
+      note: "The deck, the catalog and the inspector. These are new in the 1.2 shell.",
+      items: [
+        {
+          key: "view",
+          type: "select",
+          label: "Default view",
+          hint: "Grid scans art; list scans names and play counts.",
+          options: [
+            { value: "grid", label: "Card grid" },
+            { value: "list", label: "Compact list" }
+          ]
+        },
+        {
+          key: "sort",
+          type: "select",
+          label: "Catalog order",
+          hint: "Also available above the catalog.",
+          options: [
+            { value: "title", label: "Title (A–Z)" },
+            { value: "genre", label: "Genre, then title" },
+            { value: "platform", label: "Platform, then title" },
+            { value: "plays", label: "Most played" },
+            { value: "recent", label: "Recently played" }
+          ]
+        },
+        { key: "reverseSort", type: "toggle", label: "Reverse order", hint: "Flip whichever order is selected." },
+        { key: "showShelves", type: "toggle", label: "Continue & pinned shelves", hint: "The two rows above the catalog." },
+        { key: "inspector", type: "toggle", label: "Inspector on select", hint: "Open the detail panel when a card is clicked." },
+        { key: "toasts", type: "toggle", label: "Action toasts", hint: "Short confirmation pop-ups for pins, copies and launches." },
+        {
+          key: "startRoute",
+          type: "select",
+          label: "Opens on",
+          hint: "Where a fresh load lands when the URL has no route.",
+          options: [
+            { value: "library", label: "Library" },
+            { value: "ai", label: "AI Panel" },
+            { value: "browser", label: "Browser" },
+            { value: "last", label: "Last panel" }
+          ]
+        },
+        { key: "confirmExit", type: "toggle", label: "Confirm before closing a game", hint: "Asks once before the frame unloads." }
+      ]
+    },
+    {
       id: "appearance",
       title: "Appearance",
-      note: "Theme, density and motion. Accent swaps the neon, everything else keeps the cocoa base.",
+      note: "Theme, density and motion. Accent swaps the neon; the cocoa base stays.",
       items: [
         {
           key: "accent",
@@ -181,9 +232,9 @@
         {
           key: "tileSize",
           type: "range",
-          label: "Tile size",
-          hint: "Minimum card width in the library grid.",
-          min: 160,
+          label: "Card width",
+          hint: "Minimum width of a catalog card.",
+          min: 150,
           max: 280,
           step: 2,
           suffix: "px"
@@ -192,41 +243,28 @@
           key: "glow",
           type: "select",
           label: "Neon glow",
-          hint: "Full glow uses shadows on hover and active states.",
+          hint: "Full glow adds shadows to indicators and primary buttons.",
           options: [
             { value: "full", label: "Full" },
             { value: "soft", label: "Soft" },
             { value: "off", label: "Off" }
           ]
         },
-        { key: "motion", type: "toggle", label: "Animations", hint: "Panel transitions, hover lifts and bubble entry." },
-        { key: "showStageBar", type: "toggle", label: "Stage bar", hint: "The breadcrumb strip above the panels." },
-        { key: "showLeds", type: "toggle", label: "Status LEDs", hint: "Engines, proxy and catalog indicators." },
-        { key: "dockLabels", type: "toggle", label: "Dock labels", hint: "Turn off for an icon-only rail." }
+        { key: "motion", type: "toggle", label: "Animations", hint: "Panel transitions, hover lifts and toast entry." },
+        { key: "navLabels", type: "toggle", label: "Deck labels", hint: "Turn off for an icon-only command deck." },
+        { key: "showStatus", type: "toggle", label: "Status strip", hint: "Session, route and clock along the bottom." }
       ]
     },
     {
       id: "library",
-      title: "Library",
-      note: "How the catalog opens and sorts.",
+      title: "Library defaults",
+      note: "How the catalog opens and filters.",
       items: [
-        {
-          key: "sort",
-          type: "select",
-          label: "Sort order",
-          hint: "Applies to the grid immediately.",
-          options: [
-            { value: "title", label: "Title (A–Z)" },
-            { value: "genre", label: "Genre, then title" },
-            { value: "platform", label: "Platform, then title" }
-          ]
-        },
-        { key: "reverseSort", type: "toggle", label: "Reverse order", hint: "Flip whichever sort is selected." },
-        { key: "showTags", type: "toggle", label: "Tile tags", hint: "The genre and platform chips under each title." },
-        { key: "reopenLast", type: "toggle", label: "Reopen last game", hint: "Launch straight back into the game you played last." },
-        { key: "defaultGenre", type: "select", label: "Default genre", hint: "Filter preselected on launch.", dynamic: "genres" },
-        { key: "defaultPlatform", type: "select", label: "Default platform", hint: "Filter preselected on launch.", dynamic: "platforms" },
-        { key: "proxyOnly", type: "toggle", label: "Proxy-only by default", hint: "Start with the needs-proxy filter engaged." }
+        { key: "reopenLast", type: "toggle", label: "Reopen last game", hint: "Launch straight back into the last title on load." },
+        { key: "defaultGenre", type: "select", label: "Default genre", hint: "Preselected filter on launch.", dynamic: "genres" },
+        { key: "defaultPlatform", type: "select", label: "Default platform", hint: "Preselected filter on launch.", dynamic: "platforms" },
+        { key: "proxyOnly", type: "toggle", label: "Proxy-only by default", hint: "Start with the needs-proxy filter engaged." },
+        { key: "showTags", type: "toggle", label: "Tags on cards", hint: "Genre and platform under each title." }
       ]
     },
     {
@@ -271,7 +309,7 @@
           key: "searchEngine",
           type: "select",
           label: "Search engine",
-          hint: "Used when the address bar input is not a URL.",
+          hint: "Used when the address input is not a URL.",
           options: [
             ...Object.entries(ENGINES).map(([value, engine]) => ({ value, label: engine.label })),
             { value: "custom", label: "Custom endpoint" }
@@ -281,10 +319,10 @@
           key: "customSearch",
           type: "text",
           label: "Custom search URL",
-          hint: "Used when “Custom endpoint” is selected. Query is appended.",
+          hint: "Used when “Custom endpoint” is selected. The query is appended.",
           placeholder: "https://example.com/search?q="
         },
-        { key: "homeUrl", type: "text", label: "Home destination", hint: "Loaded by the Home button in the browser panel.", placeholder: "https://…" },
+        { key: "homeUrl", type: "text", label: "Home destination", hint: "Loaded by the Home button.", placeholder: "https://…" },
         { key: "watchdogMs", type: "range", label: "Block watchdog", hint: "How long to wait for a frame load before suggesting a block.", min: 3000, max: 20000, step: 500, suffix: "ms" }
       ]
     },
@@ -299,25 +337,9 @@
       ]
     },
     {
-      id: "stealth",
-      title: "Stealth & offline",
-      note: "Cloak the whole workspace, rebind the panic key, and keep the shell usable without a network.",
-      items: [
-        {
-          key: "stealthHotkey",
-          type: "text",
-          label: "Panic hotkey",
-          hint: "Electron global shortcut. In a browser only the Ctrl+Shift+H fallback works.",
-          placeholder: "CommandOrControl+Shift+H"
-        },
-        { key: "cloakHint", type: "toggle", label: "Show cloak hint", hint: "The small return-key hint in the corner of the blank document." },
-        { key: "offlineCache", type: "toggle", label: "Offline shell cache", hint: "Cache the local shell, catalog and AI engine for network-free launches. Game frames stay online." }
-      ]
-    },
-    {
       id: "diagnostics",
       title: "Diagnostics",
-      note: "What the log keeps and how much it keeps.",
+      note: "What the log keeps and how much of it.",
       items: [
         {
           key: "logLevel",

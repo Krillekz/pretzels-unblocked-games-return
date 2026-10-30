@@ -4,40 +4,17 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="dark" />
-<title>Pretzel's Unblocked Games: RETURN</title>
+<meta name="robots" content="noindex" />
+<title>Pretzel's Unblocked Games: RETURN — 1.2 BETA</title>
 <link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
-<link rel="stylesheet" href="css/theme.css?v=5" />
-<link rel="stylesheet" href="css/app.css?v=5" />
+<link rel="stylesheet" href="css/shell.css?v=b13" />
 </head>
-<body data-panel="library">
+<body data-route="library" data-panel="library" data-view="grid">
 
-<div class="test-bar" role="status">
-  <strong>Test Phase</strong>
-  <span>v0.1.0-alpha — unfinished preview. Games, proxy routing and the AI personas are still in progress, so expect rough edges and report them rather than judging the finished product.</span>
-</div>
-
-<div class="cloak" id="cloak" hidden tabindex="-1">
-  <div class="cloak-toolbar">
-    <span>Document1 - Word</span>
-    <span>Saved to this PC</span>
-  </div>
-  <div class="cloak-page">
-    <p class="cloak-kicker">Operations / planning</p>
-    <h1>Weekly planning notes</h1>
-    <p class="cloak-meta">Draft · last edited 9:41 AM</p>
-    <p>Keep the launch checklist short enough that the handoff does not need a second meeting. The open items below are the only ones that block Friday.</p>
-    <h2>Open items</h2>
-    <ul>
-      <li>Confirm the staging review time and send the calendar note.</li>
-      <li>Close the two outstanding copy edits in the handoff section.</li>
-      <li>Re-check the asset list after the final export.</li>
-      <li>Archive last week's notes once the summary is approved.</li>
-    </ul>
-    <h2>Next check-in</h2>
-    <p>Friday, 3:00 PM — same room. Bring the updated checklist and the final asset count.</p>
-    <p class="cloak-signoff">— prepared for the weekly review</p>
-  </div>
-  <div class="cloak-hint" id="cloak-hint">Return to workspace: <kbd id="cloak-hint-key">Ctrl+Shift+H</kbd></div>
+<div class="ribbon" role="status">
+  <span class="ribbon-pill">1.2 BETA</span>
+  <span class="ribbon-copy">Test Phase build — unfinished preview. Report what breaks instead of scoring it as a release.</span>
+  <button class="ribbon-link" type="button" id="whatsnew-open">What's new</button>
 </div>
 
 <svg class="sprite" aria-hidden="true" focusable="false">
@@ -48,7 +25,7 @@
       <stop offset="1" stop-color="#c47c0d" />
     </linearGradient>
     <filter id="crest-glow" x="-45%" y="-45%" width="190%" height="190%">
-      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feGaussianBlur stdDeviation="1.4" result="blur" />
       <feMerge>
         <feMergeNode in="blur" />
         <feMergeNode in="SourceGraphic" />
@@ -58,14 +35,11 @@
 
   <symbol id="crest" viewBox="0 0 64 64">
     <g transform="translate(0 -3.5)" fill="none" stroke="url(#crest-stroke)" stroke-linecap="round" stroke-linejoin="round">
-      <!-- knot body: two upper loops, centre fold, closed base -->
       <path d="M32 50.5C24.5 50.5 17.4 47 14.4 39.4 11.4 31.8 16 22.4 24 21.4c4.5-.6 7 3 8 7.6 1-4.6 3.5-8.2 8-7.6 8 1 12.6 10.4 9.6 18-3 7.6-10.1 11.1-17.6 11.1Z"
-            stroke-width="3.4" filter="url(#crest-glow)" />
-      <!-- twisted ends -->
+        stroke-width="3.4" filter="url(#crest-glow)" />
       <path d="M25.4 48.2c-3.6 3.2-6.2 5.5-8.9 7.2" stroke-width="3" />
       <path d="M38.6 48.2c3.6 3.2 6.2 5.5 8.9 7.2" stroke-width="3" />
     </g>
-    <!-- controller medallion sitting in the knot -->
     <g transform="translate(0 -3.5)">
       <rect x="24.4" y="39.6" width="15.2" height="8.8" rx="4.4" fill="#100c09" stroke="#f0455c" stroke-width="1.5" />
       <circle cx="28.6" cy="44" r="1.1" fill="#f0455c" />
@@ -97,9 +71,16 @@
     </g>
   </symbol>
 
-  <symbol id="i-diagnostics" viewBox="0 0 24 24">
+  <symbol id="i-logs" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <path d="M2.8 12h3.9l2.4-6.4 3.9 12.8 2.4-6.4h5.8" />
+    </g>
+  </symbol>
+
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.1" />
+      <path d="M19.4 13.6a7.6 7.6 0 0 0 0-3.2l2-1.5-2-3.5-2.4 1a7.6 7.6 0 0 0-2.8-1.6L13.8 2h-3.6l-.4 2.8A7.6 7.6 0 0 0 7 6.4l-2.4-1-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3.2l-2 1.5 2 3.5 2.4-1a7.6 7.6 0 0 0 2.8 1.6l.4 2.8h3.6l.4-2.8a7.6 7.6 0 0 0 2.8-1.6l2.4 1 2-3.5-2-1.5Z" />
     </g>
   </symbol>
 
@@ -107,6 +88,12 @@
     <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
       <circle cx="10.8" cy="10.8" r="6.6" />
       <path d="m15.8 15.8 4.4 4.4" />
+    </g>
+  </symbol>
+
+  <symbol id="i-close" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="m6 6 12 12M18 6 6 18" />
     </g>
   </symbol>
 
@@ -123,9 +110,47 @@
     </g>
   </symbol>
 
-  <symbol id="i-close" viewBox="0 0 24 24">
+  <symbol id="i-star" viewBox="0 0 24 24">
+    <path d="m12 3.4 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.8l6-.9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="i-grid" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="3.5" y="3.5" width="7" height="7" rx="1.4" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="1.4" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="1.4" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="1.4" />
+    </g>
+  </symbol>
+
+  <symbol id="i-list" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-      <path d="m6 6 12 12M18 6 6 18" />
+      <path d="M4 6.5h16M4 12h16M4 17.5h16" />
+    </g>
+  </symbol>
+
+  <symbol id="i-dice" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7">
+      <rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4" />
+      <circle cx="8.4" cy="8.4" r="1.3" fill="currentColor" />
+      <circle cx="15.6" cy="8.4" r="1.3" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.3" fill="currentColor" />
+      <circle cx="8.4" cy="15.6" r="1.3" fill="currentColor" />
+      <circle cx="15.6" cy="15.6" r="1.3" fill="currentColor" />
+    </g>
+  </symbol>
+
+  <symbol id="i-copy" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="8.6" y="8.6" width="11.8" height="11.8" rx="2.4" />
+      <path d="M15.4 5.4a2.4 2.4 0 0 0-2.4-2.4H6a2.4 2.4 0 0 0-2.4 2.4v7a2.4 2.4 0 0 0 2.4 2.4" />
+    </g>
+  </symbol>
+
+  <symbol id="i-external" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4h6v6M20 4l-8.5 8.5" />
+      <path d="M18 14.5V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V7.5A1.5 1.5 0 0 1 5 6h4.5" />
     </g>
   </symbol>
 
@@ -135,172 +160,353 @@
     </g>
   </symbol>
 
-  <symbol id="i-settings" viewBox="0 0 24 24">
+  <symbol id="i-play" viewBox="0 0 24 24">
+    <path d="M8 4.6 19.2 12 8 19.4Z" fill="currentColor" />
+  </symbol>
+
+  <symbol id="i-bulb" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3.1" />
-      <path d="M19.4 13.6a7.6 7.6 0 0 0 0-3.2l2-1.5-2-3.5-2.4 1a7.6 7.6 0 0 0-2.8-1.6L13.8 2h-3.6l-.4 2.8A7.6 7.6 0 0 0 7 6.4l-2.4-1-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3.2l-2 1.5 2 3.5 2.4-1a7.6 7.6 0 0 0 2.8 1.6l.4 2.8h3.6l.4-2.8a7.6 7.6 0 0 0 2.8-1.6l2.4 1 2-3.5-2-1.5Z" />
+      <path d="M9.2 17.4h5.6M10.2 20.4h3.6" />
+      <path d="M12 3.2a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9v1.4h5v-1.4c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3.2Z" />
     </g>
   </symbol>
 
-  <symbol id="i-cloak" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 3h7l5 5v13H6z" />
-      <path d="M13 3v5h5M9 12h6M9 16h6" />
+  <symbol id="i-lock" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+      <rect x="4.6" y="10.2" width="14.8" height="10.2" rx="2.4" />
+      <path d="M8.2 10.2V7.6a3.8 3.8 0 0 1 7.6 0v2.6" />
     </g>
   </symbol>
 </svg>
 
-<div class="app">
-  <aside class="dock" aria-label="Primary">
-    <button class="brand" data-nav="library" aria-label="Pretzel's Unblocked Games, go to library">
-      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
-      <span class="brand-text">
-        <strong>PRETZEL'S</strong>
-        <small>UNBLOCKED GAMES</small>
-      </span>
+<header class="deck">
+  <button class="brand" type="button" data-route="library" aria-label="Pretzel's Unblocked Games — library">
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+    <span class="brand-text">
+      <strong>PRETZEL'S</strong>
+      <small>Unblocked Games</small>
+    </span>
+    <span class="brand-tag">RETURN</span>
+  </button>
+
+  <nav class="deck-nav" aria-label="Primary">
+    <button class="nav-btn is-active" type="button" data-route="library" aria-label="Library" title="Library (1)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library" /></svg>
+      <span>Library</span>
+      <kbd>1</kbd>
     </button>
+    <button class="nav-btn" type="button" data-route="ai" aria-label="AI Panel" title="AI Panel (2)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ai" /></svg>
+      <span>AI Panel</span>
+      <kbd>2</kbd>
+    </button>
+    <button class="nav-btn" type="button" data-route="browser" aria-label="Browser" title="Browser (3)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
+      <span>Browser</span>
+      <kbd>3</kbd>
+    </button>
+    <button class="nav-btn" type="button" data-route="logs" aria-label="Diagnostics" title="Diagnostics (4)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logs" /></svg>
+      <span>Diagnostics</span>
+      <kbd>4</kbd>
+    </button>
+    <button class="nav-btn" type="button" data-route="settings" aria-label="Settings" title="Settings (5)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings" /></svg>
+      <span>Settings</span>
+      <kbd>5</kbd>
+    </button>
+    <button class="nav-btn" type="button" data-route="suggest" aria-label="Suggestions" title="Suggestions (6)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bulb" /></svg>
+      <span>Suggestions</span>
+      <kbd>6</kbd>
+    </button>
+  </nav>
 
-    <div class="dock-group">
-      <p class="dock-label">Workspace</p>
-      <nav class="dock-nav">
-        <button class="dock-btn is-active" data-nav="library" aria-current="page">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library" /></svg>
-          <span>Library</span>
-        </button>
-        <button class="dock-btn" data-nav="ai">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ai" /></svg>
-          <span>AI Panel</span>
-        </button>
-        <button class="dock-btn" data-nav="browser">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
-          <span>Browser</span>
-        </button>
-        <button class="dock-btn" data-nav="diagnostics">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-diagnostics" /></svg>
-          <span>Diagnostics</span>
-        </button>
-        <button class="dock-btn" data-nav="settings">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings" /></svg>
-          <span>Settings</span>
-        </button>
-      </nav>
+  <div class="deck-tools">
+    <button class="palette-btn" type="button" id="palette-open" aria-label="Open command palette" title="Command palette (Ctrl+K)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+      <span>Jump to…</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <span class="build-chip" id="build-chip" title="Running build">1.2 BETA · b13</span>
+    <div class="leds" aria-label="Status">
+      <span class="led" id="led-ai" data-state="ok"><i aria-hidden="true"></i>Engines</span>
+      <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
+      <span class="led" id="led-games" data-state="ok"><i aria-hidden="true"></i><b id="led-games-count">0</b> games</span>
     </div>
+    <button class="icon-btn menu-btn" type="button" id="menu-open" aria-label="Open navigation" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid" /></svg>
+    </button>
+  </div>
+</header>
 
-    <div class="dock-foot">
-      <span class="dock-build">v0.1.0-alpha</span>
-      <span class="dock-status" id="dock-status">LIBRARY</span>
-    </div>
-  </aside>
+<div class="subbar">
+  <p class="crumbs"><span>Workspace</span><i>/</i><strong id="crumb">Library</strong></p>
+  <div class="subbar-tools">
+    <button class="ghost-btn" type="button" id="random-game" aria-label="Roll a random game" title="Roll a random game">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice" /></svg>
+      <span>Roll a game</span>
+    </button>
+    <span class="subbar-hint" id="subbar-hint">Click a card to inspect · double-click to play</span>
+  </div>
+</div>
 
-  <main class="stage">
-    <header class="stage-bar">
-      <div class="stage-crumb">
-        <span class="crumb-root">Workspace</span>
-        <span class="crumb-sep">/</span>
-        <span id="stage-crumb">Library</span>
+<main class="workspace">
+
+  <!-- ==================== LIBRARY ==================== -->
+  <section class="panel is-active panel-library" id="panel-library" data-panel="library" aria-label="Game library">
+
+    <aside class="rail" id="rail" aria-label="Filters">
+      <div class="rail-head">
+        <span class="rail-title">Filters</span>
+        <button class="linkish" type="button" id="rail-clear">Reset</button>
       </div>
-      <div class="stage-meta">
-        <button class="cloak-btn" id="cloak-toggle" type="button" aria-pressed="false" title="Blank document (Ctrl+Shift+H)">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cloak" /></svg>
-          <span>Cloak</span>
+
+      <div class="rail-group" data-group="genre">
+        <p class="rail-label">Genre</p>
+        <div class="rail-list" id="rail-genre" role="group" aria-label="Filter by genre"></div>
+      </div>
+
+      <div class="rail-group" data-group="platform">
+        <p class="rail-label">Platform</p>
+        <div class="rail-list" id="rail-platform" role="group" aria-label="Filter by platform"></div>
+      </div>
+
+      <div class="rail-group" data-group="access">
+        <p class="rail-label">Access</p>
+        <button class="rail-toggle" type="button" id="filter-proxy" aria-pressed="false">
+          <span class="switch-dot" aria-hidden="true"></span>
+          Proxy only
         </button>
-        <span class="build-tag" id="build-tag" title="Running build">v0.1.0-alpha · b0</span>
-        <div class="stage-leds">
-          <span class="led" data-state="ok"><i aria-hidden="true"></i>Engines</span>
-          <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
-          <span class="led" id="led-games" data-state="ok"><i aria-hidden="true"></i><b id="led-games-count">0</b> games</span>
-        </div>
+        <p class="rail-note">Gateway not configured in this build. Flagged titles show their block card instead of loading.</p>
       </div>
-    </header>
 
-    <div class="stage-body">
+      <div class="rail-foot">
+        <p class="rail-label">Keyboard</p>
+        <dl class="keylist">
+          <div><dt>Ctrl K</dt><dd>Command palette</dd></div>
+          <div><dt>/</dt><dd>Search</dd></div>
+          <div><dt>G / L</dt><dd>Grid / list</dd></div>
+          <div><dt>F</dt><dd>Focus player</dd></div>
+          <div><dt>Esc</dt><dd>Back out</dd></div>
+        </dl>
+      </div>
+    </aside>
 
-      <!-- ============ GAME LIBRARY ============ -->
-      <section class="panel is-active" id="panel-library" data-panel="library" aria-labelledby="library-title">
-        <header class="panel-head">
-          <div class="panel-title">
-            <p class="eyebrow">Foundational shell</p>
-            <h1 id="library-title">Game Library</h1>
-            <p class="panel-sub">Frame-verified games that open right here. No installs, no accounts, no telemetry.</p>
+    <div class="lib-main" id="lib-main">
+      <section class="hero" id="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="kicker">01 — Tonight's pick</p>
+          <div class="hero-head">
+            <span class="hero-glyph" id="hero-glyph" aria-hidden="true">PF</span>
+            <div>
+              <h1 id="hero-title">Loading catalog…</h1>
+              <p class="hero-sub" id="hero-sub">Reading data/library.json.</p>
+            </div>
           </div>
-          <div class="head-tools">
-            <label class="search">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
-              <input id="lib-search" type="search" placeholder="Search titles…" autocomplete="off" aria-label="Search games" />
-            </label>
+          <div class="hero-tags" id="hero-tags"></div>
+          <div class="hero-actions">
+            <button class="btn primary" type="button" id="hero-play">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play" /></svg>
+              Play now
+            </button>
+            <button class="btn ghost" type="button" id="hero-details">Inspect</button>
+            <button class="btn ghost" type="button" id="hero-pin">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star" /></svg>
+              Pin
+            </button>
           </div>
-        </header>
-
-        <div class="toolbar" id="lib-filters">
-          <div class="chip-group" data-filter-group="genre" aria-label="Filter by genre"></div>
-          <span class="toolbar-sep" aria-hidden="true"></span>
-          <div class="chip-group" data-filter-group="platform" aria-label="Filter by platform"></div>
-          <button class="chip chip-toggle" id="filter-proxy" aria-pressed="false">Needs proxy</button>
-          <span class="result-count" id="lib-count"></span>
         </div>
 
-        <div class="view-grid" id="lib-grid" tabindex="0" role="region" aria-label="Game library"></div>
-
-        <div class="view-player is-hidden" id="lib-player">
-          <div class="frame-bar">
-            <div class="frame-id">
-              <span class="frame-title-row">
-                <strong id="frame-title">&mdash;</strong>
-                <span class="frame-badge is-hidden" id="frame-badge">Proxied</span>
-              </span>
-              <span id="frame-url" class="frame-url"></span>
-            </div>
-            <div class="frame-actions">
-              <button class="btn ghost" id="frame-refresh">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh" /></svg>
-                <span class="btn-label">Refresh</span>
-              </button>
-              <button class="btn ghost" id="frame-fullscreen">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expand" /></svg>
-                <span class="btn-label">Fullscreen</span>
-              </button>
-              <button class="btn danger" id="frame-close">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
-                <span class="btn-label">Close</span>
-              </button>
-            </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span>Pinned</span>
+            <strong id="stat-pins">0</strong>
+            <small>titles saved here</small>
           </div>
-          <div class="frame-wrap" id="frame-wrap">
-            <iframe id="game-frame" title="Game viewport" allow="fullscreen; autoplay; gamepad" referrerpolicy="no-referrer"></iframe>
-
-            <div class="block-panel is-hidden" id="frame-notice">
-              <div class="block-icon" aria-hidden="true">&#9888;</div>
-              <h2>Proxy required for this entry</h2>
-              <p class="block-copy" id="frame-notice-copy">This game is flagged <code>needsProxy</code>, but no proxy gateway is configured.</p>
-              <div class="block-actions">
-                <button class="btn ghost" id="frame-direct">Load direct anyway</button>
-              </div>
-            </div>
+          <div class="stat">
+            <span>Launches</span>
+            <strong id="stat-plays">0</strong>
+            <small>tracked on this device</small>
+          </div>
+          <div class="stat">
+            <span>Catalog</span>
+            <strong id="stat-catalog">0</strong>
+            <small>web games indexed</small>
           </div>
         </div>
       </section>
 
-      <!-- ============ AI PANEL ============ -->
-      <section class="panel" id="panel-ai" data-panel="ai" data-mode="debate" aria-labelledby="ai-title">
-        <header class="panel-head">
-          <div class="panel-title">
-            <p class="eyebrow">Local personas</p>
-            <h1 id="ai-title">AI Panel</h1>
-            <p class="panel-sub">Debate, study and snack logic — rule-based, offline, no keys.</p>
+      <section class="shelf" id="shelf-continue" hidden aria-labelledby="continue-title">
+        <header class="shelf-head">
+          <div>
+            <p class="kicker">02 — Continue</p>
+            <h2 id="continue-title">Pick up where you left off</h2>
           </div>
-          <div class="head-tools">
-            <button class="btn ghost" id="ai-clear">Clear history</button>
-            <button class="btn icon tray-close" data-tray-close aria-label="Close tray">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
-            </button>
+          <span class="shelf-meta" id="continue-meta"></span>
+        </header>
+        <div class="shelf-row" id="continue-row"></div>
+      </section>
+
+      <section class="shelf" id="shelf-pinned" hidden aria-labelledby="pinned-title">
+        <header class="shelf-head">
+          <div>
+            <p class="kicker">03 — Pinned</p>
+            <h2 id="pinned-title">Your shortlist</h2>
+          </div>
+          <span class="shelf-meta" id="pinned-meta"></span>
+        </header>
+        <div class="shelf-row" id="pinned-row"></div>
+      </section>
+
+      <section class="catalog" aria-labelledby="catalog-title">
+        <header class="catalog-head">
+          <div>
+            <p class="kicker">04 — Catalog</p>
+            <h2 id="catalog-title">All games <span class="count" id="lib-count">0</span></h2>
+          </div>
+          <div class="catalog-tools">
+            <label class="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+              <input id="lib-search" type="search" placeholder="Search titles and tags" autocomplete="off" aria-label="Search games" />
+            </label>
+            <select class="select" id="sort-select" aria-label="Sort catalog">
+              <option value="title">Title A–Z</option>
+              <option value="genre">Genre</option>
+              <option value="platform">Platform</option>
+              <option value="plays">Most played</option>
+              <option value="recent">Recently played</option>
+            </select>
+            <div class="seg" role="group" aria-label="View mode">
+              <button class="seg-btn is-on" type="button" id="view-grid" aria-pressed="true" title="Grid view (G)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid" /></svg>
+              </button>
+              <button class="seg-btn" type="button" id="view-list" aria-pressed="false" title="List view (L)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-list" /></svg>
+              </button>
+            </div>
           </div>
         </header>
 
-        <div class="mode-strip" role="group" aria-label="Assistant mode">
-          <button class="mode is-active" data-mode="debate" aria-pressed="true">Anime Debate Matrix</button>
-          <button class="mode" data-mode="academic" aria-pressed="false">Academic Assistant</button>
-          <button class="mode" data-mode="chef" aria-pressed="false">Pretzel Chef</button>
+        <div class="cards" id="lib-grid" tabindex="0" role="region" aria-label="Game catalog"></div>
+      </section>
+    </div>
+
+    <aside class="inspector" id="inspector" aria-label="Game inspector">
+      <header class="inspector-head">
+        <span class="kicker">Inspector</span>
+        <button class="icon-btn" type="button" id="inspector-close" aria-label="Close inspector">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+        </button>
+      </header>
+      <div class="inspector-body" id="inspector-body"></div>
+    </aside>
+
+    <section class="player" id="player" hidden aria-label="Game player">
+      <div class="player-bar">
+        <button class="icon-btn" type="button" id="frame-close" aria-label="Close game">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+        </button>
+        <div class="player-id">
+          <span class="frame-title-row">
+            <strong id="frame-title">&mdash;</strong>
+            <span class="frame-badge is-hidden" id="frame-badge">Proxied</span>
+          </span>
+          <span class="frame-url" id="frame-url"></span>
         </div>
+        <span class="player-clock" id="player-time">00:00</span>
+        <div class="player-actions">
+          <button class="ghost-btn" type="button" id="frame-refresh">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh" /></svg>
+            <span>Reload</span>
+          </button>
+          <button class="ghost-btn" type="button" id="frame-focus">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-expand" /></svg>
+            <span>Focus</span>
+          </button>
+          <button class="ghost-btn is-danger" type="button" id="frame-exit">Exit</button>
+        </div>
+      </div>
+
+      <div class="player-grid">
+        <div class="frame-wrap" id="frame-wrap">
+          <iframe id="game-frame" title="Game viewport" allow="fullscreen; autoplay; gamepad" referrerpolicy="no-referrer"></iframe>
+
+          <div class="block-panel is-hidden" id="frame-notice">
+            <div class="block-icon" aria-hidden="true">&#9888;</div>
+            <h2>Proxy required for this entry</h2>
+            <p class="block-copy" id="frame-notice-copy">This game is flagged <code>needsProxy</code>, but no gateway is configured.</p>
+            <div class="block-actions">
+              <button class="btn ghost" type="button" id="frame-direct">Load direct anyway</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="player-side" aria-label="Game details">
+          <p class="kicker">Now playing</p>
+          <h2 id="player-side-title">—</h2>
+          <div class="player-side-tags" id="player-side-tags"></div>
+          <dl class="factlist" id="player-facts"></dl>
+          <div class="player-side-actions">
+            <button class="btn primary" type="button" id="player-pin">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star" /></svg>
+              <span>Pin game</span>
+            </button>
+            <button class="btn ghost" type="button" id="player-copy">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-copy" /></svg>
+              <span>Copy link</span>
+            </button>
+            <button class="btn ghost" type="button" id="player-external">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-external" /></svg>
+              <span>Open in tab</span>
+            </button>
+          </div>
+          <div class="player-side-more">
+            <p class="kicker">Up next</p>
+            <div id="player-next" class="next-list"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </section>
+
+  <!-- ==================== AI ==================== -->
+  <section class="panel panel-ai" id="panel-ai" data-panel="ai" data-mode="debate" aria-label="AI panel">
+    <div class="ai-layout">
+      <aside class="ai-side">
+        <p class="kicker">Local personas</p>
+        <h1>AI Panel</h1>
+        <p class="panel-sub">Three offline engines. No keys, no network, no accounts.</p>
+
+        <div class="mode-list" role="group" aria-label="Assistant mode">
+          <button class="mode is-active" type="button" data-mode="debate" aria-pressed="true">
+            <span class="mode-index">01</span>
+            <span class="mode-copy"><strong>Anime Debate Matrix</strong><small>Matchups, stat sheets, tier calls</small></span>
+          </button>
+          <button class="mode" type="button" data-mode="academic" aria-pressed="false">
+            <span class="mode-index">02</span>
+            <span class="mode-copy"><strong>Academic Assistant</strong><small>Outlines, study plans, note passes</small></span>
+          </button>
+          <button class="mode" type="button" data-mode="chef" aria-pressed="false">
+            <span class="mode-index">03</span>
+            <span class="mode-copy"><strong>Pretzel Chef</strong><small>Snacks, resets and puns</small></span>
+          </button>
+        </div>
+
+        <div class="ai-note">
+          <p id="ai-note-title">Every character works</p>
+          <p id="ai-note-copy">19 curated sheets, and any other name gets a scout estimate marked as such. Try “Baki vs Ohma” or “Gojo against Makima”.</p>
+        </div>
+      </aside>
+
+      <div class="ai-main">
+        <header class="ai-head">
+          <div>
+            <p class="kicker" id="ai-mode-label">Anime Debate Matrix</p>
+            <h2>Console</h2>
+          </div>
+          <button class="ghost-btn" type="button" id="ai-clear">Clear history</button>
+        </header>
 
         <div class="chat" id="chat-log" aria-live="polite"></div>
 
@@ -310,118 +516,333 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-send" /></svg>
           </button>
         </form>
-        <p class="footnote">Local engines &middot; no network calls &middot; history stored per mode</p>
-      </section>
-
-      <!-- ============ SANDBOX BROWSER ============ -->
-      <section class="panel" id="panel-browser" data-panel="browser" aria-labelledby="browser-title">
-        <header class="panel-head">
-          <div class="panel-title">
-            <p class="eyebrow">Isolated frame</p>
-            <h1 id="browser-title">Sandbox Browser</h1>
-            <p class="panel-sub">Load anything that allows framing. Blocked sites can retry through your own gateway.</p>
-          </div>
-          <div class="head-tools">
-            <button class="btn ghost" id="browser-home">Home</button>
-            <button class="btn ghost" id="browser-clear">Unload frame</button>
-          </div>
-        </header>
-
-        <form class="addrbar" id="addr-form">
-          <svg class="addr-globe" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
-          <input id="addr-input" type="text" spellcheck="false" autocomplete="off"
-                 placeholder="Enter a URL or search…" aria-label="Address or search" />
-          <button class="btn primary" type="submit">Open</button>
-        </form>
-        <p class="addr-hint" id="addr-hint"><span id="addr-hint-text">Bare domains get https:// &middot; anything else becomes a search.</span>
-          <button type="button" class="linkish" id="block-manual">Site won't embed?</button>
-        </p>
-
-        <div class="browser-stage">
-          <div class="browser-empty" id="browser-empty">
-            <svg class="watermark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
-            <div class="empty-inner">
-              <h2>No destination loaded</h2>
-              <p>Enter an address above. If a site refuses framing, retry it through your proxy gateway or open it externally.</p>
-            </div>
-          </div>
-
-          <iframe id="browser-frame" class="is-hidden" title="Sandboxed browser frame"
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
-                  referrerpolicy="no-referrer"></iframe>
-
-          <div class="block-panel is-hidden" id="block-panel">
-            <div class="block-icon" aria-hidden="true">&#9888;</div>
-            <h2>This site won't load in a frame</h2>
-            <p class="block-host" id="block-host">&mdash;</p>
-            <p class="block-copy">The site sends an <code>X-Frame-Options</code> or CSP <code>frame-ancestors</code> header that blocks embedding. Nothing is wrong with your connection.</p>
-            <div class="block-actions">
-              <button class="btn primary" id="block-proxy">Retry through proxy</button>
-              <button class="btn ghost" id="block-external">Open externally</button>
-            </div>
-            <p class="block-note" id="block-note"></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ DIAGNOSTICS ============ -->
-      <section class="panel" id="panel-diagnostics" data-panel="diagnostics" aria-labelledby="diag-title">
-        <header class="panel-head">
-          <div class="panel-title">
-            <p class="eyebrow">Lifecycle &amp; frame telemetry</p>
-            <h1 id="diag-title">System Diagnostics</h1>
-            <p class="panel-sub">What the shell is doing right now, in order.</p>
-          </div>
-          <div class="head-tools">
-            <button class="btn ghost" id="diag-proxy-test">Test proxy</button>
-            <button class="btn ghost" id="diag-clear">Clear log</button>
-            <button class="btn icon tray-close" data-tray-close aria-label="Close tray">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
-            </button>
-          </div>
-        </header>
-
-        <div class="diag-grid">
-          <div class="diag-card"><span>Session</span><strong id="diag-session">&mdash;</strong></div>
-          <div class="diag-card"><span>Breakpoint</span><strong id="diag-breakpoint">&mdash;</strong></div>
-          <div class="diag-card"><span>Games loaded</span><strong id="diag-games">&mdash;</strong></div>
-          <div class="diag-card"><span>Proxy node</span><strong id="diag-proxy">Unconfigured</strong></div>
-          <div class="diag-card"><span>Stored messages</span><strong id="diag-storage">0</strong></div>
-          <div class="diag-card"><span>Renderer</span><strong id="diag-renderer">Browser</strong></div>
-          <div class="diag-card"><span>Offline cache</span><strong id="diag-offline">Checking</strong></div>
-          <div class="diag-card"><span>Panic cloak</span><strong id="diag-cloak">Ctrl+Shift+H</strong></div>
-        </div>
-
-        <div class="log" id="diag-log" role="log" aria-live="polite"></div>
-      </section>
-
-      <!-- ============ SETTINGS ============ -->
-      <section class="panel" id="panel-settings" data-panel="settings" aria-labelledby="settings-title">
-        <header class="panel-head">
-          <div class="panel-title">
-            <p class="eyebrow">Customization</p>
-            <h1 id="settings-title">Settings</h1>
-            <p class="panel-sub">Every switch applies instantly and saves to this device.</p>
-          </div>
-          <div class="head-tools">
-            <button class="btn ghost" id="settings-export">Export</button>
-            <button class="btn ghost" id="settings-import">Import</button>
-            <button class="btn danger" id="settings-reset">Reset all</button>
-            <input type="file" id="settings-file" class="is-hidden" accept="application/json,.json" />
-          </div>
-        </header>
-
-        <div class="settings" id="settings-body"></div>
-      </section>
-
+        <p class="footnote">Rule-based engines · history stored per mode · nothing leaves this machine</p>
+      </div>
     </div>
-  </main>
+  </section>
+
+  <!-- ==================== BROWSER ==================== -->
+  <section class="panel panel-browser" id="panel-browser" data-panel="browser" aria-label="Sandbox browser">
+    <header class="page-head">
+      <div>
+        <p class="kicker">Isolated frame</p>
+        <h1>Sandbox Browser</h1>
+        <p class="panel-sub">Anything that allows framing loads here. Blocked hosts can retry through your own gateway.</p>
+      </div>
+      <div class="page-actions">
+        <button class="ghost-btn" type="button" id="browser-home">Home</button>
+        <button class="ghost-btn" type="button" id="browser-clear">Unload frame</button>
+      </div>
+    </header>
+
+    <form class="addrbar" id="addr-form">
+      <svg class="addr-globe" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-browser" /></svg>
+      <input id="addr-input" type="text" spellcheck="false" autocomplete="off" placeholder="Enter a URL or search…" aria-label="Address or search" />
+      <button class="btn primary" type="submit">Open</button>
+    </form>
+    <p class="addr-hint" id="addr-hint">
+      <span id="addr-hint-text">Bare domains get https:// · anything else becomes a search.</span>
+      <button type="button" class="linkish" id="block-manual">Site won't embed?</button>
+    </p>
+
+    <div class="quicklinks" aria-label="Quick destinations">
+      <span class="rail-label">Quick links</span>
+      <button type="button" class="quick" data-url="https://duckduckgo.com/">DuckDuckGo</button>
+      <button type="button" class="quick" data-url="https://en.wikipedia.org/">Wikipedia</button>
+      <button type="button" class="quick" data-url="https://gabrielecirulli.github.io/2048/">2048</button>
+      <button type="button" class="quick" data-url="https://www.mathsisfun.com/games/">Maths Is Fun</button>
+      <button type="button" class="quick" data-url="https://zty.pe/">ZType</button>
+    </div>
+
+    <div class="browser-stage">
+      <div class="browser-empty" id="browser-empty">
+        <svg class="watermark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+        <div class="empty-inner">
+          <h2>No destination loaded</h2>
+          <p>Enter an address above or pick a quick link. If a site refuses framing, retry it through your proxy gateway or open it in a tab.</p>
+        </div>
+      </div>
+
+      <iframe id="browser-frame" class="is-hidden" title="Sandboxed browser frame"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+              referrerpolicy="no-referrer"></iframe>
+
+      <div class="block-panel is-hidden" id="block-panel">
+        <div class="block-icon" aria-hidden="true">&#9888;</div>
+        <h2>This site won't load in a frame</h2>
+        <p class="block-host" id="block-host">&mdash;</p>
+        <p class="block-copy">The site sends an <code>X-Frame-Options</code> or CSP <code>frame-ancestors</code> header that blocks embedding. Nothing is wrong with your connection.</p>
+        <div class="block-actions">
+          <button class="btn primary" type="button" id="block-proxy">Retry through proxy</button>
+          <button class="btn ghost" type="button" id="block-external">Open externally</button>
+        </div>
+        <p class="block-note" id="block-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== LOGS ==================== -->
+  <section class="panel panel-logs" id="panel-logs" data-panel="logs" aria-label="Diagnostics">
+    <header class="page-head">
+      <div>
+        <p class="kicker">Lifecycle &amp; frame telemetry</p>
+        <h1>System Diagnostics</h1>
+        <p class="panel-sub">What this shell is doing, in order, in this tab.</p>
+      </div>
+      <div class="page-actions">
+        <button class="ghost-btn" type="button" id="diag-copy">Copy log</button>
+        <button class="ghost-btn" type="button" id="diag-proxy-test">Test proxy</button>
+        <button class="ghost-btn" type="button" id="diag-clear">Clear</button>
+      </div>
+    </header>
+
+    <div class="diag-grid">
+      <div class="diag-card"><span>Session</span><strong id="diag-session">&mdash;</strong></div>
+      <div class="diag-card"><span>Breakpoint</span><strong id="diag-breakpoint">&mdash;</strong></div>
+      <div class="diag-card"><span>Games loaded</span><strong id="diag-games">&mdash;</strong></div>
+      <div class="diag-card"><span>Proxy node</span><strong id="diag-proxy">Unconfigured</strong></div>
+      <div class="diag-card"><span>Stored messages</span><strong id="diag-storage">0</strong></div>
+      <div class="diag-card"><span>Pins / recents</span><strong id="diag-pins">0 / 0</strong></div>
+      <div class="diag-card"><span>Renderer</span><strong id="diag-renderer">&mdash;</strong></div>
+      <div class="diag-card"><span>Offline cache</span><strong id="diag-offline">checking</strong></div>
+    </div>
+
+    <div class="log" id="diag-log" role="log" aria-live="polite"></div>
+  </section>
+
+  <!-- ==================== SETTINGS ==================== -->
+  <section class="panel panel-settings" id="panel-settings" data-panel="settings" aria-label="Settings">
+    <header class="page-head">
+      <div>
+        <p class="kicker">Customization</p>
+        <h1>Settings</h1>
+        <p class="panel-sub">One section at a time. Every switch still applies live and saves to this device only.</p>
+      </div>
+      <div class="page-actions">
+        <button class="ghost-btn" type="button" id="settings-export">Export</button>
+        <button class="ghost-btn" type="button" id="settings-import">Import</button>
+        <button class="ghost-btn is-danger" type="button" id="settings-reset">Reset all</button>
+        <input type="file" id="settings-file" class="is-hidden" accept="application/json,.json" />
+      </div>
+    </header>
+
+    <div class="settings-layout">
+      <nav class="settings-nav" id="settings-nav" role="tablist" aria-label="Settings sections" aria-orientation="vertical"></nav>
+      <div class="settings" id="settings-body"></div>
+    </div>
+  </section>
+
+  <!-- ==================== SUGGESTIONS ==================== -->
+  <section class="panel panel-suggest" id="panel-suggest" data-panel="suggest" aria-label="Suggestions">
+    <div class="suggest-wrap">
+      <header class="page-head">
+        <div>
+          <p class="kicker">Public feedback</p>
+          <h1>Suggestions</h1>
+          <p class="panel-sub">Send an idea, a bug report or a game request. Other people's submissions stay in the admin inbox.</p>
+        </div>
+        <div class="page-actions">
+          <span class="suggest-count" id="suggest-count">0 sent from this device</span>
+        </div>
+      </header>
+
+      <div class="suggest-tabs" role="tablist" aria-label="Suggestions views">
+        <button class="suggest-tab is-on" type="button" id="suggest-tab-send" role="tab" aria-selected="true" aria-controls="suggest-send" tabindex="0">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bulb" /></svg>
+          <span>Send a suggestion</span>
+        </button>
+        <button class="suggest-tab" type="button" id="suggest-tab-admin" role="tab" aria-selected="false" aria-controls="suggest-admin" tabindex="-1">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lock" /></svg>
+          <span>Admin inbox</span>
+        </button>
+      </div>
+
+      <div class="suggest-body">
+        <section class="suggest-panel" id="suggest-send" role="tabpanel" aria-labelledby="suggest-tab-send">
+          <div class="suggest-card">
+            <form id="suggest-form" novalidate>
+              <fieldset class="suggest-cats">
+                <legend>What kind of suggestion?</legend>
+                <div class="chip-row" id="suggest-cats">
+                  <button class="chip is-on" type="button" data-cat="idea" aria-pressed="true">Idea</button>
+                  <button class="chip" type="button" data-cat="bug" aria-pressed="false">Bug report</button>
+                  <button class="chip" type="button" data-cat="game" aria-pressed="false">Game request</button>
+                  <button class="chip" type="button" data-cat="other" aria-pressed="false">Other</button>
+                </div>
+              </fieldset>
+
+              <label class="field" for="suggest-message">
+                <span class="field-label">Your suggestion</span>
+                <textarea id="suggest-message" rows="5" maxlength="600" placeholder="What would make this better?" aria-describedby="suggest-hint"></textarea>
+                <span class="field-meta" id="suggest-hint"><span id="suggest-chars">0</span> / 600</span>
+              </label>
+
+              <div class="suggest-row">
+                <label class="field" for="suggest-name">
+                  <span class="field-label">Name or handle <small>optional</small></span>
+                  <input id="suggest-name" type="text" maxlength="60" placeholder="Anonymous" autocomplete="off" />
+                </label>
+                <label class="check">
+                  <input type="checkbox" id="suggest-include-build" checked />
+                  <span>Include build info</span>
+                </label>
+              </div>
+
+              <div class="suggest-actions">
+                <button class="btn primary" type="submit">Send suggestion</button>
+                <span class="suggest-error" id="suggest-error" role="alert"></span>
+              </div>
+              <p class="suggest-disclaimer">This test build saves suggestions in this browser. A published build would send them to a server so the admin can read other devices.</p>
+            </form>
+          </div>
+
+          <div class="suggest-sent" id="suggest-sent" hidden>
+            <div>
+              <strong>Sent — thank you.</strong>
+              <p>Reference <b id="suggest-sent-ref">—</b>. The admin reviews the inbox.</p>
+            </div>
+            <button class="btn ghost" type="button" id="suggest-again">Send another</button>
+          </div>
+
+          <section class="suggest-mine" aria-labelledby="suggest-mine-title">
+            <header class="suggest-mine-head">
+              <h2 id="suggest-mine-title">Sent from this device</h2>
+              <span class="suggest-muted" id="suggest-mine-note">Newest activity first</span>
+            </header>
+            <div class="suggest-list" id="suggest-mine-list"></div>
+          </section>
+        </section>
+
+        <section class="suggest-panel" id="suggest-admin" role="tabpanel" aria-labelledby="suggest-tab-admin" hidden>
+          <div class="admin-gate" id="admin-gate">
+            <div class="admin-lock" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><use href="#i-lock" /></svg>
+            </div>
+            <h2>Admin inbox</h2>
+            <p class="suggest-muted">Enter the admin password to read suggestions. The public side never lists other people's submissions.</p>
+            <form class="admin-form" id="admin-form">
+              <label class="field" for="admin-password">
+                <span class="field-label">Password</span>
+                <input id="admin-password" type="password" autocomplete="current-password" placeholder="Admin password" />
+              </label>
+              <button class="btn primary" type="submit">Unlock</button>
+            </form>
+            <p class="suggest-error" id="admin-error" role="alert"></p>
+            <p class="suggest-disclaimer">Local test gate only. A published build needs server-side auth before this can protect real submissions.</p>
+          </div>
+
+          <div id="admin-inbox" hidden>
+            <div class="admin-bar">
+              <div>
+                <h2>Inbox <span class="admin-count" id="admin-count"></span></h2>
+                <p class="suggest-muted" id="admin-summary"></p>
+              </div>
+              <div class="admin-actions">
+                <button class="ghost-btn" type="button" id="admin-export">Export</button>
+                <button class="ghost-btn is-danger" type="button" id="admin-clear">Clear all</button>
+                <button class="ghost-btn" type="button" id="admin-lock">Lock</button>
+              </div>
+            </div>
+            <div class="admin-stats" id="admin-stats"></div>
+            <div class="admin-tools">
+              <input class="set-text" id="admin-search" type="search" placeholder="Search message, name, reply or ref" autocomplete="off" aria-label="Search suggestions" />
+              <select class="select" id="admin-filter" aria-label="Filter by status">
+                <option value="all">All statuses</option>
+                <option value="new">New</option>
+                <option value="planned">Planned</option>
+                <option value="done">Done</option>
+                <option value="declined">Not planned</option>
+              </select>
+              <select class="select" id="admin-category" aria-label="Filter by category">
+                <option value="all">All categories</option>
+                <option value="idea">Idea</option>
+                <option value="bug">Bug report</option>
+                <option value="game">Game request</option>
+                <option value="other">Other</option>
+              </select>
+              <select class="select" id="admin-sort" aria-label="Sort suggestions">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="updated">Recently updated</option>
+              </select>
+            </div>
+            <div class="admin-list" id="admin-list"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="statusbar">
+  <span class="sb-live"><i aria-hidden="true"></i>READY</span>
+  <span>SESSION <b id="sb-session">—</b></span>
+  <span>BUILD <b id="sb-build">—</b></span>
+  <span class="sb-hide-sm">ROUTE <b id="sb-route">LIBRARY</b></span>
+  <span class="sb-hide-md">CATALOG <b id="sb-catalog">0</b></span>
+  <span class="sb-hide-md">PROXY <b id="sb-proxy">OFF</b></span>
+  <span class="sb-clock" id="sb-clock">--:--:--</span>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="palette-layer" id="palette-layer" hidden>
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette-input">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+      <input id="palette-input" type="text" placeholder="Jump to a game, panel or action…" autocomplete="off" spellcheck="false" aria-label="Command palette search" />
+      <kbd>Esc</kbd>
+    </div>
+    <div class="palette-list" id="palette-list" role="listbox" aria-label="Results"></div>
+    <div class="palette-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
+      <span><kbd>↵</kbd> run</span>
+      <span class="palette-hint" id="palette-hint"></span>
+    </div>
+  </div>
 </div>
 
-<div class="tray-scrim" id="tray-scrim" hidden></div>
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
-<script src="js/settings.js?v=5" defer></script>
-<script src="js/ai.js?v=5" defer></script>
-<script src="js/app.js?v=5" defer></script>
+<dialog class="sheet" id="whatsnew">
+  <div class="sheet-head">
+    <div>
+      <p class="kicker">1.2 BETA</p>
+      <h2>What's new in this deck</h2>
+    </div>
+    <button class="icon-btn" type="button" id="whatsnew-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+    <ul class="news">
+      <li><strong>New deck layout</strong><span>The dock is gone. A command deck, a filter rail, a scrollable editorial column and a persistent inspector replace it.</span></li>
+      <li><strong>Inspector workflow</strong><span>One click selects a game and fills the inspector; double-click (or Shift+Enter) launches. The card's play chip is still one click.</span></li>
+      <li><strong>Pins and recents</strong><span>Pin titles to a shortlist and pick up where you left off, with launch counts and relative times.</span></li>
+      <li><strong>Command palette</strong><span>Ctrl/Cmd+K jumps to any game, panel or action — random game, view switch, focus mode, log copy.</span></li>
+      <li><strong>Grid and list</strong><span>A dense list view for browsing, a grid view for scanning. Both persist.</span></li>
+      <li><strong>Focus mode</strong><span>F collapses the chrome so the frame owns the window. Esc restores it.</span></li>
+      <li><strong>Hash routing</strong><span>Every panel and open game has a URL, so reloads and the back button behave.</span></li>
+      <li><strong>Settings tabs</strong><span>One section opens at a time, and the left rail switches between them instead of scrolling a long page. Patch notes and About are tabs too.</span></li>
+      <li><strong>Suggestions</strong><span>A public form with categories, optional name and build info. Your own submissions list below it; other people's stay in the inbox.</span></li>
+      <li><strong>Admin inbox</strong><span>Suggestions → Admin inbox is password-gated, with search, status and category filters, stats, replies, export and delete. It is a local test gate, not real security.</span></li>
+      <li><strong>Admin replies</strong><span>Reply with any text. Status changes and replies post a huge, randomly colored update on the public card so the suggester cannot miss it.</span></li>
+      <li><strong>Bug fixes</strong><span>Patch notes now separate fixes from features. The current entry lists the issues found in the scan.</span></li>
+      <li><strong>Now on the live site</strong><span>This is the published Test Phase build on GitHub Pages, plus the desktop shell it runs in.</span></li>
+    </ul>
+  </div>
+  <div class="sheet-foot">
+    <button class="btn ghost" type="button" id="whatsnew-patches">Patch notes</button>
+    <button class="btn primary" type="button" id="whatsnew-dismiss">Start exploring</button>
+  </div>
+</dialog>
+
+<div class="cloak" id="cloak" hidden aria-hidden="true">
+  <p class="cloak-title">Pretzel's Unblocked Games: RETURN</p>
+</div>
+
+<script src="js/settings.js?v=b13" defer></script>
+<script src="js/ai.js?v=b13" defer></script>
+<script src="js/app.js?v=b13" defer></script>
 </body>
 </html>

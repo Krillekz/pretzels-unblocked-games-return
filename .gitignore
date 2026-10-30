@@ -2,9 +2,6 @@
 .freebuff/
 .freebuff*
 
-# v1.1 test deck — local only, not published yet
-v1.1/
-
 # dependencies
 node_modules/
 

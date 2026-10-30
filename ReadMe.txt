@@ -468,3 +468,59 @@ Any character name now works. `findFighter` resolves curated sheets first (exact
 *   The Manager is unsigned, local-only and carries its own Electron runtime (the portable folder is large). It is not an installer and not part of the static site.
 *   There is no deploy packaging panel, by the locked decision. Publishing the site remains a separate manual step.
 *   Phase 4 and Phase 6 are delivered in their own build log above; the Phase 5 executable only runs the dashboard.
+
+---
+
+## 🚀 1.2 BETA RELEASE — DECK PROMOTED (2026-10-30)
+
+The v1.1 deck is no longer a local preview. It was promoted to the project root and published as
+**1.2 BETA** (`v1.2.0-beta`, build `b13`).
+
+### What moved
+
+*   `v1.1/index.html` → `index.html`, `v1.1/css/shell.css` → `css/shell.css`, `v1.1/js/app.js` →
+    `js/app.js`, `v1.1/js/settings.js` → `js/settings.js`. `js/ai.js` was already identical in both
+    shells, so it stayed put.
+*   Asset and data paths were rewritten from `../assets` / `../data` to `assets` / `data`, and the
+    `?v=` cache key moved from `t12` to `b13` on the stylesheet and both scripts.
+*   `css/theme.css` and `css/app.css` are retired; the deck's single `css/shell.css` carries the
+    tokens, layout and responsive rules.
+*   The `v1.1/` staging folder and its `.gitignore` entry were removed. The original files remain in
+    the git history.
+
+### Features now shipping
+
+*   Command deck, filter rail, editorial library column, inspector and status strip.
+*   Inspector workflow with play chip / double-click / `Shift+Enter`, focus mode and hash routing.
+*   Pins, Continue shelf, launch counts, grid/list views and the `Ctrl/Cmd+K` palette.
+*   Public Suggestions panel and the password-gated admin inbox with replies, stats, filters, export
+    and the oversized color-coded public update.
+*   Tabbed settings (43 rows, nine tabs) and in-app patch notes split into changes and bug fixes.
+
+### Repairs made during the promotion
+
+*   `@font-face` URLs pointed two levels up from the sub-folder; they now resolve from `css/`.
+*   `sw.js` precached the retired stylesheets, so an offline load would have been unstyled. Its shell
+    list matches the 1.2 files and the cache name is now `pretzel-shell-v2`.
+*   Diagnostics regained the renderer and offline-cache rows lost in the swap.
+*   The panic cloak and its `Ctrl/Cmd+Shift+H` handler were restored inside the new markup.
+*   The desktop smoke now counts `.card` instead of `.tile`, reads `#build-chip`, and polls for the
+    service worker rather than sampling once.
+*   The Manager's required-asset list, app window selector and the redundant "Open v1.1 deck" route
+    were updated for the single shell.
+
+### Verification performed
+
+*   `npm run check` passes for the shell, settings, engine, service worker and Electron files.
+*   Electron smoke from source and from the packaged `PretzelGames.exe`: title reads 1.2 BETA,
+    16 cards, renderer "Electron shell", cache `pretzel-shell-v2` active, cloak show/hide/title
+    restore, global hotkey registered, window on the secondary display. Both exit 0.
+*   Manager `npm run smoke` exits 0: asset scan 17/17 with no broken references, app window shows the
+    1.2 BETA title with 16 cards, 860/390 presets, dropout blocking and recovery.
+
+### Known limits
+
+*   The admin password is a client-side test gate and suggestions are per-browser. A real inbox needs
+    a server endpoint and authenticated reads.
+*   The shortcuts are unsigned; SmartScreen may warn on first launch.
+*   Proxy routing stays unconfigured until an adapter is deployed and its endpoint is set.

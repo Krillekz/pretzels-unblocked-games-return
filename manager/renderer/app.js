@@ -794,11 +794,11 @@ async function openFrameMode(mode) {
   else log("error", result.error || "Could not open the frame harness.");
 }
 
-async function openTestWindow(route) {
+async function openTestWindow(route = "app") {
   const result = await window.manager.openAppWindow({ route });
   if (result.ok) {
-    log("info", `${route === "v11" ? "v1.1 deck" : "Games shell"} test window ${result.reused ? "reused" : "opened"}.`);
-    toast("Test window", route === "v11" ? "Opened the v1.1 deck." : "Opened the games shell.", "ok");
+    log("info", `Games shell test window ${result.reused ? "reused" : "opened"}.`);
+    toast("Test window", "Opened the games shell.", "ok");
   } else {
     toast("Could not open window", result.error || "Choose a workspace first.", "error");
     log("error", result.error || "Test window refused.");
@@ -1137,7 +1137,6 @@ function bindEvents() {
   });
 
   $("#open-shell")?.addEventListener("click", () => openTestWindow("app"));
-  $("#open-deck")?.addEventListener("click", () => openTestWindow("v11"));
   $("#test-open")?.addEventListener("click", () => openTestWindow("app"));
   $("#overview-test-app")?.addEventListener("click", () => openTestWindow("app"));
   $("#test-close")?.addEventListener("click", async () => {

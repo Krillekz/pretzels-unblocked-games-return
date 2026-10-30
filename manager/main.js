@@ -229,9 +229,9 @@ function applyPreset(preset) {
   return testWindow.getContentSize();
 }
 
-function openAppWindow(route = "app") {
+function openAppWindow() {
   if (!staticServer || !workspace) return { ok: false, error: "Choose a workspace first." };
-  const target = route === "v11" ? `${staticServer.origin}/v1.1/` : `${staticServer.origin}/`;
+  const target = `${staticServer.origin}/`;
 
   if (testWindow && !testWindow.isDestroyed()) {
     testWindow.loadURL(target);
@@ -412,10 +412,7 @@ function registerIpc() {
     return { ok: true };
   });
 
-  ipcMain.handle("manager:open-app-window", (_event, options = {}) => {
-    const route = options.route === "v11" ? "v11" : "app";
-    return openAppWindow(route);
-  });
+  ipcMain.handle("manager:open-app-window", () => openAppWindow());
 
   ipcMain.handle("manager:resize-app-window", (_event, preset) => {
     const size = applyPreset(preset);
@@ -679,7 +676,7 @@ async function runSmoke() {
         new Promise((resolve) => {
           const start = Date.now();
           const tick = setInterval(() => {
-            if (document.querySelectorAll(".tile").length > 0 || Date.now() - start > 6000) {
+            if (document.querySelectorAll(".card").length > 0 || Date.now() - start > 6000) {
               clearInterval(tick);
               resolve(true);
             }
@@ -689,8 +686,8 @@ async function runSmoke() {
       appWindowCheck = await testWindow.webContents.executeJavaScript(`({
         opened: true,
         title: document.title,
-        tiles: document.querySelectorAll(".tile").length,
-        shell: Boolean(document.querySelector(".app")),
+        tiles: document.querySelectorAll(".card").length,
+        shell: Boolean(document.querySelector("#lib-grid")),
         fileProtocol: location.protocol
       })`);
       appWindowCheck.onSecondary = isOnSecondary(testWindow);

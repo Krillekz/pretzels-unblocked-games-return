@@ -1,4 +1,4 @@
-# Pretzel Manager — Phase 5 dashboard (+ Phase 6 mirror routes)
+# Pretzel Manager — dashboard for 1.2 BETA
 
 A separate Electron utility for **Pretzel's Unblocked Games: RETURN**. It is not
 part of the static site and it does not ship inside the games shell. It reads and
@@ -48,9 +48,9 @@ executable only runs the Manager.
 | Files | Delivery asset scan, local reference check, paths and timestamped backups |
 
 The **app test window** is a separate Chromium window pointed at the local
-workspace through a loopback-only static server. It opens the current shell or
-the v1.1 deck on the secondary display. The dropout toggle blocks external
-http(s) requests in that test session only; local files keep loading.
+workspace through a loopback-only static server. It opens the 1.2 BETA shell on
+the secondary display. The dropout toggle blocks external http(s) requests in
+that test session only; local files keep loading.
 
 ## Data safety
 

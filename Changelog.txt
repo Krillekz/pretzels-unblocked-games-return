@@ -4,15 +4,35 @@ This document serves as the historical record and update ledger for **Pretzel's 
 
 ---
 
-### 📦 Current Lifecycle Stage: v0.1.0-alpha (Public Test Phase) → v1.1.2 in release prep
-*   **Status:** Published as a public **Test Phase** build — see https://krillekz.github.io/pretzels-unblocked-games-return/
-*   **Next release:** `v1.1.2-test` (the RETURN deck) — scheduled **Friday 30 October 2026, 3:00–5:00 pm (local time)**. The live site stays on v0.1.0-alpha until the promotion pass finishes.
+### 📦 Current Lifecycle Stage: v1.2.0-beta — "1.2 BETA" (Public Test Phase)
+*   **Status:** Published. The 1.2 deck is live at https://krillekz.github.io/pretzels-unblocked-games-return/ (build `b13`).
+*   **Previous:** `v0.1.0-alpha` was the first Test Phase build with the left dock; the 1.2 deck replaced it on 30 October 2026.
+*   **Next:** fixes driven by beta reports. A blocker found in a pass moves the next tag rather than shipping it broken.
 *   **Branch:** `main`
-*   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`Electron .exe`)
+*   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`PretzelGames.exe`, `Manager.exe`)
 
 ---
 
 ### 📅 Version History
+
+#### 2026-10-30 — v1.2.0-beta: 1.2 BETA Is Public
+*   **Changed:** The v1.1 deck is now the default shell at the project root — command deck, filter rail, editorial library column, inspector, player takeover and status strip replace the old left dock. `css/theme.css` and `css/app.css` are retired in favour of `css/shell.css`.
+*   **Added:** Public Suggestions panel (`6`) with Idea / Bug report / Game request / Other, a 600-character message, optional name and optional build stamp.
+*   **Added:** Password-gated admin inbox behind the Suggestions tab — four stat cards, search, status and category filters, newest/oldest/recently-updated sorting, free-text replies, copy, export and delete.
+*   **Added:** Oversized, randomly colored admin updates on public cards for both status changes and replies, with the update time stored so a card cannot change silently.
+*   **Added:** Tabbed settings — 43 rows across nine tabs with About and Patch notes as their own tabs, remembered per browser.
+*   **Added:** Pinned and Continue shelves, launch counts, grid/list views (`G` / `L`), focus mode (`F`), hash routing for every panel and open game, and the `Ctrl/Cmd+K` command palette.
+*   **Added:** Patch notes inside Settings, newest first, with a separate **Bug fixes** list per release; the current entry shows the build tag.
+*   **Changed:** Version strings, the page title, the ribbon and the intro sheet now read **1.2 BETA** / `v1.2.0-beta` instead of a local v1.1 test deck. `package.json` version is `1.2.0-beta`.
+*   **Changed:** Build tag bumped to `b13`, carried in the deck chip, the status strip, the About row and the diagnostics copy.
+*   **Fixed:** The stylesheet's `@font-face` URLs pointed two directories up for the old sub-folder location; they now resolve from `css/`, so Chakra Petch loads instead of falling back to system fonts.
+*   **Fixed:** `sw.js` still precached `css/theme.css` and `css/app.css`, so an offline load of the new shell returned unstyled markup. The shell list now matches the 1.2 files and the cache name moved to `pretzel-shell-v2`.
+*   **Fixed:** Diagnostics lost the renderer and offline-cache rows in the swap; both are back (`#diag-renderer`, `#diag-offline`), so the Electron shell and cache state stay visible.
+*   **Fixed:** The panic cloak only existed in the old shell and would have vanished with it. The overlay, the `Ctrl/Cmd+Shift+H` handler and the desktop shortcut bridge are restored in the new markup.
+*   **Fixed:** The desktop smoke test looked for `.tile` cards and `#build-tag`, which the deck does not have; it now counts `.card` elements and reads `#build-chip`. It also polls for the service worker instead of sampling once, so a slow install no longer fails the run.
+*   **Fixed:** The Manager's asset scan listed `css/theme.css` and `css/app.css` as required and its app window waited for `.tile`; both now track `css/shell.css` and `.card`. The redundant "Open v1.1 deck" route is gone now that the deck is the shell.
+*   **Removed:** The `v1.1/` staging folder and its `.gitignore` entry — its contents are the root shell now and the history keeps the original files.
+*   **Verified:** `npm run check`, the Electron smoke from source and from the packaged `PretzelGames.exe` (16 cards, Electron detection, cache `pretzel-shell-v2` active, cloak show/hide/title restore, hotkey registered, secondary-display placement), plus the Manager's `npm run smoke` (asset scan 17/17, app window 16 cards, 860/390 presets, dropout blocking).
 
 #### 2026-10-29 — Phase 4 + Phase 6: Desktop Shell, Offline Cache, Panic Cloak & Mirror Routes
 *   **Added (Phase 4):** Electron wrapper for the games shell — `electron/main.js`, a secure context-isolated preload bridge, a loopback-only static server, `npm start`, and a portable `release/Pretzel Games-win32-x64/PretzelGames.exe` built by `tools/package-electron.js`. The packaged app ships only runtime files, inside an asar, and loads the same `index.html`.

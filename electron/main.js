@@ -211,21 +211,27 @@ async function runSmoke() {
       ready: Boolean(window.__pretzelReady),
       desktop: window.pretzelShell?.isDesktop === true,
       bridge: typeof window.pretzelShell?.openExternal === "function",
-      tiles: document.querySelectorAll(".tile").length,
+      tiles: document.querySelectorAll(".card").length,
       renderer: document.querySelector("#diag-renderer")?.textContent || "",
       offline: document.querySelector("#diag-offline")?.textContent || "",
       cloakHidden: document.querySelector("#cloak")?.hidden !== false,
-      build: document.querySelector("#build-tag")?.textContent || "",
-      hotkey: window.PretzelSettings?.get()?.stealthHotkey || ""
+      build: document.querySelector("#build-chip")?.textContent || ""
     }))()`);
     report.checks.shell = shell;
 
     const sw = await mainWindow.webContents.executeJavaScript(`
       (async () => {
         if (!("serviceWorker" in navigator)) return { supported: false };
-        const reg = await navigator.serviceWorker.getRegistration().catch(() => null);
+        /* install runs after boot, so poll instead of sampling once */
+        const start = Date.now();
+        let reg = null;
         let keys = [];
-        try { keys = await caches.keys(); } catch { keys = []; }
+        while (Date.now() - start < 10000) {
+          reg = await navigator.serviceWorker.getRegistration().catch(() => null);
+          try { keys = await caches.keys(); } catch { keys = []; }
+          if (reg && reg.active && keys.some((key) => key.startsWith("pretzel-shell-"))) break;
+          await new Promise((resolve) => setTimeout(resolve, 200));
+        }
         return {
           supported: true,
           registered: Boolean(reg),
@@ -256,7 +262,7 @@ async function runSmoke() {
     report.checks.cloak = cloak;
 
     report.checks.stealthHotkey = {
-      expected: shell.hotkey || DEFAULT_HOTKEY,
+      expected: stealthHotkey || DEFAULT_HOTKEY,
       registered: Boolean(globalShortcut.isRegistered(stealthHotkey)),
       active: stealthHotkey,
     };
