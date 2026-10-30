@@ -4,14 +4,21 @@ This document serves as the historical record and update ledger for **Pretzel's 
 
 ---
 
-### 📦 Current Lifecycle Stage: v0.1.0-alpha (Public Test Phase)
+### 📦 Current Lifecycle Stage: v0.1.0-alpha (Public Test Phase) → v1.1.2 in release prep
 *   **Status:** Published as a public **Test Phase** build — see https://krillekz.github.io/pretzels-unblocked-games-return/
+*   **Next release:** `v1.1.2-test` (the RETURN deck) — scheduled **Friday 30 October 2026, 3:00–5:00 pm (local time)**. The live site stays on v0.1.0-alpha until the promotion pass finishes.
 *   **Branch:** `main`
 *   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`Electron .exe`)
 
 ---
 
 ### 📅 Version History
+
+#### 2026-10-29 — Release Status: v1.1.2 Sneak Peeks
+*   **Announced:** The next release update is targeted for **tomorrow, Friday 30 October 2026, between 3:00 and 5:00 pm (local time)**. The window is a target, not a guarantee; a blocker found in final checks moves it.
+*   **Sneak peeks:** The new command deck and inspector, a public Suggestions panel, a password-gated admin inbox with replies and stats, oversized color-coded admin updates on public cards, 43 settings rows across nine tabs, patch notes split into changes and bug fixes, and pinned/Continue shelves with a command palette.
+*   **Also in the deck:** universal anime-character resolution in the Debate Matrix, a visible build tag in the status strip, and the proxy-blocked launch fix.
+*   **Note:** The v1.1.2 deck is in its final verification pass. Until promotion, the public Test Phase build remains v0.1.0-alpha.
 
 #### 2026-10-29 — Published: GitHub Test Phase
 *   **Added:** Public repository `Krillekz/pretzels-unblocked-games-return` with GitHub Pages serving `main` at https://krillekz.github.io/pretzels-unblocked-games-return/.
@@ -91,6 +98,7 @@ This document serves as the historical record and update ledger for **Pretzel's 
 ### 🚀 Upcoming Feature Backlog (Future Sprints)
 The following modifications are slated for integration during subsequent development sprints following the design interview phase:
 
+*   **v1.1.2 public promotion:** Move the RETURN deck from its final verification pass to the GitHub Pages build during the announced window. This includes the command deck, Suggestions and admin inbox, nine-tab settings, and patch notes with bug fixes.
 *   **Database Payload Injections:** Populating the data array engine once library storage choices are verified by the user. *(Delivered in Phase 3 — 16 verified entries in `data/library.json`.)*
 *   **Electron Dependency Compilation:** Initializing `package.json` configurations and packaging files to export the base desktop application layer.
 *   **Manager App File Hooks:** Coding the read/write logic allowing the testing dashboard executable to dynamically adjust main system elements.
