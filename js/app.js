@@ -11,7 +11,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const VERSION = "v1.2.0-beta";
+  const VERSION = "v1.3.0-beta";
   const BUILD = (() => {
     const tag = document.querySelector('script[src*="js/app.js"]');
     const match = tag && String(tag.getAttribute("src") || "").match(/[?&]v=([A-Za-z0-9._-]+)/);
@@ -25,6 +25,12 @@
   const SEEN_KEY = "pretzel.v11.seen11";
   const SUGGEST_KEY = "pretzel.v11.suggestions";
   const ADMIN_SESSION_KEY = "pretzel.v11.admin";
+  /* The bundled development gateway in tools/proxy-dev.js expects ?url=, not
+     a path suffix, so the preset has to carry the placeholder. */
+  const LOCAL_GATEWAY = {
+    endpoint: "http://127.0.0.1:8788/?url={url}",
+    health: "http://127.0.0.1:8788/"
+  };
   const SUGGEST_LIMIT = 200;
   const REPLY_LIMIT = 600;
   /* A local gate for the test build. The hash cannot protect a real inbox;
@@ -122,6 +128,8 @@
     sort: "title",
     reverse: false,
     view: "grid",
+    shown: 24,
+    catalogSig: "",
     selected: null,
     heroId: null,
     settingsTab: "interface",
@@ -131,6 +139,7 @@
     gameProxied: false,
     playStart: 0,
     playTicker: 0,
+    playAccum: 0,
     focus: false,
     paletteIndex: 0,
     paletteItems: [],
@@ -219,6 +228,21 @@
     const words = String(title || "?").trim().split(/[\s-]+/).filter(Boolean);
     return (words.length > 1 ? words[0][0] + words[1][0] : String(title || "?").slice(0, 2)).toUpperCase();
   }
+
+  /* Every card used to share one placeholder glow. Hashing the id gives each
+     of them a stable hue, so a 56-card catalog reads as distinct tiles. */
+  function hueFor(id) {
+    const key = String(id || "?");
+    let hash = 7;
+    for (let i = 0; i < key.length; i += 1) hash = (hash * 31 + key.charCodeAt(i)) % 100003;
+    return hash % 360;
+  }
+
+  function isNewGame(game) {
+    return (game.tags || []).includes("new");
+  }
+
+  const PAGE_SIZE = 24;
 
   function relativeTime(ts) {
     if (!ts) return "never";
@@ -612,15 +636,17 @@
   /* shelves                                                            */
   /* ------------------------------------------------------------------ */
 
-  function miniCard(game, meta) {
+  function miniCard(game, meta, flag) {
     const card = el("button", "mini");
     card.type = "button";
     card.dataset.game = game.id;
     card.title = `Open ${game.title}`;
+    card.style.setProperty("--cover-hue", String(hueFor(game.id)));
 
     const cover = el("div", "mini-cover");
     cover.append(el("span", "mini-glyph", glyphFor(game.title)));
     cover.append(el("small", "", game.genre || "Game"));
+    if (flag) cover.append(el("span", "mini-flag", flag));
 
     const body = el("div", "mini-body");
     body.append(el("span", "mini-title", game.title), el("span", "mini-meta", meta));
@@ -633,6 +659,14 @@
   function renderShelves() {
     const settings = PretzelSettings.get();
     const show = Boolean(settings.showShelves);
+
+    const freshGames = state.games.filter(isNewGame);
+    els.shelfNew.hidden = !show || freshGames.length === 0;
+    els.newRow.replaceChildren();
+    freshGames.slice(0, 12).forEach((game) => {
+      els.newRow.append(miniCard(game, `${game.genre || "Game"} · ${game.platform || "HTML5"}`, "New"));
+    });
+    els.newMeta.textContent = freshGames.length ? `${freshGames.length} added in 1.3` : "";
 
     const recentGames = state.recents.map((entry) => gameById(entry.id)).filter(Boolean);
     els.shelfContinue.hidden = !show || recentGames.length === 0;
@@ -669,8 +703,11 @@
     card.classList.toggle("is-selected", state.selected === game.id);
     card.classList.toggle("is-pinned", state.pins.includes(game.id));
 
+    card.style.setProperty("--cover-hue", String(hueFor(game.id)));
+
     const cover = el("div", "card-cover");
     cover.append(el("span", "card-glyph", glyphFor(game.title)));
+    if (isNewGame(game)) cover.append(el("span", "card-flag", "New"));
     if (state.pins.includes(game.id)) {
       const pin = el("span", "card-pin");
       pin.title = "Pinned";
@@ -722,6 +759,17 @@
 
   function renderCatalog() {
     const matches = sortedGames(filteredGames());
+
+    /* Any filter, query or sort change starts the list over at page one. */
+    const signature = JSON.stringify([state.filters, state.sort, state.reverse]);
+    if (signature !== state.catalogSig) {
+      state.catalogSig = signature;
+      state.shown = PAGE_SIZE;
+    }
+    const selectedIndex = matches.findIndex((game) => game.id === state.selected);
+    if (selectedIndex >= state.shown) state.shown = selectedIndex + 1;
+    const visible = matches.slice(0, state.shown);
+
     const wasInGrid = els.grid.contains(document.activeElement);
     els.grid.replaceChildren();
 
@@ -734,7 +782,15 @@
       empty.append(el("strong", "", "No matches"), el("p", "", "Loosen a filter or clear the search field."));
       els.grid.append(empty);
     } else {
-      matches.forEach((game) => els.grid.append(makeCard(game)));
+      visible.forEach((game) => els.grid.append(makeCard(game)));
+      if (visible.length < matches.length) {
+        const more = el("div", "catalog-more");
+        const button = el("button", "", `Show ${Math.min(PAGE_SIZE, matches.length - visible.length)} more`);
+        button.type = "button";
+        button.id = "catalog-more";
+        more.append(button, el("span", "", `Showing ${visible.length} of ${matches.length}`));
+        els.grid.append(more);
+      }
     }
 
     els.count.textContent = `${matches.length} / ${state.games.length}`;
@@ -774,11 +830,45 @@
     });
   }
 
+  function renderChips() {
+    if (!els.chips) return;
+    const genres = [...new Set(state.games.map((game) => game.genre).filter(Boolean))].sort();
+    els.chips.replaceChildren();
+
+    const makeChip = (value, label, count) => {
+      const chip = el("button", "chip-filter" + (state.filters.genre === value ? " is-on" : ""));
+      chip.type = "button";
+      chip.dataset.genre = value;
+      chip.setAttribute("aria-pressed", String(state.filters.genre === value));
+      chip.append(el("span", "", label), el("small", "", String(count)));
+      return chip;
+    };
+
+    els.chips.append(makeChip("all", "All games", state.games.length));
+    genres.forEach((genre) => els.chips.append(makeChip(genre, genre, countFor("genre", genre))));
+  }
+
+  function updateChips() {
+    if (!els.chips) return;
+    $$(".chip-filter", els.chips).forEach((chip) => {
+      const on = state.filters.genre === chip.dataset.genre;
+      chip.classList.toggle("is-on", on);
+      chip.setAttribute("aria-pressed", String(on));
+      const count = chip.querySelector("small");
+      if (count) {
+        count.textContent = String(
+          chip.dataset.genre === "all" ? state.games.length : countFor("genre", chip.dataset.genre)
+        );
+      }
+    });
+  }
+
   function renderRail() {
     const genres = [...new Set(state.games.map((game) => game.genre).filter(Boolean))].sort();
     const platforms = [...new Set(state.games.map((game) => game.platform).filter(Boolean))].sort();
     buildRailGroup("genre", genres);
     buildRailGroup("platform", platforms);
+    renderChips();
     els.filterProxy.setAttribute("aria-pressed", String(state.filters.proxyOnly));
   }
 
@@ -791,6 +881,7 @@
       count.textContent = String(value === "all" ? state.games.length : countFor(group, value));
       item.classList.toggle("is-on", state.filters[group] === value);
     });
+    updateChips();
     els.filterProxy.setAttribute("aria-pressed", String(state.filters.proxyOnly));
   }
 
@@ -985,22 +1076,47 @@
     return proxied ? { src: proxied, proxied: true } : { src: "", proxied: false };
   }
 
+  /* Time in frame only counts while the page is visible. A background tab or a
+     minimised window pauses the clock instead of banking hours nobody played.
+     Visibility is the right signal here: it is the one that cannot leave the
+     clock stuck at zero in a window the player is actually watching. */
+  function playElapsed() {
+    return state.playAccum + (state.playStart ? Date.now() - state.playStart : 0);
+  }
+
+  function paintPlayTime() {
+    if (els.playerTime) els.playerTime.textContent = clock(playElapsed() / 1000);
+  }
+
   function startTicker() {
     window.clearInterval(state.playTicker);
-    state.playStart = Date.now();
-    els.playerTime.textContent = "00:00";
-    state.playTicker = window.setInterval(() => {
-      const seconds = (Date.now() - state.playStart) / 1000;
-      els.playerTime.textContent = clock(seconds);
-    }, 1000);
+    state.playAccum = 0;
+    state.playStart = document.hidden ? 0 : Date.now();
+    paintPlayTime();
+    state.playTicker = window.setInterval(paintPlayTime, 1000);
   }
 
   function stopTicker() {
     window.clearInterval(state.playTicker);
     state.playTicker = 0;
-    const seconds = state.playStart ? (Date.now() - state.playStart) / 1000 : 0;
+    const seconds = playElapsed() / 1000;
+    state.playAccum = 0;
     state.playStart = 0;
     return seconds;
+  }
+
+  function syncPlayClock() {
+    if (!state.game) return;
+    const paused = document.hidden;
+    if (paused) {
+      if (state.playStart) {
+        state.playAccum += Date.now() - state.playStart;
+        state.playStart = 0;
+      }
+    } else if (!state.playStart) {
+      state.playStart = Date.now();
+    }
+    paintPlayTime();
   }
 
   function renderPlayerSide(game) {
@@ -1068,7 +1184,7 @@
     if (!target.src) {
       els.gameFrame.src = "about:blank";
       els.frameBadge.classList.add("is-hidden");
-      els.frameNoticeCopy.textContent = `“${game.title}” is flagged needsProxy, but no gateway is configured. Deploy proxy/ and add its URL to data/config.json, or load it directly.`;
+      els.frameNoticeCopy.textContent = `“${game.title}” is flagged needsProxy, but no gateway is configured. Start tools/proxy-dev.js and use the local gateway in Settings → Proxy, deploy proxy/ for a permanent one, or load it directly.`;
       els.frameNotice.classList.remove("is-hidden");
       log("warn", `Needs proxy but none configured — ${game.title}`);
     } else {
@@ -1098,7 +1214,7 @@
 
     /* A proxy-flagged title is not a launch until it actually has a source.
        Loading it directly is the moment to count it and start the clock. */
-    if (!state.playStart) {
+    if (!state.playTicker) {
       recordOpen(game.id);
       startTicker();
       renderPlayerSide(game);
@@ -1724,6 +1840,8 @@
 
   function exportSuggestions() {
     const payload = {
+      format: "pretzel-suggestions",
+      bundle: 2,
       exportedAt: new Date().toISOString(),
       build: `${VERSION} · ${BUILD}`,
       suggestions: state.suggestions
@@ -1736,6 +1854,71 @@
     window.setTimeout(() => URL.revokeObjectURL(link.href), 1500);
     toast("Suggestions exported");
     log("event", `Admin exported ${state.suggestions.length} suggestions`);
+  }
+
+  /* The inbox lives in one browser. A bundle is how an admin moves it: export
+     here, import on the other device, and both sides keep their own copy. */
+  function importSuggestionsFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onerror = () => {
+      toast("Could not read that file", "error");
+      log("error", "Suggestion import failed — the file could not be read");
+    };
+    reader.onload = () => {
+      let parsed = null;
+      try {
+        parsed = JSON.parse(String(reader.result || ""));
+      } catch {
+        toast("That file is not valid JSON", "error");
+        log("error", "Suggestion import failed — invalid JSON");
+        return;
+      }
+
+      const incoming = Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed && parsed.suggestions)
+          ? parsed.suggestions
+          : null;
+      if (!incoming) {
+        toast("No suggestions found in that file", "error");
+        log("error", "Suggestion import failed — no suggestions array");
+        return;
+      }
+
+      const seen = new Set(state.suggestions.map((entry) => entry.id));
+      const added = [];
+      let skipped = 0;
+      incoming.forEach((raw) => {
+        const entry = normalizeSuggestion(raw);
+        if (!entry || seen.has(entry.id) || added.length >= SUGGEST_LIMIT) {
+          skipped += 1;
+          return;
+        }
+        seen.add(entry.id);
+        added.push(entry);
+      });
+
+      if (!added.length) {
+        toast(`Nothing new in that bundle · ${skipped} already here`, "warn");
+        log("event", `Suggestion import found ${skipped} duplicates and nothing new`);
+        return;
+      }
+
+      const next = [...added, ...state.suggestions].slice(0, SUGGEST_LIMIT);
+      if (!writeStore(SUGGEST_KEY, next)) {
+        toast("This browser refused storage, so the import was not saved", "error");
+        log("error", "Suggestion import could not be saved");
+        return;
+      }
+
+      state.suggestions = next;
+      renderPublicSuggestions();
+      renderAdminList();
+      toast(`Imported ${added.length} suggestion${added.length === 1 ? "" : "s"}${skipped ? ` · ${skipped} skipped` : ""}`);
+      log("event", `Imported ${added.length} suggestions · ${skipped} skipped`);
+    };
+    reader.readAsText(file);
   }
 
   function renderSuggestions() {
@@ -2283,12 +2466,12 @@
 
   function buildAboutGroup() {
     const group = el("section", "set-group");
-    group.append(el("h2", "", "About this build"), el("p", "set-note", "1.2 BETA — a published Test Phase build, not a finished release."));
+    group.append(el("h2", "", "About this build"), el("p", "set-note", "1.3 BETA — a local preview build. 1.2 BETA is still the published Test Phase release."));
 
     [
       ["Build", `${VERSION} · build ${BUILD}`],
-      ["Channel", "1.2 BETA · Test Phase"],
-      ["Published", "GitHub Pages · main"],
+      ["Channel", "1.3 BETA · local preview"],
+      ["Published", "1.2 BETA · GitHub Pages"],
       ["Renderer", isDesktop() ? "Electron shell" : "Browser"],
       ["Engines", `${window.PretzelAI ? window.PretzelAI.fighterCount : 19} fighters · 3 personas`],
       ["Catalog", `${state.games.length} games`],
@@ -2306,14 +2489,108 @@
     return group;
   }
 
+  /* The settings file is a trust boundary: it is user-supplied, and the shell
+     reloads straight after a successful import. So every key is checked
+     against the schema and coerced to its default's type, unknown keys are
+     dropped, and a file with nothing recognisable is refused instead of
+     being written. Old exports (a bare settings object) still import. */
+  function readSettingsBundle(raw) {
+    let parsed = null;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { ok: false, error: "That file is not valid JSON." };
+    }
+
+    const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+    if (!source) return { ok: false, error: "That file does not contain settings." };
+
+    const incoming =
+      source.settings && typeof source.settings === "object" && !Array.isArray(source.settings)
+        ? source.settings
+        : source;
+    const defaults = PretzelSettings.DEFAULTS;
+    const patch = {};
+
+    Object.keys(defaults).forEach((key) => {
+      if (!Object.prototype.hasOwnProperty.call(incoming, key)) return;
+      const fallback = defaults[key];
+      const value = incoming[key];
+      if (typeof fallback === "number") {
+        const next = Number(value);
+        if (Number.isFinite(next)) patch[key] = next;
+      } else if (typeof fallback === "boolean") {
+        patch[key] = value === true || value === "true" || value === 1;
+      } else if (typeof fallback === "string") {
+        patch[key] = String(value).slice(0, 400);
+      }
+    });
+
+    if (incoming.aiWeights && typeof incoming.aiWeights === "object") {
+      const weights = { ...defaults.aiWeights };
+      Object.keys(weights).forEach((key) => {
+        const next = Number(incoming.aiWeights[key]);
+        if (Number.isFinite(next)) weights[key] = Math.min(100, Math.max(0, next));
+      });
+      patch.aiWeights = weights;
+    }
+
+    const keys = Object.keys(patch);
+    if (!keys.length) return { ok: false, error: "No known settings in that file." };
+    return { ok: true, patch, keys };
+  }
+
+  function useLocalGateway() {
+    PretzelSettings.save({
+      proxyEndpoint: LOCAL_GATEWAY.endpoint,
+      proxyHealth: LOCAL_GATEWAY.health,
+      proxyToken: ""
+    });
+    applySettingsRuntime();
+    renderSettings();
+    probeProxy();
+    toast("Local gateway set — start it with: node tools/proxy-dev.js");
+    log("event", `Proxy preset → ${LOCAL_GATEWAY.endpoint}`);
+  }
+
   /* Newest first. Kept in the app so the Patch notes tab works offline, like
      the persona engines. */
   const PATCHES = [
     {
+      version: "v1.3.0-beta",
+      date: "30 Oct 2026",
+      tag: "Published · BETA",
+      current: true,
+      summary: "40 new games, a New shelf, one-tap genre chips and a catalog that pages. Published to GitHub Pages as 1.3 BETA.",
+      points: [
+        "The catalog grew from 16 titles to 56 across 12 genres. Every URL was checked for HTTP status and for `X-Frame-Options` / `frame-ancestors` before it went in, so no entry is a guess.",
+        "A New shelf above Continue lists what arrived in this build, and those cards carry a small New flag on the cover.",
+        "Quick genre chips sit above the catalog — one tap filters, the filter rail and the chips stay in sync, and the counts on both follow the catalog.",
+        "The catalog renders 24 cards at a time with a Show more button and a Showing X of Y line. Filtering, searching or changing the sort starts the list over at page one.",
+        "Cover art takes its glow from a hash of the game id, so 56 cards read as distinct tiles instead of one repeated placeholder.",
+        "Time in frame pauses whenever the window is hidden or loses focus, so a background tab or a minimised window stops inflating launch totals.",
+        "Suggestion bundles — the admin inbox imports another device's exported JSON, merges by id and skips anything already here, with a count for what it skipped.",
+        "Every export now carries a format marker and bundle version, so a file that is not a suggestion bundle is rejected instead of half-imported.",
+        "Tab is trapped inside the command palette; focus no longer walks into the page behind the dialog.",
+        "Settings backups you can trust — Export writes a versioned bundle, and Import now validates every key against the schema before writing, instead of storing whatever JSON the file happened to contain.",
+        "One-click local gateway — Settings → Proxy has a Use local dev gateway preset that points at tools/proxy-dev.js with the ?url= contract it actually expects."
+      ],
+      fixes: [
+        "The ribbon and the intro sheet still described this build as local and unpublished after it went live on GitHub Pages; both now describe the published 1.3 build, and the build tag reads b15.",
+        "Shelf kickers ran 02, 03, 04 across three shelves and went out of order once a fourth was added. The New shelf takes 02 and the rest shift, so the numbering reads in sequence again.",
+        "Loading a needs-proxy title directly no longer re-records the launch or restarts the clock when the clock happened to be paused.",
+        "The clock is derived from accumulated visible time instead of a single start stamp, so a window that is hidden and restored no longer counts the hidden gap.",
+        "The proxy preset ships the ?url= placeholder the bundled dev gateway needs; the old advice of pasting a bare origin would have produced URLs the gateway rejects.",
+        "Importing settings used to save the parsed file verbatim and reload, so a stray key, a string where a number belonged or a non-object file went straight into storage. It is now filtered to known keys and coerced to their default types.",
+        "The import file picker is cleared after a choice, so re-selecting the same file still fires and a failed import can be retried.",
+        "The settings export is a named, versioned bundle and no longer called pretzel-v11-settings.json."
+      ]
+    },
+    {
       version: "v1.2.0-beta",
       date: "30 Oct 2026",
-      tag: "Current · Test Phase",
-      current: true,
+      tag: "Published · Test Phase",
+      current: false,
       summary: "1.2 BETA goes public. The deck replaces the old dock shell, with suggestions, the admin inbox, tabbed settings and build visibility.",
       points: [
         "The command deck, inspector workflow, shelves, palette, focus mode and hash routing are now the default shell instead of the old left dock.",
@@ -2553,7 +2830,11 @@
           const test = el("button", "btn ghost", "Test proxy");
           test.type = "button";
           test.addEventListener("click", () => probeProxy());
-          actions.append(test);
+          const preset = el("button", "btn ghost", "Use local dev gateway");
+          preset.type = "button";
+          preset.id = "proxy-preset";
+          preset.addEventListener("click", useLocalGateway);
+          actions.append(test, preset, el("span", "set-hint", "Start it with  node tools/proxy-dev.js  on port 8788."));
           group.append(actions);
         }
 
@@ -2877,6 +3158,11 @@
     els.heroPin = $("#hero-pin");
     els.heroDetails = $("#hero-details");
 
+    els.chips = $("#genre-chips");
+    els.shelfNew = $("#shelf-new");
+    els.newRow = $("#new-row");
+    els.newMeta = $("#new-meta");
+
     els.shelfContinue = $("#shelf-continue");
     els.continueRow = $("#continue-row");
     els.continueMeta = $("#continue-meta");
@@ -2964,6 +3250,8 @@
     els.adminSort = $("#admin-sort");
     els.adminList = $("#admin-list");
     els.adminExport = $("#admin-export");
+    els.adminImport = $("#admin-import");
+    els.adminImportBtn = $("#admin-import-btn");
     els.adminClear = $("#admin-clear");
     els.adminLock = $("#admin-lock");
 
@@ -3099,9 +3387,26 @@
     els.viewList.addEventListener("click", () => setView("list"));
 
     els.grid.addEventListener("click", (event) => {
+      if (event.target.closest("#catalog-more")) {
+        const previous = $$(".card", els.grid).length;
+        state.shown += PAGE_SIZE;
+        renderCatalog();
+        const cards = $$(".card", els.grid);
+        const next = cards[Math.min(previous, cards.length - 1)];
+        if (next) {
+          next.focus({ preventScroll: true });
+          next.scrollIntoView({ block: "nearest" });
+        }
+        return;
+      }
       if (event.target.closest(".card-play")) return;
       const card = event.target.closest(".card");
       if (card) selectGame(card.dataset.game);
+    });
+
+    els.chips.addEventListener("click", (event) => {
+      const chip = event.target.closest(".chip-filter");
+      if (chip) setFilter("genre", chip.dataset.genre);
     });
 
     els.grid.addEventListener("dblclick", (event) => {
@@ -3251,10 +3556,17 @@
     });
 
     $("#settings-export").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(PretzelSettings.get(), null, 2)], { type: "application/json" });
+      const payload = {
+        format: "pretzel-settings",
+        version: 2,
+        exportedAt: new Date().toISOString(),
+        build: `${VERSION} · ${BUILD}`,
+        settings: PretzelSettings.get()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "pretzel-v11-settings.json";
+      link.download = "pretzel-settings.json";
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(link.href), 1500);
       log("event", "Settings exported");
@@ -3263,19 +3575,35 @@
     $("#settings-import").addEventListener("click", () => els.settingsFile.click());
     els.settingsFile.addEventListener("change", async (event) => {
       const file = event.target.files && event.target.files[0];
+      els.settingsFile.value = "";
       if (!file) return;
+
+      let raw = "";
       try {
-        const parsed = JSON.parse(await file.text());
-        PretzelSettings.save(parsed);
-        location.reload();
-      } catch (err) {
-        log("error", `Settings import failed — ${err.message}`);
-        toast("That file is not valid settings JSON", "error");
+        raw = await file.text();
+      } catch (error) {
+        log("error", `Settings import failed — ${error.message}`);
+        toast("That file could not be read", "error");
+        return;
       }
+
+      const result = readSettingsBundle(raw);
+      if (!result.ok) {
+        log("error", `Settings import failed — ${result.error}`);
+        toast(result.error, "error");
+        return;
+      }
+
+      PretzelSettings.save(result.patch);
+      log("event", `Settings imported · ${result.keys.length} keys`);
+      toast(`Imported ${result.keys.length} settings — reloading`);
+      location.reload();
     });
     $("#settings-reset").addEventListener("click", () => {
-      if (!window.confirm("Reset every 1.2 setting to its default?")) return;
+      if (!window.confirm("Reset every setting to its default and reload?")) return;
       PretzelSettings.reset();
+      log("warn", "Settings restored to defaults");
+      toast("Defaults restored — reloading");
       location.reload();
     });
 
@@ -3326,6 +3654,12 @@
       renderAdminList();
     });
     els.adminExport.addEventListener("click", exportSuggestions);
+    els.adminImportBtn.addEventListener("click", () => els.adminImport.click());
+    els.adminImport.addEventListener("change", () => {
+      const chosen = els.adminImport.files && els.adminImport.files[0];
+      importSuggestionsFile(chosen);
+      els.adminImport.value = "";
+    });
     els.adminClear.addEventListener("click", clearSuggestions);
     els.adminLock.addEventListener("click", lockAdmin);
 
@@ -3350,10 +3684,34 @@
     els.paletteLayer.addEventListener("click", (event) => {
       if (event.target === els.paletteLayer) closePalette();
     });
+    /* keep Tab inside the dialog — arrow keys move the list, Esc closes it */
+    els.paletteLayer.addEventListener("keydown", (event) => {
+      if (event.key !== "Tab" || !paletteOpen()) return;
+      const focusables = [els.paletteInput, ...$$(".palette-item", els.paletteList)].filter(
+        (node) => node && !node.disabled && node.offsetParent !== null
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      const inside = els.paletteLayer.contains(active);
+      if (event.shiftKey) {
+        if (!inside || active === first) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (!inside || active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
 
     if (window.pretzelShell && typeof window.pretzelShell.onStealthToggle === "function") {
       window.pretzelShell.onStealthToggle(() => toggleCloak());
     }
+
+    /* play clock pauses while the page is hidden */
+    document.addEventListener("visibilitychange", syncPlayClock);
 
     /* keyboard */
     document.addEventListener("keydown", (event) => {
@@ -3570,7 +3928,7 @@
       }, 700);
     }
 
-    log("info", `1.2 BETA ready · ${VERSION} · ${state.games.length} games · ${state.pins.length} pins`);
+    log("info", `1.3 BETA ready · ${VERSION} · ${state.games.length} games · ${state.pins.length} pins`);
     window.__pretzelReady = true;
   }
 

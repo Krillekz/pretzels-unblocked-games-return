@@ -779,6 +779,7 @@ body.nav-open .deck { z-index: 70; }
 }
 
 .mini {
+  --cover-hue: 36;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -803,6 +804,30 @@ body.nav-open .deck { z-index: 70; }
   background:
     radial-gradient(140px 90px at 20% 0%, rgba(255, 176, 32, 0.16), transparent 70%),
     linear-gradient(150deg, #1d1811, #12100c);
+}
+.mini-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(120px 80px at 88% 6%, hsl(var(--cover-hue, 36) 78% 58% / 0.2), transparent 72%);
+  pointer-events: none;
+}
+.mini-glyph,
+.mini-flag { position: relative; z-index: 1; }
+.mini-flag {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  padding: 1px 5px;
+  border: 1px solid hsl(var(--cover-hue, 36) 78% 60% / 0.5);
+  border-radius: 3px;
+  background: hsl(var(--cover-hue, 36) 60% 12% / 0.8);
+  color: hsl(var(--cover-hue, 36) 82% 74%);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 .mini-glyph {
   font-family: var(--font-display);
@@ -923,6 +948,46 @@ body.nav-open .deck { z-index: 70; }
 .seg-btn:hover { color: var(--ink-2); }
 .seg-btn.is-on { background: var(--surface-3); color: var(--amber); }
 
+/* quick genre strip ------------------------------------------------- */
+
+.chips {
+  display: flex;
+  gap: 6px;
+  padding: 12px 2px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chips:empty { display: none; }
+
+.chip-filter {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--ink-3);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.chip-filter small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-4);
+}
+.chip-filter:hover { border-color: var(--line-3); color: var(--ink); }
+.chip-filter.is-on {
+  border-color: var(--amber-line);
+  background: var(--amber-wash, rgba(255, 176, 32, 0.12));
+  color: var(--amber);
+}
+.chip-filter.is-on small { color: var(--amber); opacity: 0.75; }
+
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--tile-min), 1fr));
@@ -932,7 +997,36 @@ body.nav-open .deck { z-index: 70; }
 }
 .cards:focus-visible { outline: none; }
 
+.catalog-more {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px 0 18px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+}
+.catalog-more button {
+  padding: 7px 16px;
+  border: 1px solid var(--line-3);
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.catalog-more button:hover { border-color: var(--amber-line); background: var(--surface-3); color: var(--amber); }
+.catalog-more span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+}
+
 .card {
+  --cover-hue: 36;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -945,7 +1039,11 @@ body.nav-open .deck { z-index: 70; }
   overflow: hidden;
   transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
-.card:hover { border-color: var(--line-3); transform: translateY(-2px); }
+.card:hover {
+  border-color: var(--line-3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+}
 .card.is-selected {
   border-color: var(--amber-line);
   box-shadow: 0 0 0 1px var(--amber-line), 0 10px 26px rgba(0, 0, 0, 0.45);
@@ -985,13 +1083,40 @@ body.nav-open .deck { z-index: 70; }
     linear-gradient(155deg, #1c1512, #100f0d);
 }
 
+.card-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(190px 120px at 86% 6%, hsl(var(--cover-hue, 36) 78% 58% / 0.18), transparent 72%);
+  pointer-events: none;
+}
+
 .card-glyph {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 26px;
   letter-spacing: 0.02em;
   color: rgba(255, 211, 122, 0.88);
   text-shadow: 0 0 24px rgba(255, 176, 32, 0.18);
+}
+
+.card-flag {
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
+  z-index: 1;
+  padding: 1.5px 6px;
+  border: 1px solid hsl(var(--cover-hue, 36) 78% 60% / 0.5);
+  border-radius: 3px;
+  background: hsl(var(--cover-hue, 36) 55% 11% / 0.82);
+  color: hsl(var(--cover-hue, 36) 84% 76%);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .card-play {

@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="dark" />
 <meta name="robots" content="noindex" />
-<title>Pretzel's Unblocked Games: RETURN — 1.2 BETA</title>
+<title>Pretzel's Unblocked Games: RETURN — 1.3 BETA</title>
 <link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
-<link rel="stylesheet" href="css/shell.css?v=b13" />
+<link rel="stylesheet" href="css/shell.css?v=b15" />
 </head>
 <body data-route="library" data-panel="library" data-view="grid">
 
 <div class="ribbon" role="status">
-  <span class="ribbon-pill">1.2 BETA</span>
-  <span class="ribbon-copy">Test Phase build — unfinished preview. Report what breaks instead of scoring it as a release.</span>
+  <span class="ribbon-pill">1.3 BETA</span>
+  <span class="ribbon-copy">Live build — 50+ titles, a fresh shelf and a faster catalog.</span>
   <button class="ribbon-link" type="button" id="whatsnew-open">What's new</button>
 </div>
 
@@ -228,7 +228,7 @@
       <span>Jump to…</span>
       <kbd>Ctrl K</kbd>
     </button>
-    <span class="build-chip" id="build-chip" title="Running build">1.2 BETA · b13</span>
+    <span class="build-chip" id="build-chip" title="Running build">1.3 BETA · b15</span>
     <div class="leds" aria-label="Status">
       <span class="led" id="led-ai" data-state="ok"><i aria-hidden="true"></i>Engines</span>
       <span class="led" id="led-proxy" data-state="off"><i aria-hidden="true"></i>Proxy</span>
@@ -337,10 +337,21 @@
         </div>
       </section>
 
+      <section class="shelf" id="shelf-new" hidden aria-labelledby="new-title">
+        <header class="shelf-head">
+          <div>
+            <p class="kicker">02 — New</p>
+            <h2 id="new-title">Added in 1.3</h2>
+          </div>
+          <span class="shelf-meta" id="new-meta"></span>
+        </header>
+        <div class="shelf-row" id="new-row"></div>
+      </section>
+
       <section class="shelf" id="shelf-continue" hidden aria-labelledby="continue-title">
         <header class="shelf-head">
           <div>
-            <p class="kicker">02 — Continue</p>
+            <p class="kicker">03 — Continue</p>
             <h2 id="continue-title">Pick up where you left off</h2>
           </div>
           <span class="shelf-meta" id="continue-meta"></span>
@@ -351,7 +362,7 @@
       <section class="shelf" id="shelf-pinned" hidden aria-labelledby="pinned-title">
         <header class="shelf-head">
           <div>
-            <p class="kicker">03 — Pinned</p>
+            <p class="kicker">04 — Pinned</p>
             <h2 id="pinned-title">Your shortlist</h2>
           </div>
           <span class="shelf-meta" id="pinned-meta"></span>
@@ -362,7 +373,7 @@
       <section class="catalog" aria-labelledby="catalog-title">
         <header class="catalog-head">
           <div>
-            <p class="kicker">04 — Catalog</p>
+            <p class="kicker">05 — Catalog</p>
             <h2 id="catalog-title">All games <span class="count" id="lib-count">0</span></h2>
           </div>
           <div class="catalog-tools">
@@ -387,6 +398,8 @@
             </div>
           </div>
         </header>
+
+        <div class="chips" id="genre-chips" role="group" aria-label="Quick genre filter"></div>
 
         <div class="cards" id="lib-grid" tabindex="0" role="region" aria-label="Game catalog"></div>
       </section>
@@ -739,6 +752,8 @@
               </div>
               <div class="admin-actions">
                 <button class="ghost-btn" type="button" id="admin-export">Export</button>
+                <button class="ghost-btn" type="button" id="admin-import-btn">Import</button>
+                <input id="admin-import" type="file" accept="application/json,.json" hidden />
                 <button class="ghost-btn is-danger" type="button" id="admin-clear">Clear all</button>
                 <button class="ghost-btn" type="button" id="admin-lock">Lock</button>
               </div>
@@ -807,7 +822,7 @@
 <dialog class="sheet" id="whatsnew">
   <div class="sheet-head">
     <div>
-      <p class="kicker">1.2 BETA</p>
+      <p class="kicker">1.3 BETA · live</p>
       <h2>What's new in this deck</h2>
     </div>
     <button class="icon-btn" type="button" id="whatsnew-close" aria-label="Close">
@@ -816,19 +831,19 @@
   </div>
   <div class="sheet-body">
     <ul class="news">
-      <li><strong>New deck layout</strong><span>The dock is gone. A command deck, a filter rail, a scrollable editorial column and a persistent inspector replace it.</span></li>
-      <li><strong>Inspector workflow</strong><span>One click selects a game and fills the inspector; double-click (or Shift+Enter) launches. The card's play chip is still one click.</span></li>
-      <li><strong>Pins and recents</strong><span>Pin titles to a shortlist and pick up where you left off, with launch counts and relative times.</span></li>
-      <li><strong>Command palette</strong><span>Ctrl/Cmd+K jumps to any game, panel or action — random game, view switch, focus mode, log copy.</span></li>
-      <li><strong>Grid and list</strong><span>A dense list view for browsing, a grid view for scanning. Both persist.</span></li>
-      <li><strong>Focus mode</strong><span>F collapses the chrome so the frame owns the window. Esc restores it.</span></li>
-      <li><strong>Hash routing</strong><span>Every panel and open game has a URL, so reloads and the back button behave.</span></li>
+      <li><strong>40 new games</strong><span>The catalog goes from 16 titles to 56 across 12 genres, every one checked for HTTP status and framing headers before it was added.</span></li>
+      <li><strong>New shelf</strong><span>A fifth row lists what arrived in this build, and those cards carry a small New flag so they are easy to spot while browsing.</span></li>
+      <li><strong>Quick genre chips</strong><span>A one-tap genre strip above the cards filters without reaching for the rail. The rail still works, and both stay in sync.</span></li>
+      <li><strong>A catalog that pages</strong><span>Cards render 24 at a time with a Show more button and an honest Showing X of Y line, so a big catalog paints fast and the scroll stays short.</span></li>
+      <li><strong>Per-title cover art</strong><span>Each cover now takes its glow from a hash of the game id, so 56 cards read as distinct tiles instead of one repeated placeholder.</span></li>
+      <li><strong>An honest play clock</strong><span>Time in frame stops counting while the window is hidden or unfocused, so a background tab no longer inflates your totals.</span></li>
+      <li><strong>Settings backups that validate</strong><span>Import checks every key against the schema and drops what it does not recognise, instead of writing whatever the file contained.</span></li>
+      <li><strong>Suggestion bundles</strong><span>The admin inbox can import another device's exported JSON, so an inbox can be carried between browsers.</span></li>
+      <li><strong>Local gateway preset</strong><span>Settings → Proxy has a one-click preset for the bundled dev gateway, with the URL shape it actually expects.</span></li>
       <li><strong>Settings tabs</strong><span>One section opens at a time, and the left rail switches between them instead of scrolling a long page. Patch notes and About are tabs too.</span></li>
-      <li><strong>Suggestions</strong><span>A public form with categories, optional name and build info. Your own submissions list below it; other people's stay in the inbox.</span></li>
-      <li><strong>Admin inbox</strong><span>Suggestions → Admin inbox is password-gated, with search, status and category filters, stats, replies, export and delete. It is a local test gate, not real security.</span></li>
-      <li><strong>Admin replies</strong><span>Reply with any text. Status changes and replies post a huge, randomly colored update on the public card so the suggester cannot miss it.</span></li>
-      <li><strong>Bug fixes</strong><span>Patch notes now separate fixes from features. The current entry lists the issues found in the scan.</span></li>
-      <li><strong>Now on the live site</strong><span>This is the published Test Phase build on GitHub Pages, plus the desktop shell it runs in.</span></li>
+      <li><strong>Admin inbox and replies</strong><span>Password-gated, with search, status and category filters, stats, replies, export and delete. Replies post a huge, randomly colored update on the public card.</span></li>
+      <li><strong>Command palette</strong><span>Ctrl/Cmd+K jumps to any game, panel or action. Tab now stays inside the palette.</span></li>
+      <li><strong>Where this build lives</strong><span>1.3 BETA is published to GitHub Pages. The 1.2 test deck is still reachable from the repo's release history.</span></li>
     </ul>
   </div>
   <div class="sheet-foot">
@@ -841,8 +856,8 @@
   <p class="cloak-title">Pretzel's Unblocked Games: RETURN</p>
 </div>
 
-<script src="js/settings.js?v=b13" defer></script>
-<script src="js/ai.js?v=b13" defer></script>
-<script src="js/app.js?v=b13" defer></script>
+<script src="js/settings.js?v=b15" defer></script>
+<script src="js/ai.js?v=b15" defer></script>
+<script src="js/app.js?v=b15" defer></script>
 </body>
 </html>

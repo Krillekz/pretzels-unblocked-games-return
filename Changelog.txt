@@ -4,9 +4,10 @@ This document serves as the historical record and update ledger for **Pretzel's 
 
 ---
 
-### 📦 Current Lifecycle Stage: v1.2.0-beta — "1.2 BETA" (Public Test Phase)
-*   **Status:** Published. The 1.2 deck is live at https://krillekz.github.io/pretzels-unblocked-games-return/ (build `b13`).
-*   **Previous:** `v0.1.0-alpha` was the first Test Phase build with the left dock; the 1.2 deck replaced it on 30 October 2026.
+### 📦 Current Lifecycle Stage: v1.3.0-beta — "1.3 BETA" published
+*   **Status:** Published. 1.3 BETA is live at https://krillekz.github.io/pretzels-unblocked-games-return/ (build `b15`, 56 games).
+*   **Working copy:** `v1.3.0-beta` (**1.3 BETA**, build `b15`) is the published build. Further work continues on `main` without a new tag until it is ready.
+*   **Previous:** `v1.2.0-beta` (`b13`) shipped the deck, suggestions and the admin inbox; `v0.1.0-alpha` was the first Test Phase build with the left dock.
 *   **Next:** fixes driven by beta reports. A blocker found in a pass moves the next tag rather than shipping it broken.
 *   **Branch:** `main`
 *   **Deployment Endpoint:** Static (`github.io`) & Desktop Wrapper (`PretzelGames.exe`, `Manager.exe`)
@@ -14,6 +15,30 @@ This document serves as the historical record and update ledger for **Pretzel's 
 ---
 
 ### 📅 Version History
+
+#### 2026-10-30 — v1.3.0-beta: 1.3 BETA Is Public (56 games)
+*   **Added:** The catalog grew from 16 entries to **56** across 12 genres (Arcade, Board, Coding, Puzzle, Racing, Retro, Sandbox, Shooter, Sports, Strategy, Typing, Word). New titles include Hextris, T-Rex Runner, Slope, Doodle Jump, Flappy Bird, Krunker, Shell Shockers, Surviv.io, Diep.io, Zombs Royale, Slither.io, Splix.io, Wings.io, Mope.io, Retro Bowl, Basketball Stars, Bubbles, Breakout, Sudoku, Mahjong, Wordle Unlimited, Nerdle, Hangman, Reversi, Checkers, Lidraughts, PyChess, Online Go, FreeCell, Battleship, Prince of Persia, Super Mario Bros., Windows 93, Elevator Saga, Flexbox Froggy, Grid Garden, Blockly Games, Keybr and Sandspiel.
+*   **Verified before adding:** every candidate URL was probed with the project's own `checkFrame` (`manager/lib/frame-check.js`). 89 candidates were checked across three passes; 62 answered `200` with framing headers that permit an external ancestor, and the shipped 56 are drawn from those. Titles that blocked framing (`X-Frame-Options` or `frame-ancestors`), answered `403`, or served an expired certificate were left out rather than shipped as broken cards.
+*   **Added:** A **New** shelf above Continue listing the titles added in this build, and a small New flag on those cards and shelf tiles.
+*   **Added:** A **quick genre strip** above the catalog. It mirrors the genre list in the filter rail with live counts, filters on one tap, and stays in sync with the rail in both directions.
+*   **Added:** Paged catalog rendering. Cards render **24 at a time** with a `Show N more` button and a `Showing X of Y` line. Any filter, query or sort change resets to page one; selecting a title from the palette, a shelf or a URL expands the page far enough to include it.
+*   **Added:** Per-title cover art. `hueFor` hashes the game id into a stable hue that tints each card and shelf cover, so 56 tiles read as distinct artwork instead of one repeated gradient.
+*   **Added:** Suggestion bundles. The admin inbox has an **Import** action that reads an exported `pretzel-suggestions` JSON file, normalises every entry, merges by id, skips duplicates and reports how many were added and skipped. Exports now carry `format` and `bundle: 2` markers so a foreign file is rejected instead of half-imported.
+*   **Added:** `Tab` is trapped inside the command palette — focus cycles through the palette input and its result buttons instead of walking into the page behind the dialog.
+*   **Added:** A **Use local dev gateway** preset in Settings → Proxy. It writes `http://127.0.0.1:8788/?url={url}` as the endpoint and `http://127.0.0.1:8788/` as the health URL, which is the contract `tools/proxy-dev.js` actually serves, then probes it.
+*   **Changed:** Time in frame is now accumulated from visible time only. `startTicker`/`stopTicker` derive elapsed time from a paused accumulator plus a running stamp, and `syncPlayClock` banks the elapsed span on `visibilitychange`, so a background tab or minimised window stops inflating launch totals.
+*   **Changed:** Settings **Import** now goes through `readSettingsBundle`: the file is parsed, filtered to keys that exist in the settings schema, coerced to each default's type, and `aiWeights` are clamped to 0–100. Unknown keys are dropped, an unreadable file is refused with the reason, and a successful import logs how many keys applied. Legacy exports (a bare settings object) still import.
+*   **Changed:** Settings **Export** writes a named, versioned bundle (`format`, `version`, `exportedAt`, `build`, `settings`) as `pretzel-settings.json`, and the import file picker resets after a choice so re-selecting the same file still fires.
+*   **Changed:** Version strings, the ribbon, the page title and the About tab read **1.3 BETA** / `v1.3.0-beta`, the build tag is **`b15`**, and the ribbon now says the build is live rather than local.
+*   **Changed:** The service-worker cache moved to `pretzel-shell-v4` so a stale 1.2 or b14 shell cannot mix its files with the new markup, styles and catalog.
+*   **Fixed:** The ribbon, the intro sheet and the patch-notes entry still described 1.3 as an unpublished local build after it was published; they now describe the live build.
+*   **Fixed:** Shelf kickers were hard-coded 02 / 03 / 04 for three shelves, so adding a fourth left the sequence out of order. The New shelf takes 02 and the rest shift to 03 / 04 / 05.
+*   **Fixed:** Loading a needs-proxy title directly could record the launch a second time, because the old guard read the clock's start stamp, which is now legitimately empty while the page is hidden. It reads the ticker instead.
+*   **Fixed:** An early draft of the clock keyed off `document.hasFocus()`; in a visible but unfocused window the clock could sit at `00:00` and under-report silently. Moved to page visibility and verified in a harness.
+*   **Fixed:** Settings import used to write the parsed JSON straight to storage and reload, so a stray key, a string where a number belonged or a non-object file went in unvalidated. It is now checked against the schema before anything is written.
+*   **Fixed:** The proxy advice in the block card pointed at `data/config.json` only; it now names the local gateway path first, which is the one a tester can actually start.
+*   **Verified:** `npm run check` exits 0 and the Electron smoke passes from source (title 1.3 BETA, build `v1.3.0-beta · b15`, 24 cards on page one, renderer "Electron shell", cache `pretzel-shell-v4`, cloak show/hide, hotkey registered, secondary display). A throwaway Electron harness (git-ignored `tmp/`, deleted after the run) confirmed the catalog loads 56 titles, page one holds 24 cards with `Show 24 more`, paging reaches 48 with `Showing 48 of 56`, the 13 genre chips carry live counts, filtering to Board leaves 8 Board cards and removes the pager, a 7-result search needs no pager, the New shelf lists 12 tiles with 12 flags, and the cache holds only `pretzel-shell-v4`.
+*   **Note:** This build is committed and pushed to `main`; GitHub Pages serves it at the endpoint above.
 
 #### 2026-10-30 — v1.2.0-beta: 1.2 BETA Is Public
 *   **Changed:** The v1.1 deck is now the default shell at the project root — command deck, filter rail, editorial library column, inspector, player takeover and status strip replace the old left dock. `css/theme.css` and `css/app.css` are retired in favour of `css/shell.css`.

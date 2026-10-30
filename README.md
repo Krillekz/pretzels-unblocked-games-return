@@ -1,9 +1,9 @@
 # Pretzel's Unblocked Games: RETURN
 
-> ## ⚠️ 1.2 BETA — TEST PHASE
+> ## ⚠️ 1.3 BETA — TEST PHASE
 > **This is an unfinished test build, not a finished product.**
-> The new shell, the suggestion inbox, the proxy routing and the desktop packaging are all
-> still in progress, so expect rough edges, missing pieces and the odd broken frame.
+> The catalog, the suggestion inbox, the proxy routing and the desktop packaging are all
+> still in progress, so expect rough edges, missing pieces and the odd game that refuses to frame.
 > Judge it as a beta and report what breaks instead of scoring it as a release.
 
 **Live build:** https://krillekz.github.io/pretzels-unblocked-games-return/
@@ -14,9 +14,23 @@ no telemetry, no server.
 
 ## Release status
 
-- **Now live:** `v1.2.0-beta` — **1.2 BETA**, this repository and the Pages build linked above, running build tag **b13**.
-- **Previous:** `v0.1.0-alpha` — the first Test Phase shell with the left dock. Replaced in 1.2.
+- **Now live:** `v1.3.0-beta` — **1.3 BETA**, this repository and the Pages build linked above, running build tag **b15** with **56 games**.
+- **Previous:** `v1.2.0-beta` (build `b13`) — the deck layout, suggestions and the admin inbox. `v0.1.0-alpha` was the first Test Phase shell with the left dock.
 - **Next:** a fix pass on whatever the beta reports. Patch notes inside the app track each build.
+
+### 1.3 BETA
+
+- **40 new games** — the catalog goes from 16 titles to 56 across 12 genres. Every URL was checked for HTTP status and for `X-Frame-Options` / CSP `frame-ancestors` before it was added; nothing in the catalog is an unverified guess.
+- **A catalog that pages** — cards render 24 at a time with a Show more button and a Showing X of Y line, so a 56-title grid paints quickly and the scroll stays short.
+- **Quick genre chips** — a one-tap genre strip above the cards, with counts, kept in sync with the filter rail.
+- **A New shelf** — the titles added in this build get their own row plus a New flag on the cover.
+- **Per-title cover art** — each cover takes its glow from a hash of the game id, so the tiles read as distinct artwork rather than one repeated placeholder.
+- **Time in frame is honest** — the clock pauses while the page is hidden, so a background tab or minimised window stops banking hours nobody played.
+- **Suggestion bundles** — the admin inbox imports another device's exported JSON, merges by id and reports what it skipped, so an inbox can finally move between browsers without a server.
+- **Palette focus trap** — `Tab` stays inside the command palette instead of walking into the page behind it.
+- **Exports carry a format marker** — a file that is not a suggestion bundle is rejected instead of half-imported.
+- **Settings imports are validated** — the file is filtered to known keys and coerced to their default types before storage, so a hand-edited file cannot wedge the shell.
+- **One-click local gateway** — Settings → Proxy presets the endpoint and health URL to the bundled `tools/proxy-dev.js`, with the `?url=` shape it expects.
 
 ## What's new in 1.2 BETA
 
@@ -37,7 +51,7 @@ The deck replaces the old dock layout entirely.
 
 | Area | Status |
 | --- | --- |
-| Game library | 16 entries, genre/platform/proxy filters, search, sorting, shelves, grid/list, keyboard scrolling |
+| Game library | 56 entries across 12 genres, paged 24 at a time, genre chips, genre/platform/proxy filters, search, sorting, shelves, grid/list, keyboard scrolling |
 | Game viewport | Sandboxed iframe with refresh, fullscreen, focus mode and close; `needsProxy` routing |
 | AI panel | Three deterministic local engines: Anime Debate Matrix (curated roster + scout estimates for any name), Academic Assistant, Pretzel Chef |
 | Sandbox browser | Smart address parsing (URL vs search), configurable engine and home page, block dialog with proxy retry, quick links |
@@ -132,14 +146,15 @@ structured so the storage calls can be replaced without touching the layout.
 - **Mirror routes only verify.** The manifest compares live hosts with this workspace by SHA-256; it
   does not upload the site to them.
 - **Frames are cross-origin**, so the shell cannot read score or pause state.
-- **Playtime is wall-clock** while the tab is open; a suspended laptop will over-count.
-- **Game framing can change** — hosts may add `X-Frame-Options` at any time; entries are point-in-time checks.
+- **Playtime counts visible time only.** The clock pauses while the page is hidden, but a mirrored or always-on-top window still counts while you look elsewhere.
+- **Game framing can change** — hosts may add `X-Frame-Options` at any time. Catalog entries are point-in-time header checks: the host answered `200` and its headers allow framing, which is not the same as the page painting inside a frame forever.
+- **Catalog verification is header-level.** Every URL was checked with the project's own `checkFrame`, but a site can still refuse to render through script behaviour or a login wall; the block card and the frame watchdog exist for that case.
 
 ## Layout
 
 ```
 index.html            shell markup (command deck, rail, inspector, player, panels)
-css/shell.css         the 1.2 design system and responsive rules
+css/shell.css         the 1.3 design system and responsive rules
 js/app.js             routing, catalog, shelves, player, browser, suggestions, settings, patches
 js/ai.js              three local persona engines
 js/settings.js        settings store + schema

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "games": [
     {
       "id": "2048",
@@ -221,6 +221,606 @@
         "fps",
         "3d",
         "keyboard"
+      ]
+    },
+    {
+      "id": "slope",
+      "title": "Slope",
+      "genre": "Arcade",
+      "platform": "WebGL",
+      "url": "https://slopegame.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "endless",
+        "speed",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "doodle-jump",
+      "title": "Doodle Jump",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://doodlejump.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "endless",
+        "jumping",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "flappy-bird",
+      "title": "Flappy Bird",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://flappybird.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "one-button",
+        "endless",
+        "classic",
+        "new"
+      ]
+    },
+    {
+      "id": "mope-io",
+      "title": "Mope.io",
+      "genre": "Arcade",
+      "platform": "WebGL",
+      "url": "https://mope.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "io",
+        "survival",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "splix-io",
+      "title": "Splix.io",
+      "genre": "Arcade",
+      "platform": "WebGL",
+      "url": "https://splix.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "io",
+        "territory",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "wings-io",
+      "title": "Wings.io",
+      "genre": "Arcade",
+      "platform": "WebGL",
+      "url": "https://wings.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "io",
+        "dogfight",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "slither-io",
+      "title": "Slither.io",
+      "genre": "Arcade",
+      "platform": "WebGL",
+      "url": "https://slither.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "io",
+        "snake",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "t-rex-runner",
+      "title": "T-Rex Runner",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://wayou.github.io/t-rex-runner/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "endless",
+        "one-button",
+        "offline",
+        "new"
+      ]
+    },
+    {
+      "id": "hextris",
+      "title": "Hextris",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://hextris.github.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "blocks",
+        "fast",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "bubbles",
+      "title": "Bubbles",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://bubblespop.netlify.app/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "pop",
+        "relaxing",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "breakout",
+      "title": "Breakout",
+      "genre": "Arcade",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/breakout.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "blocks",
+        "classic",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "krunker",
+      "title": "Krunker",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://krunker.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "fps",
+        "multiplayer",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "shell-shockers",
+      "title": "Shell Shockers",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://shellshock.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "fps",
+        "eggs",
+        "multiplayer",
+        "new"
+      ]
+    },
+    {
+      "id": "surviv-io",
+      "title": "Surviv.io",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://surviv.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "battle-royale",
+        "top-down",
+        "multiplayer",
+        "new"
+      ]
+    },
+    {
+      "id": "diep-io",
+      "title": "Diep.io",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://diep.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "io",
+        "tanks",
+        "multiplayer",
+        "new"
+      ]
+    },
+    {
+      "id": "zombs-royale",
+      "title": "Zombs Royale",
+      "genre": "Shooter",
+      "platform": "WebGL",
+      "url": "https://zombsroyale.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "battle-royale",
+        "multiplayer",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "retro-bowl",
+      "title": "Retro Bowl",
+      "genre": "Sports",
+      "platform": "HTML5",
+      "url": "https://retrobowl.me/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "football",
+        "manager",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "basketball-stars",
+      "title": "Basketball Stars",
+      "genre": "Sports",
+      "platform": "HTML5",
+      "url": "https://basketballstars.io/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "hoops",
+        "one-on-one",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "sudoku",
+      "title": "Sudoku",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://sudoku.gg/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "numbers",
+        "logic",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "little-alchemy",
+      "title": "Little Alchemy",
+      "genre": "Puzzle",
+      "platform": "HTML5",
+      "url": "https://littlealchemy.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "crafting",
+        "sandbox",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "mahjong",
+      "title": "Mahjong",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://mahjong.online/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "tiles",
+        "matching",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "wordle-unlimited",
+      "title": "Wordle Unlimited",
+      "genre": "Word",
+      "platform": "HTML5",
+      "url": "https://www.wordleunlimited.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "words",
+        "daily",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "nerdle",
+      "title": "Nerdle",
+      "genre": "Word",
+      "platform": "HTML5",
+      "url": "https://nerdlegame.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "numbers",
+        "daily",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "hangman",
+      "title": "Hangman",
+      "genre": "Word",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/hangman.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "words",
+        "classic",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "reversi",
+      "title": "Reversi",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/reversi.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "board",
+        "strategy",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "checkers",
+      "title": "Checkers",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://www.mathsisfun.com/games/checkers.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "board",
+        "classic",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "lidraughts",
+      "title": "Lidraughts",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://lidraughts.org/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "draughts",
+        "multiplayer",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "pychess",
+      "title": "PyChess",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://www.pychess.org/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "chess",
+        "multiplayer",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "online-go",
+      "title": "Online Go",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://online-go.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "go",
+        "multiplayer",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "freecell",
+      "title": "FreeCell",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://freecell.net/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "cards",
+        "classic",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "battleship",
+      "title": "Battleship",
+      "genre": "Board",
+      "platform": "HTML5",
+      "url": "https://www.battleshiponline.org/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "naval",
+        "classic",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "prince-of-persia",
+      "title": "Prince of Persia",
+      "genre": "Retro",
+      "platform": "Emulated",
+      "url": "https://archive.org/embed/msdos_Prince_of_Persia_1990",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "dos",
+        "platformer",
+        "classic",
+        "new"
+      ]
+    },
+    {
+      "id": "super-mario-bros",
+      "title": "Super Mario Bros.",
+      "genre": "Retro",
+      "platform": "Emulated",
+      "url": "https://www.retrogames.cc/nes-games/super-mario-bros.html",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "nes",
+        "platformer",
+        "classic",
+        "new"
+      ]
+    },
+    {
+      "id": "windows-93",
+      "title": "Windows 93",
+      "genre": "Retro",
+      "platform": "HTML5",
+      "url": "https://www.windows93.net/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "sandbox",
+        "joke",
+        "desktop",
+        "new"
+      ]
+    },
+    {
+      "id": "elevator-saga",
+      "title": "Elevator Saga",
+      "genre": "Coding",
+      "platform": "HTML5",
+      "url": "https://play.elevatorsaga.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "javascript",
+        "puzzle",
+        "coding",
+        "new"
+      ]
+    },
+    {
+      "id": "flexbox-froggy",
+      "title": "Flexbox Froggy",
+      "genre": "Coding",
+      "platform": "HTML5",
+      "url": "https://flexboxfroggy.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "css",
+        "learning",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "grid-garden",
+      "title": "Grid Garden",
+      "genre": "Coding",
+      "platform": "HTML5",
+      "url": "https://cssgridgarden.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "css",
+        "learning",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "blockly-games",
+      "title": "Blockly Games",
+      "genre": "Coding",
+      "platform": "HTML5",
+      "url": "https://blockly.games/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "blocks",
+        "learning",
+        "mouse",
+        "new"
+      ]
+    },
+    {
+      "id": "keybr",
+      "title": "Keybr",
+      "genre": "Typing",
+      "platform": "HTML5",
+      "url": "https://www.keybr.com/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "typing",
+        "practice",
+        "keyboard",
+        "new"
+      ]
+    },
+    {
+      "id": "sandspiel",
+      "title": "Sandspiel",
+      "genre": "Sandbox",
+      "platform": "WebGL",
+      "url": "https://sandspiel.club/",
+      "cover": "",
+      "needsProxy": false,
+      "tags": [
+        "falling-sand",
+        "toy",
+        "mouse",
+        "new"
       ]
     }
   ]

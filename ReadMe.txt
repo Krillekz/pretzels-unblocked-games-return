@@ -524,3 +524,122 @@ The v1.1 deck is no longer a local preview. It was promoted to the project root 
     a server endpoint and authenticated reads.
 *   The shortcuts are unsigned; SmartScreen may warn on first launch.
 *   Proxy routing stays unconfigured until an adapter is deployed and its endpoint is set.
+
+---
+
+## 🧪 1.3 BETA — LOCAL POLISH BUILD (2026-10-30, unreleased)
+
+`v1.3.0-beta`, build `b14`. Built and verified in the workspace, deliberately **not committed and not
+pushed** — the live Pages site still serves 1.2 BETA.
+
+### What changed
+
+*   **Play clock accuracy.** Time in frame is accumulated from visible time only. `startTicker` resets an
+    accumulator and stamps a start time, `stopTicker` returns accumulator + running span, and
+    `syncPlayClock` banks the span on `visibilitychange`. A background tab or minimised window no longer
+    inflates launch totals, and the clock resumes where it left off.
+*   **Suggestion bundles.** The admin inbox gained **Import**: it reads an exported bundle, normalises
+    every entry through `normalizeSuggestion`, merges by id, skips duplicates, caps at the inbox limit
+    and reports added/skipped counts. Exports now include `format: "pretzel-suggestions"` and
+    `bundle: 2`, and a file without a suggestions array is rejected with a toast and a log line.
+*   **Palette focus trap.** `Tab` cycles inside the command palette (input plus result buttons) instead
+    of moving focus into the page behind the dialog.
+*   **Labels.** Title, ribbon, About tab and patch notes read 1.3 BETA; the ribbon states that the live
+    site still runs 1.2.
+*   **Settings import validation.** The settings file is user-supplied and the shell reloads after an
+    import, so `readSettingsBundle` parses it, keeps only keys that exist in the schema, coerces each to
+    its default's type, clamps `aiWeights` to 0-100 and drops everything else. Invalid JSON and files with
+    no recognisable keys are refused with a toast and a log line, without writing or reloading. Old
+    bare-object exports still import, and exports now carry `format`, `version`, `exportedAt` and `build`.
+*   **Local gateway preset.** Settings -> Proxy gained **Use local dev gateway**, which sets
+    `http://127.0.0.1:8788/?url={url}` and the matching health URL for `tools/proxy-dev.js` and probes it.
+    The bundled gateway expects `?url=`, so a bare origin would have been rejected.
+*   **Service worker.** Cache name bumped to `pretzel-shell-v3`.
+
+### Repairs found while building it
+
+*   The direct-load path for a `needsProxy` title guarded on the clock's start stamp, which can now be
+    empty while the page is hidden, so a launch could be recorded twice. The guard reads the ticker.
+*   A first draft paused the clock on `document.hasFocus()` instead of page visibility. A visible but
+    unfocused window would have sat at `00:00` and under-reported. Caught in the harness and changed.
+
+### Verification performed
+
+*   `npm run check` passes for every shell, engine, worker and Electron file.
+*   Electron smoke: title `1.3 BETA`, build `v1.3.0-beta · b14`, 16 cards, renderer "Electron shell",
+    cache `pretzel-shell-v3` active, cloak show/hide/title restore, hotkey registered, window on the
+    secondary display. Exit 0.
+*   Throwaway harness (`tmp/`, git-ignored, since deleted): bundle import added 2 entries, skipped the
+    duplicate id inside the same file, kept a `planned` status, refused a junk file, and left the count
+    unchanged on re-import; the clock advanced `00:00 → 00:03` in a visible window; `Tab` from the last
+    palette result wrapped back inside the palette.
+*   Second harness for the settings and proxy work: a versioned bundle set `accent: mint`, `tileSize: 240`,
+    coerced `motion: "true"` to a boolean, dropped an unknown key and clamped weights 140 / -4 / "50" to
+    100 / 0 / 50; invalid JSON and an object with no known keys wrote nothing and did not reload (a window
+    marker survived); a legacy bare object still applied; the gateway preset wrote exactly
+    `http://127.0.0.1:8788/?url={url}` and `http://127.0.0.1:8788/`; and the settings page holds exactly
+    one import button and one file input.
+
+### Not done yet
+
+*   Push to GitHub, bump the Pages build, or repackage the executables. The packaged `PretzelGames.exe`
+    on disk still reports 1.2.
+
+---
+
+## 1.3 BETA catalog build (b15) — published
+
+The earlier 1.3 log ended with "push to GitHub" under *Not done yet*. That is now done: this build is
+committed to `main` and published at https://krillekz.github.io/pretzels-unblocked-games-return/.
+
+### What changed
+
+*   **The catalog is 56 titles, up from 16.** Twelve genres, three platforms (HTML5, WebGL, Emulated).
+    The 16 existing entries were kept byte-for-byte; 40 were added, and each new one carries a `new`
+    tag so the shell can find it.
+*   **Every candidate was frame-checked before it was added.** Three probes ran the project's own
+    `checkFrame` over 89 URLs. Rejected: hosts sending `X-Frame-Options` or `frame-ancestors`
+    (chess.com, tetr.io, jstris, solitaired, patorjk, lichess, nytimes Wordle, neal.fun, monkeytype,
+    geoguessr, sudoku.com, cardgames.io, play2048, typing.com), hosts answering `403` (agar.io,
+    quakejs, cookie clicker, chesstempo, typeracer) and one expired certificate (hextris.io).
+    A final pass over the shipped file returned 0 problems: 56/56 answered `200` with framing allowed.
+*   **Paged catalog.** `state.shown` starts at `PAGE_SIZE` (24) and a signature of `filters + sort +
+    reverse` resets it, so any query change starts at page one while paging and selection survive a
+    re-render. The footer is a grid-spanning `Show N more` button with a `Showing X of Y` line; after a
+    page expands, focus moves to the first newly rendered card so keyboard browsing continues.
+*   **Genre chips.** `renderChips`/`updateChips` build a 13-chip strip (All plus 12 genres) with live
+    counts. Chips and the filter rail drive the same `state.filters.genre`, so neither can drift.
+*   **New shelf.** `renderShelves` lists up to 12 `new`-tagged titles above Continue, with a New flag on
+    shelf tiles and on catalog cards. Shelf kickers were renumbered to 02/03/04/05.
+*   **Cover tint.** `hueFor(id)` hashes the id into a stable 0–359 hue written to `--cover-hue`; the
+    cover gradients blend it over the existing genre tint, so 56 cards look like distinct artwork.
+*   **Labels.** Build `b15`, cache `pretzel-shell-v4`, asset query strings `?v=b15`, and the ribbon now
+    reads as a live build instead of a local preview.
+
+### Repairs found while building it
+
+*   The ribbon, the intro sheet and the in-app patch entry all still said 1.3 was local and unpublished.
+    Publishing without correcting them would have shipped a lie in the first line of the page.
+*   Shelf kickers were hard-coded 02 / 03 / 04 for three shelves; adding a fourth left the sequence out
+    of order. They are now 02 / 03 / 04 / 05.
+
+### Verification performed
+
+*   `npm run check` exits 0 for every shell, engine, worker and Electron file.
+*   `npm run smoke`: title `1.3 BETA`, build `v1.3.0-beta · b15`, 24 cards on page one, renderer
+    "Electron shell", cache `pretzel-shell-v4`, cloak show/hide/title restore, hotkey registered,
+    window on the secondary display. Exit 0.
+*   Throwaway Electron harness (`tmp/`, git-ignored, deleted after the run): 56 titles load; page one
+    renders 24 cards with `Show 24 more`; paging reaches 48 with `Showing 48 of 56`; 12 distinct cover
+    hues in the first 12 cards; 13 chips with live counts; filtering to Board leaves 8 Board cards,
+    drops the pager and syncs the rail; a 7-result search needs no pager and clearing it restores 24;
+    the New shelf shows 12 tiles with 12 flags; only `pretzel-shell-v4` is cached.
+*   Catalog probe: 56/56 entries answer `200` with framing headers that allow an external ancestor.
+
+### Left open
+
+*   The packaged `PretzelGames.exe` on disk was not rebuilt, so it still carries the b14 label. Rebuild
+    with `npm run package:win` when the desktop binary needs to match the site.
+*   Framing is verified at header level. A host can still refuse to paint through script behaviour or a
+    login wall, which is what the block card and the frame watchdog are for.
+*   Suggestions remain per-browser; there is still no server endpoint for them.
