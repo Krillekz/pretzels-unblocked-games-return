@@ -28,7 +28,7 @@ A first look at what the v1.1.2 update brings. These are test-deck features, not
 - **A new command deck** — six primary panels across the top, a persistent filter rail, an editorial library column and an inspector. One click selects a card; the play chip, double-click or `Shift+Enter` launches it.
 - **Suggestions, for real** — a public form for ideas, bug reports and game requests, with an optional name and build stamp.
 - **An admin inbox** — password-gated, with search, status and category filters, stats, sorting, replies, JSON export and cleanup tools.
-- **Admin updates you cannot miss** — when a suggestion is marked Planned, Done or Not planned, or an admin replies, the public card shows the update in oversized type with a random bright accent. Clearing a reply removes the banner again.
+- **Admin updates you cannot miss** — when a suggestion is marked Planned, Done or Not planned, or an admin replies, the public card shows the update in oversized type with a random bright accent. Clearing a reply removes the reply banner; a status change keeps its own.
 - **Settings, rebuilt** — 43 rows across nine tabs, including a new Interface group, so one section opens at a time instead of one long page.
 - **Better patch notes** — every release entry separates changes from bug fixes, with the current build tag shown in the status strip.
 - **Pins, recents and a command palette** — pinned shelf, Continue shelf, launch counts, `Ctrl/Cmd+K` actions and grid/list views.
