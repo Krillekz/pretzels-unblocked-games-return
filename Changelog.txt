@@ -14,6 +14,30 @@ This document serves as the historical record and update ledger for **Pretzel's 
 
 ### 📅 Version History
 
+#### 2026-10-29 — Phase 4 + Phase 6: Desktop Shell, Offline Cache, Panic Cloak & Mirror Routes
+*   **Added (Phase 4):** Electron wrapper for the games shell — `electron/main.js`, a secure context-isolated preload bridge, a loopback-only static server, `npm start`, and a portable `release/Pretzel Games-win32-x64/PretzelGames.exe` built by `tools/package-electron.js`. The packaged app ships only runtime files, inside an asar, and loads the same `index.html`.
+*   **Added:** Desktop detection in the shell — the diagnostics renderer now reports **Electron shell**, external links open in the system browser, and off-origin navigation is refused.
+*   **Added (Phase 6):** Offline fallback through `sw.js`. The shell, fonts, CSS, catalog and config are cached network-first; game frames and third-party requests are never intercepted. Diagnostics shows cache state and Settings can enable or disable the cache.
+*   **Added:** Panic cloak overlay bound to `CommandOrControl+Shift+H` — a global shortcut plus an in-page fallback. It covers the window with a blank document, swaps the window title, restores both on the second press, and is reachable from the stage bar.
+*   **Added:** `data/mirrors.json` delivery-route manifest with a new Manager **Mirrors** page — primary origin, up to twelve fallback origins, active route, SHA-256 comparison of live `index.html` and `library.json` against the workspace, per-host HTTP status and latency, and **Auto-route** which promotes the first matching host.
+*   **Added:** Mirror manifest writes are validated (plain http(s) origins, no credentials/query/hash, no duplicates) and the previous manifest is copied into `.manager/backups/` before the atomic replacement.
+*   **Changed:** Every Electron window — shell, Manager dashboard, app test window and frame harness — now opens on the secondary display when one is connected, leaving the primary free.
+*   **Fixed:** `data/config.json` was missing the `stealth` block and shipped `offlineFallback: false`, which silently disabled the Phase 6 offline cache despite the code supporting it. Both are now set.
+*   **Fixed:** The stealth hotkey registration could leave a dead accelerator registered after a failed rebind; it now restores the previous working shortcut and falls back to the in-page handler.
+*   **Verified:** `npm run check` passes for all shell files, `npm run smoke` covers the Electron bridge, service-worker cache, cloak show/hide/title restore, global hotkey registration, 16 tiles and secondary-display placement. The Manager smoke covers six routes and a mirror-manifest save/backup/auto-route roundtrip.
+
+#### 2026-10-29 — Phase 5: Manager.exe Dashboard Delivered
+*   **Added:** Standalone Electron management app in `manager/` with its own package, secure preload bridge and five-page control deck (Overview, Catalog, Frame check, Test lab, Files). Built and packaged as `manager/dist/Pretzel Manager-win32-x64/Manager.exe` on Electron 45.1.0.
+*   **Added:** Catalog editor for the shared `data/library.json` — create, edit and delete entries, search and platform filter, and save the complete array. The Manager never parses or rewrites application JavaScript.
+*   **Added:** Schema v1 validation before any write, timestamped backups in `.manager/backups/`, atomic replacement, and a 40-copy retention cap. Invalid saves are rejected before the backup and the write.
+*   **Added:** Frame check page that follows redirects, reports HTTP status and reads `X-Frame-Options` / CSP `frame-ancestors`, plus a visual frame harness with real, simulated-blocked and simulated-crash modes.
+*   **Added:** Test lab with all three locked simulations — external-network dropout (local assets stay reachable), forced frame failure states, and 1440 / 860 / 390 layout presets applied to a live app test window.
+*   **Added:** Files page with delivery asset inventory, local-reference resolution, workspace paths, manual backup and reveal actions. No deploy packaging panel, per the locked Phase 5 decision.
+*   **Added:** Workspace discovery through the saved path, current directory, executable directory and parents, plus a folder picker in the top bar for a portable executable.
+*   **Changed:** All Manager windows — dashboard, app test window and frame harness — prefer the widest non-primary display when a second monitor is connected, leaving the primary display clear. Single-display machines fall back to the primary.
+*   **Verified:** `npm run smoke` and the packaged `Manager.exe --smoke` cover the preload bridge, five routes, broken-catalog rejection, asset scan, save/backup/reject roundtrip, UI draft/discard, live frame check, blocked-frame harness, app window at 16 tiles, 860/390 resizes and a blocked external fetch while dropout is on. Screenshots land in `manager/.smoke/`.
+*   **Note:** The Manager is local-only, unsigned and separate from Phase 4 packaging for the main games shell. Phase 4 remains open.
+
 #### 2026-10-29 — Release Status: v1.1.2 Sneak Peeks
 *   **Announced:** The next release update is targeted for **tomorrow, Friday 30 October 2026, between 3:00 and 5:00 pm (local time)**. The window is a target, not a guarantee; a blocker found in final checks moves it.
 *   **Sneak peeks:** The new command deck and inspector, a public Suggestions panel, a password-gated admin inbox with replies and stats, oversized color-coded admin updates on public cards, 43 settings rows across nine tabs, patch notes split into changes and bug fixes, and pinned/Continue shelves with a command palette.
@@ -100,6 +124,6 @@ The following modifications are slated for integration during subsequent develop
 
 *   **v1.1.2 public promotion:** Move the RETURN deck from its final verification pass to the GitHub Pages build during the announced window. This includes the command deck, Suggestions and admin inbox, nine-tab settings, and patch notes with bug fixes.
 *   **Database Payload Injections:** Populating the data array engine once library storage choices are verified by the user. *(Delivered in Phase 3 — 16 verified entries in `data/library.json`.)*
-*   **Electron Dependency Compilation:** Initializing `package.json` configurations and packaging files to export the base desktop application layer.
-*   **Manager App File Hooks:** Coding the read/write logic allowing the testing dashboard executable to dynamically adjust main system elements.
+*   **Electron Dependency Compilation:** Delivered in Phase 4 — `PretzelGames.exe` packages the full games shell with the preload bridge and loopback server.
+*   **Manager App File Hooks:** Delivered in Phase 5 — the dashboard reads/writes the shared library JSON, backs up before overwrite and validates the full array before saving. Deploy packaging remains deliberately excluded.
 *   **Network Bypass Tests:** Researching framework rules to automatically clean out frame disruption warnings when loading legacy domains inside the sandboxed viewport window. *(Delivered in Phase 3b — header stripping plus configurable proxy gateway.)*

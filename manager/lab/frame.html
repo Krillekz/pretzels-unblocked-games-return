@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>Frame harness — Pretzel Manager</title>
+<style>
+  @font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 600; font-display: swap; src: url("../renderer/assets/fonts/chakra-petch-600.woff2") format("woff2"); }
+  @font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap; src: url("../renderer/assets/fonts/chakra-petch-700.woff2") format("woff2"); }
+  :root {
+    --bg: #0b0908; --surface: #17120f; --surface-2: #211a15; --line: rgba(255,238,214,.1);
+    --amber: #ffb020; --amber-bright: #ffd37a; --crimson: #f0455c; --crimson-bright: #ff7285;
+    --ink: #f6ede2; --ink-3: #ab9a8c; --ink-4: #8d7c6d; --ok: #57c9a0;
+    --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+    --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; display: flex; flex-direction: column; overflow: hidden;
+    background: radial-gradient(700px 400px at 10% -20%, rgba(255,176,32,.1), transparent 60%), var(--bg);
+    color: var(--ink); font-family: var(--ui); font-size: 13px;
+  }
+  header {
+    flex: none; height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 0 18px; border-bottom: 1px solid var(--line); background: rgba(25,19,15,.94);
+  }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand img { width: 32px; height: 32px; }
+  .brand strong { display: block; font-family: var(--display); font-size: 15px; letter-spacing: 1.2px; }
+  .brand small { display: block; font-family: var(--mono); font-size: 8px; letter-spacing: 1.2px; color: var(--ink-4); }
+  .mode-readout { display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-4); }
+  .mode-readout b { color: var(--amber); }
+  .toolbar {
+    flex: none; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 11px 18px; border-bottom: 1px solid var(--line); background: rgba(0,0,0,.16);
+  }
+  .toolbar button {
+    height: 30px; padding: 0 11px; border: 1px solid var(--line); border-radius: 6px;
+    background: transparent; color: var(--ink-3); font: 11px var(--ui); cursor: pointer;
+  }
+  .toolbar button:hover { border-color: rgba(255,176,32,.34); color: var(--ink); background: rgba(255,176,32,.08); }
+  .toolbar button.is-active { border-color: rgba(255,176,32,.45); color: var(--amber); background: rgba(255,176,32,.1); }
+  .url {
+    flex: 1; min-width: 260px; height: 30px; padding: 0 10px; border: 1px solid var(--line);
+    border-radius: 6px; background: rgba(0,0,0,.25); color: var(--ink-3); font: 10px var(--mono);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  main { flex: 1; min-height: 0; padding: 14px; background: #0a0807; }
+  .frame-host {
+    position: relative; width: 100%; height: 100%; border: 1px solid var(--line); border-radius: 10px;
+    background: #0d0a08; overflow: hidden;
+  }
+  .frame-host::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+    box-shadow: inset 0 0 60px rgba(0,0,0,.35);
+  }
+  iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  .panel {
+    position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 28px; text-align: center;
+    background:
+      radial-gradient(500px 260px at 50% 30%, rgba(240,69,92,.08), transparent 70%),
+      rgba(13,10,8,.97);
+  }
+  .panel[hidden] { display: none; }
+  .warn {
+    width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(240,69,92,.4); border-radius: 50%; color: var(--crimson-bright);
+    background: rgba(240,69,92,.1); font-size: 24px; margin-bottom: 15px;
+  }
+  .panel h1 { margin: 0 0 8px; font: 700 26px/1.1 var(--display); }
+  .panel .host { margin: 0 0 9px; font: 11px var(--mono); color: var(--amber); }
+  .panel p { max-width: 540px; margin: 0; color: var(--ink-3); font-size: 12px; line-height: 1.6; }
+  .panel p code { color: var(--amber-bright); font-family: var(--mono); font-size: 11px; }
+  .panel .actions { display: flex; gap: 8px; margin-top: 17px; }
+  .panel .actions button {
+    height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px;
+    background: transparent; color: var(--ink-3); font: 11px var(--ui); cursor: pointer;
+  }
+  .panel .actions button.primary { border-color: rgba(255,176,32,.6); background: var(--amber); color: #1a1105; font-weight: 600; }
+  .panel .actions button:hover { filter: brightness(1.08); }
+  .note { margin-top: 13px; font: 9px var(--mono); letter-spacing: .5px; color: #6f6054; text-transform: uppercase; }
+  .empty-embed { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--ink-4); font: 11px var(--mono); }
+  .empty-embed[hidden] { display: none; }
+  .footer { flex: none; display: flex; justify-content: space-between; gap: 12px; padding: 8px 18px; border-top: 1px solid var(--line); font: 8.5px var(--mono); letter-spacing: .6px; color: var(--ink-4); }
+  .footer b { color: var(--ink-3); font-weight: 400; }
+  @media (max-width: 680px) { .brand small { display: none; } .url { min-width: 120px; } .panel h1 { font-size: 20px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="../renderer/assets/pretzel-crest.svg" alt="" />
+    <div><strong>FRAME HARNESS</strong><small>PRETZEL MANAGER // PHASE 5</small></div>
+  </div>
+  <div class="mode-readout">MODE <b id="mode-label">NORMAL</b></div>
+</header>
+
+<div class="toolbar">
+  <button data-mode="normal" type="button">1 · Normal</button>
+  <button data-mode="blocked" type="button">2 · XFO blocked</button>
+  <button data-mode="crash" type="button">3 · Crash</button>
+  <span class="url" id="url-label">No URL</span>
+  <button id="external" type="button">Open externally</button>
+  <button id="reload" type="button">Reload harness</button>
+</div>
+
+<main>
+  <div class="frame-host">
+    <div class="empty-embed" id="empty-embed">Paste a URL in the Manager to load a real embed.</div>
+    <iframe id="frame" title="Frame compatibility test" referrerpolicy="no-referrer"></iframe>
+
+    <div class="panel" id="blocked-panel" hidden>
+      <div class="warn" aria-hidden="true">&#9888;</div>
+      <h1>This site won't load in a frame</h1>
+      <p class="host" id="blocked-host">—</p>
+      <p>The site sends an <code>X-Frame-Options</code> or CSP <code>frame-ancestors</code> header that blocks embedding. Nothing is wrong with your connection.</p>
+      <div class="actions">
+        <button class="primary" id="blocked-proxy" type="button">Retry through proxy</button>
+        <button id="blocked-external" type="button">Open externally</button>
+      </div>
+      <p class="note">Simulation state · header refusal is not actually sent</p>
+    </div>
+
+    <div class="panel" id="crash-panel" hidden>
+      <div class="warn" aria-hidden="true">&#10005;</div>
+      <h1>The frame crashed</h1>
+      <p class="host" id="crash-host">—</p>
+      <p>The sandbox reports a failed frame. Use this state to confirm the shell's recovery actions and error copy.</p>
+      <div class="actions">
+        <button class="primary" id="crash-retry" type="button">Reload harness</button>
+        <button id="crash-external" type="button">Open externally</button>
+      </div>
+      <p class="note">Simulation state · no real crash was triggered</p>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>HEADER CHECK IN MANAGER · VISUAL CONFIRMATION HERE</span>
+  <span><b id="footer-mode">NORMAL</b> · <span id="footer-url">no URL</span></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var params = new URLSearchParams(location.search);
+  var requested = (params.get("url") || "").trim();
+  var url = /^https?:\/\//i.test(requested) ? requested : "";
+  var mode = ["normal", "blocked", "crash"].indexOf(params.get("mode")) >= 0 ? params.get("mode") : "normal";
+  var frame = document.getElementById("frame");
+  var empty = document.getElementById("empty-embed");
+  var blocked = document.getElementById("blocked-panel");
+  var crash = document.getElementById("crash-panel");
+  var host = "";
+  try { host = url ? new URL(url).host : "No URL"; } catch (e) { host = "No URL"; }
+
+  document.getElementById("url-label").textContent = url || "No URL";
+  document.getElementById("footer-url").textContent = url || "no URL";
+  document.getElementById("blocked-host").textContent = host;
+  document.getElementById("crash-host").textContent = host;
+
+  function apply(next) {
+    mode = next;
+    document.querySelectorAll("[data-mode]").forEach(function (button) {
+      button.classList.toggle("is-active", button.dataset.mode === mode);
+    });
+    document.getElementById("mode-label").textContent = mode.toUpperCase();
+    document.getElementById("footer-mode").textContent = mode.toUpperCase();
+    blocked.hidden = mode !== "blocked";
+    crash.hidden = mode !== "crash";
+    frame.style.visibility = mode === "normal" ? "visible" : "hidden";
+    empty.hidden = !(mode === "normal" && !url);
+    if (mode === "normal" && url) {
+      if (frame.getAttribute("src") !== url) frame.setAttribute("src", url);
+    } else {
+      frame.removeAttribute("src");
+    }
+    var nextParams = new URLSearchParams(location.search);
+    nextParams.set("mode", mode);
+    if (url) nextParams.set("url", url); else nextParams.delete("url");
+    history.replaceState(null, "", "?" + nextParams.toString());
+  }
+
+  document.querySelectorAll("[data-mode]").forEach(function (button) {
+    button.addEventListener("click", function () { apply(button.dataset.mode); });
+  });
+
+  document.getElementById("external").addEventListener("click", function () {
+    if (url) window.open(url, "_blank", "noopener");
+  });
+  document.getElementById("blocked-external").addEventListener("click", function () {
+    if (url) window.open(url, "_blank", "noopener");
+  });
+  document.getElementById("crash-external").addEventListener("click", function () {
+    if (url) window.open(url, "_blank", "noopener");
+  });
+  document.getElementById("blocked-proxy").addEventListener("click", function () {
+    alert("Proxy retry is simulated here. Configure gateway routing in data/config.json for a real retry.");
+  });
+  document.getElementById("reload").addEventListener("click", function () { location.reload(); });
+  document.getElementById("crash-retry").addEventListener("click", function () { location.reload(); });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "1") apply("normal");
+    if (event.key === "2") apply("blocked");
+    if (event.key === "3") apply("crash");
+  });
+
+  apply(mode);
+})();
+</script>
+</body>
+</html>

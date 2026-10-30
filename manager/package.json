@@ -1,0 +1,18 @@
+{
+  "name": "pretzel-manager",
+  "productName": "Pretzel Manager",
+  "version": "0.1.0",
+  "description": "Standalone management dashboard for Pretzel's Unblocked Games: RETURN",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check renderer/app.js && node --check lib/catalog.js && node --check lib/workspace.js && node --check lib/assets.js && node --check lib/frame-check.js && node --check lib/server.js && node --check lib/mirrors.js",
+    "smoke": "electron . --smoke",
+    "package:win": "electron-packager . \"Pretzel Manager\" --platform=win32 --arch=x64 --out=dist --overwrite --asar --executable-name=Manager --app-version=0.1.0 --ignore=\"[.]smoke\" --ignore=\"[.]backups\""
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.1.0"
+  }
+}

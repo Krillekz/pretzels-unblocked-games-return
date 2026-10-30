@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+<title>Pretzel Manager</title>
+<link rel="icon" type="image/svg+xml" href="assets/pretzel-crest.svg" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="crest-stroke" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#ffd88a" />
+      <stop offset="0.45" stop-color="#ffb020" />
+      <stop offset="1" stop-color="#c47c0d" />
+    </linearGradient>
+    <filter id="crest-glow" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <symbol id="crest" viewBox="0 0 64 64">
+    <g transform="translate(0 -3.5)" fill="none" stroke="url(#crest-stroke)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M32 50.5C24.5 50.5 17.4 47 14.4 39.4 11.4 31.8 16 22.4 24 21.4c4.5-.6 7 3 8 7.6 1-4.6 3.5-8.2 8-7.6 8 1 12.6 10.4 9.6 18-3 7.6-10.1 11.1-17.6 11.1Z" stroke-width="3.4" filter="url(#crest-glow)" />
+      <path d="M25.4 48.2c-3.6 3.2-6.2 5.5-8.9 7.2" stroke-width="3" />
+      <path d="M38.6 48.2c3.6 3.2 6.2 5.5 8.9 7.2" stroke-width="3" />
+    </g>
+    <g transform="translate(0 -3.5)">
+      <rect x="24.4" y="39.6" width="15.2" height="8.8" rx="4.4" fill="#100c09" stroke="#f0455c" stroke-width="1.5" />
+      <circle cx="28.6" cy="44" r="1.1" fill="#f0455c" />
+      <circle cx="35.4" cy="44" r="1.1" fill="#f0455c" />
+      <path d="M32 41.8v4.4" stroke="#f0455c" stroke-width="1.1" stroke-linecap="round" opacity="0.55" />
+    </g>
+  </symbol>
+
+  <symbol id="i-overview" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.4 13.2h6.2v7.4H3.4zM14.4 3.4h6.2v7.4h-6.2zM14.4 13.2h6.2v7.4h-6.2zM3.4 3.4h6.2v7.4H3.4z" /></g></symbol>
+  <symbol id="i-library" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3.2" y="3.2" width="7.4" height="7.4" rx="1.8" /><rect x="13.4" y="3.2" width="7.4" height="7.4" rx="1.8" /><rect x="3.2" y="13.4" width="7.4" height="7.4" rx="1.8" /><rect x="13.4" y="13.4" width="7.4" height="7.4" rx="1.8" /></g></symbol>
+  <symbol id="i-frame" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.4" /><path d="M3 9h18M7 7h.01M10 7h.01" stroke-linecap="round" /></g></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 3h5.6M10 3v6.1L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.1V3" /><path d="M7 15h10" /></g></symbol>
+  <symbol id="i-mirrors" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="3.4" width="12.4" height="9.2" rx="2" /><rect x="8.6" y="9.6" width="12.4" height="9.2" rx="2" /><path d="M6.2 16.4v1.2a2 2 0 0 0 2 2h9.6" stroke-linecap="round" /></g></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.4 6.6a2 2 0 0 1 2-2h4l2.2 2.6h6.9a2 2 0 0 1 2 2v8.6a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2Z" /></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.6" /><path d="m15.8 15.8 4.4 4.4" /></g></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.5-5.8" /><path d="M20 4v5h-5" /></g></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 4.8 4.8L19.5 6.9" /></g></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3.4 6.6a2 2 0 0 1 2-2h4l2.2 2.6h6.9a2 2 0 0 1 2 2v8.6a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2Z" /></g></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="8.4" y="8.4" width="11.2" height="11.2" rx="2" /><path d="M5.4 15.6H4.8a1.4 1.4 0 0 1-1.4-1.4V4.8a1.4 1.4 0 0 1 1.4-1.4h9.4a1.4 1.4 0 0 1 1.4 1.4v.6" /></g></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9 7V4.5h6V7M6.5 7l.9 12.5h9.2L17.5 7M10 11v5M14 11v5" /></g></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.2" /><path d="M3 8.4h18" /></g></symbol>
+</svg>
+
+<header class="app-bar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+    <div class="brand-copy">
+      <strong>PRETZEL <em>MANAGER</em></strong>
+      <small>RETURN // CONTROL DECK</small>
+    </div>
+  </div>
+  <div class="app-bar-meta">
+    <button class="workspace-chip" id="workspace-btn" type="button" title="Choose the workspace folder">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-folder" /></svg>
+      <span>Workspace</span>
+      <b id="workspace-name">Locating…</b>
+    </button>
+    <span class="phase-chip" id="phase-chip">PHASE 5</span>
+    <span class="build-chip" id="build-chip">m1</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail" aria-label="Manager sections">
+    <div class="rail-block">
+      <p class="rail-label">Control</p>
+      <nav class="rail-nav">
+        <button class="rail-btn is-active" data-route="overview" type="button" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-overview" /></svg>
+          <span><b>Overview</b><small>Workspace state</small></span>
+        </button>
+        <button class="rail-btn" data-route="library" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library" /></svg>
+          <span><b>Catalog</b><small>Edit library.json</small></span>
+        </button>
+        <button class="rail-btn" data-route="frame" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-frame" /></svg>
+          <span><b>Frame check</b><small>Header + visual</small></span>
+        </button>
+        <button class="rail-btn" data-route="test" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flask" /></svg>
+          <span><b>Test lab</b><small>Dropout + stress</small></span>
+        </button>
+        <button class="rail-btn" data-route="mirrors" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mirrors" /></svg>
+          <span><b>Mirrors</b><small>Route manifest</small></span>
+        </button>
+        <button class="rail-btn" data-route="files" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-files" /></svg>
+          <span><b>Files</b><small>Assets + backups</small></span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="rail-block rail-note">
+      <p class="rail-label">Writes are guarded</p>
+      <p class="rail-copy">The catalog is validated, backed up, then replaced atomically. Application JavaScript is never parsed or rewritten.</p>
+    </div>
+
+    <footer class="rail-foot">
+      <span class="rail-state"><i id="rail-dot" aria-hidden="true"></i><span id="rail-status">Connecting</span></span>
+      <span class="rail-version">Manager <b id="version-label">0.1.0</b> · Phase 6</span>
+    </footer>
+  </aside>
+
+  <main class="deck">
+    <div class="unsaved-banner" id="unsaved-banner" hidden>
+      <span><b>Unsaved catalog changes.</b> The public app still reads the last saved <code>library.json</code>.</span>
+      <div>
+        <button class="btn ghost sm" id="unsaved-discard" type="button">Discard</button>
+        <button class="btn primary sm" id="unsaved-save" type="button">Save catalog</button>
+      </div>
+    </div>
+
+    <section class="page is-active" data-page="overview" aria-labelledby="overview-title">
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Local management dashboard</p>
+          <h1 id="overview-title">One workspace.<br />One catalog.</h1>
+          <p class="lede">Test the shell, verify frames and inject games without touching application code. Everything here runs on this machine.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn ghost" id="overview-assets" type="button"><svg viewBox="0 0 24 24"><use href="#i-check" /></svg>Run asset check</button>
+          <button class="btn primary" id="overview-test-app" type="button"><svg viewBox="0 0 24 24"><use href="#i-window" /></svg>Open app test</button>
+        </div>
+      </header>
+
+      <div class="stat-grid">
+        <article class="stat-card">
+          <span class="stat-label">Catalog entries</span>
+          <strong id="stat-games">—</strong>
+          <small id="stat-games-sub">Waiting for workspace</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Backups on disk</span>
+          <strong id="stat-backups">—</strong>
+          <small id="stat-backups-sub">Timestamped copies</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Delivery assets</span>
+          <strong id="stat-assets">—</strong>
+          <small id="stat-assets-sub">Required files</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Last catalog write</span>
+          <strong id="stat-saved">—</strong>
+          <small id="stat-saved-sub">data/library.json</small>
+        </article>
+      </div>
+
+      <div class="overview-grid">
+        <article class="panel">
+          <header class="panel-head">
+            <div><p class="eyebrow">Pre-flight</p><h2>Readiness</h2></div>
+            <span class="panel-tag" id="readiness-tag">CHECKING</span>
+          </header>
+          <div class="readiness" id="readiness-list"></div>
+          <p class="panel-note" id="readiness-note">A saved catalog, a restorable backup and a clean asset scan are the three things to confirm before a release pass.</p>
+        </article>
+
+        <article class="panel">
+          <header class="panel-head">
+            <div><p class="eyebrow">Shared source</p><h2>Workspace</h2></div>
+            <button class="icon-btn" id="overview-copy-root" type="button" aria-label="Copy workspace path"><svg viewBox="0 0 24 24"><use href="#i-copy" /></svg></button>
+          </header>
+          <dl class="facts">
+            <div><dt>Root</dt><dd class="mono ellipsis" id="fact-root">—</dd></div>
+            <div><dt>Catalog</dt><dd class="mono ellipsis" id="fact-library">—</dd></div>
+            <div><dt>Proxy node</dt><dd id="fact-proxy">—</dd></div>
+            <div><dt>Search engine</dt><dd id="fact-search">—</dd></div>
+          </dl>
+          <div class="panel-actions">
+            <button class="btn ghost sm" data-open="root" type="button">Reveal root</button>
+            <button class="btn ghost sm" data-open="data" type="button">Open data</button>
+            <button class="btn ghost sm" data-open="readme" type="button">Open README</button>
+          </div>
+        </article>
+
+        <article class="panel">
+          <header class="panel-head">
+            <div><p class="eyebrow">Rollback stack</p><h2>Recent backups</h2></div>
+            <button class="link-btn" data-open="backups" type="button">Open folder</button>
+          </header>
+          <div class="backup-list" id="overview-backups"></div>
+        </article>
+
+        <article class="panel">
+          <header class="panel-head">
+            <div><p class="eyebrow">Jump in</p><h2>Next action</h2></div>
+          </header>
+          <div class="quick-grid">
+            <button class="quick-btn" data-jump="library" type="button"><svg viewBox="0 0 24 24"><use href="#i-plus" /></svg><span><b>Inject a game</b><small>Add a URL to the catalog</small></span></button>
+            <button class="quick-btn" data-jump="frame" type="button"><svg viewBox="0 0 24 24"><use href="#i-frame" /></svg><span><b>Check a frame</b><small>Read XFO and CSP headers</small></span></button>
+            <button class="quick-btn" data-jump="test" type="button"><svg viewBox="0 0 24 24"><use href="#i-flask" /></svg><span><b>Stress the shell</b><small>Dropout and breakpoints</small></span></button>
+            <button class="quick-btn" data-open="backups" type="button"><svg viewBox="0 0 24 24"><use href="#i-folder" /></svg><span><b>Reveal backups</b><small>Every save keeps one</small></span></button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" data-page="library" aria-labelledby="library-title" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Shared data · schema v1</p>
+          <h1 id="library-title">Catalog editor</h1>
+          <p class="lede">Edit the complete library in one working copy. Nothing is written until you save, and every overwrite keeps a timestamped backup.</p>
+        </div>
+        <div class="page-actions">
+          <span class="dirty-chip" id="library-dirty" hidden>UNSAVED</span>
+          <button class="btn ghost" id="catalog-discard" type="button">Discard</button>
+          <button class="btn primary" id="catalog-save" type="button"><svg viewBox="0 0 24 24"><use href="#i-check" /></svg>Save catalog</button>
+        </div>
+      </header>
+
+      <div class="library-toolbar">
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+          <input id="library-search" type="search" placeholder="Search title, id, genre or tag…" autocomplete="off" aria-label="Search catalog" />
+        </label>
+        <label class="select-field">
+          <span>Platform</span>
+          <select id="library-platform">
+            <option value="all">All</option>
+            <option value="HTML5">HTML5</option>
+            <option value="WebGL">WebGL</option>
+            <option value="Flash">Flash</option>
+            <option value="Emulator">Emulator</option>
+          </select>
+        </label>
+        <span class="toolbar-count" id="library-count">0 entries</span>
+        <button class="btn ghost sm" id="game-new" type="button"><svg viewBox="0 0 24 24"><use href="#i-plus" /></svg>New game</button>
+      </div>
+
+      <div class="library-grid">
+        <div class="catalog-panel">
+          <div class="catalog-head"><span>Entry</span><span>Platform</span><span>Proxy</span></div>
+          <div class="game-list" id="game-list" role="listbox" aria-label="Catalog entries"></div>
+        </div>
+
+        <aside class="editor-panel">
+          <div class="editor-empty" id="editor-empty">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#crest" /></svg>
+            <h2>Select an entry</h2>
+            <p>Choose a game from the catalog, or start a new one. The editor validates URLs, ids, platforms and tags before anything reaches disk.</p>
+          </div>
+
+          <form class="game-form" id="game-form" hidden>
+            <header class="editor-head">
+              <div><p class="eyebrow" id="editor-mode">Editing entry</p><h2 id="editor-title">—</h2></div>
+              <button class="icon-btn danger" id="game-delete" type="button" aria-label="Delete entry"><svg viewBox="0 0 24 24"><use href="#i-trash" /></svg></button>
+            </header>
+
+            <div class="field-row two">
+              <label class="field"><span>Id</span><input id="game-id" name="id" maxlength="48" spellcheck="false" placeholder="2048" /></label>
+              <label class="field"><span>Platform</span><select id="game-platform" name="platform"><option>HTML5</option><option>WebGL</option><option>Flash</option><option>Emulator</option></select></label>
+            </div>
+            <label class="field"><span>Title</span><input id="game-title" name="title" maxlength="80" placeholder="Game title" /></label>
+            <div class="field-row two">
+              <label class="field"><span>Genre</span><input id="game-genre" name="genre" maxlength="32" list="genre-options" placeholder="Puzzle" /></label>
+              <label class="field"><span>Tags <em>comma separated</em></span><input id="game-tags" name="tags" maxlength="220" placeholder="classic, keyboard" /></label>
+            </div>
+            <label class="field"><span>Game URL</span><input id="game-url" name="url" maxlength="2048" spellcheck="false" placeholder="https://example.com/game/" /></label>
+            <label class="field"><span>Cover <em>optional</em></span><input id="game-cover" name="cover" maxlength="256" spellcheck="false" placeholder="assets/covers/game.png" /></label>
+            <label class="check-field"><input id="game-proxy" name="needsProxy" type="checkbox" /><span><b>Needs proxy</b><small>Flag the entry for gateway routing.</small></span></label>
+
+            <div class="form-errors" id="form-errors" role="alert" hidden></div>
+
+            <div class="form-actions">
+              <button class="btn ghost" id="game-revert" type="button">Revert entry</button>
+              <button class="btn primary" id="game-apply" type="submit">Apply to working copy</button>
+            </div>
+            <p class="form-note">Applying only updates this working copy. Use <b>Save catalog</b> to write <code>data/library.json</code>.</p>
+          </form>
+        </aside>
+      </div>
+      <datalist id="genre-options"></datalist>
+    </section>
+
+    <section class="page" data-page="frame" aria-labelledby="frame-title" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Embedding compatibility</p>
+          <h1 id="frame-title">Frame check</h1>
+          <p class="lede">Read the host's real framing headers, then open the same URL in a visual frame harness. Header checks do not execute the page.</p>
+        </div>
+      </header>
+
+      <form class="frame-form" id="frame-form">
+        <label class="field grow"><span>URL to inspect</span><input id="frame-url" type="url" spellcheck="false" placeholder="https://example.com/game/" autocomplete="off" /></label>
+        <button class="btn primary" id="frame-check" type="submit"><svg viewBox="0 0 24 24"><use href="#i-search" /></svg>Check frame</button>
+        <button class="btn ghost" id="frame-visual" type="button"><svg viewBox="0 0 24 24"><use href="#i-window" /></svg>Visual test</button>
+      </form>
+
+      <div class="frame-result" id="frame-result">
+        <div class="empty-card">
+          <p class="eyebrow">No check yet</p>
+          <h2>Paste a game URL above.</h2>
+          <p>The check follows redirects, reports HTTP status and reads <code>X-Frame-Options</code> and CSP <code>frame-ancestors</code>.</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <article class="panel">
+          <header class="panel-head"><div><p class="eyebrow">Catalog queue</p><h2>Check a live entry</h2></div></header>
+          <div class="queue-list" id="frame-catalog"></div>
+        </article>
+        <article class="panel">
+          <header class="panel-head"><div><p class="eyebrow">This session</p><h2>Recent checks</h2></div><button class="link-btn" id="frame-clear" type="button">Clear</button></header>
+          <div class="history-list" id="frame-history"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" data-page="test" aria-labelledby="test-title" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Three required simulations</p>
+          <h1 id="test-title">Test lab</h1>
+          <p class="lede">Exercise the shell against the failure states you cannot trigger on demand: a dropped network, a refusing frame and a stressed breakpoint.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn ghost" id="test-clear" type="button">Clear console</button>
+          <button class="btn primary" id="test-open" type="button"><svg viewBox="0 0 24 24"><use href="#i-window" /></svg>Open app window</button>
+        </div>
+      </header>
+
+      <div class="test-grid">
+        <article class="panel test-card">
+          <header class="panel-head"><div><p class="eyebrow">Simulation 01</p><h2>Network dropout</h2></div><span class="state-pill" id="offline-state">ONLINE</span></header>
+          <p class="panel-copy">Cuts every external http(s) request in the test window while the local shell keeps loading. Start a game with the toggle on to see the failure path.</p>
+          <label class="switch-row">
+            <input id="offline-toggle" type="checkbox" />
+            <span class="switch" aria-hidden="true"><i></i></span>
+            <span><b>Block external network</b><small>Local assets remain reachable</small></span>
+          </label>
+          <div class="test-actions">
+            <button class="btn ghost sm" id="open-shell" type="button">Open shell</button>
+            <button class="btn ghost sm" id="open-deck" type="button">Open v1.1 deck</button>
+          </div>
+          <p class="hint">The app test window is separate. Toggle this while it is open; the failure applies on the next frame load.</p>
+        </article>
+
+        <article class="panel test-card">
+          <header class="panel-head"><div><p class="eyebrow">Simulation 02</p><h2>Frame failure states</h2></div></header>
+          <p class="panel-copy">Open a real embed, force an <code>X-Frame-Options</code> refusal, or force a crash state. Each opens in its own test window with a mode switch.</p>
+          <label class="field"><span>Test URL</span><input id="lab-url" type="url" spellcheck="false" value="https://example.com/" /></label>
+          <div class="button-row">
+            <button class="btn ghost sm" data-frame-mode="normal" type="button">Normal frame</button>
+            <button class="btn ghost sm" data-frame-mode="blocked" type="button">Simulate block</button>
+            <button class="btn danger sm" data-frame-mode="crash" type="button">Simulate crash</button>
+          </div>
+        </article>
+
+        <article class="panel test-card">
+          <header class="panel-head"><div><p class="eyebrow">Simulation 03</p><h2>Layout stress</h2></div><span class="state-pill" id="test-size">CLOSED</span></header>
+          <p class="panel-copy">Resize the app test window to the three review presets. Compact crosses the shell's 900px tray breakpoint; tiny checks the narrowest supported deck.</p>
+          <div class="preset-grid">
+            <button class="preset" data-preset="wide" type="button"><b>1440</b><span>Large</span></button>
+            <button class="preset" data-preset="compact" type="button"><b>860</b><span>Compact</span></button>
+            <button class="preset" data-preset="tiny" type="button"><b>390</b><span>Tiny</span></button>
+          </div>
+          <div class="test-actions">
+            <button class="btn ghost sm" id="test-close" type="button">Close app window</button>
+            <span class="test-window-state" id="test-window-state">No test window</span>
+          </div>
+        </article>
+      </div>
+
+      <article class="panel console-panel">
+        <header class="panel-head"><div><p class="eyebrow">Live events</p><h2>Test console</h2></div><span class="mono" id="console-count">0 lines</span></header>
+        <div class="test-console" id="test-console" role="log" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section class="page" data-page="files" aria-labelledby="files-title" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Workspace inventory</p>
+          <h1 id="files-title">Files &amp; backups</h1>
+          <p class="lede">Confirm the files the static site actually needs, inspect local references, and reveal the rollback stack. No deploy packaging is included by design.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn ghost" id="files-reveal" type="button"><svg viewBox="0 0 24 24"><use href="#i-folder" /></svg>Reveal root</button>
+          <button class="btn primary" id="files-rerun" type="button"><svg viewBox="0 0 24 24"><use href="#i-refresh" /></svg>Re-run scan</button>
+        </div>
+      </header>
+
+      <div class="files-summary" id="files-summary">Waiting for scan…</div>
+
+      <div class="files-layout">
+        <article class="panel">
+          <header class="panel-head"><div><p class="eyebrow">Static delivery</p><h2>Asset inventory</h2></div><span class="panel-tag" id="files-tag">—</span></header>
+          <div class="asset-table" id="asset-list"></div>
+          <p class="panel-note" id="files-note">A missing required file is a release blocker. Optional proxy and docs files only warn.</p>
+        </article>
+
+        <div class="stack">
+          <article class="panel">
+            <header class="panel-head"><div><p class="eyebrow">Rollback</p><h2>Backups</h2></div><button class="btn ghost sm" id="backup-now" type="button">Back up now</button></header>
+            <div class="backup-list tall" id="backup-list"></div>
+            <div class="panel-actions"><button class="btn ghost sm" data-open="backups" type="button">Reveal backup folder</button></div>
+          </article>
+          <article class="panel">
+            <header class="panel-head"><div><p class="eyebrow">Paths</p><h2>Workspace</h2></div></header>
+            <dl class="facts compact">
+              <div><dt>Root</dt><dd class="mono ellipsis" id="files-root">—</dd></div>
+              <div><dt>Catalog</dt><dd class="mono ellipsis" id="files-library">—</dd></div>
+              <div><dt>Settings</dt><dd class="mono ellipsis" id="files-settings">—</dd></div>
+            </dl>
+            <div class="panel-actions">
+              <button class="btn ghost sm" data-open="root" type="button">Root</button>
+              <button class="btn ghost sm" data-open="data" type="button">Data</button>
+              <button class="btn ghost sm" data-open="manager" type="button">Manager</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="mirrors" aria-labelledby="mirrors-title" hidden>
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Phase 6 · Delivery routes</p>
+          <h1 id="mirrors-title">Mirror routes</h1>
+          <p class="lede">Keep a primary host and up to twelve fallback copies of the static shell. Each check compares the live <code>index.html</code> and <code>library.json</code> against this workspace by SHA-256 before a route is promoted.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn ghost" id="mirrors-check" type="button"><svg viewBox="0 0 24 24"><use href="#i-refresh" /></svg>Check all routes</button>
+          <button class="btn ghost" id="mirrors-auto" type="button"><svg viewBox="0 0 24 24"><use href="#i-check" /></svg>Auto-route</button>
+          <button class="btn primary" id="mirrors-save" type="button">Save manifest</button>
+        </div>
+      </header>
+
+      <div class="files-summary" id="mirrors-summary">No route manifest yet. Add a primary origin, then save.</div>
+
+      <div class="mirrors-layout">
+        <article class="panel">
+          <header class="panel-head"><div><p class="eyebrow">Manifest</p><h2>data/mirrors.json</h2></div><span class="panel-tag" id="mirrors-tag">DRAFT</span></header>
+          <div class="mirror-fields">
+            <label class="field"><span>Primary origin</span><input id="mirror-primary" type="url" spellcheck="false" placeholder="https://username.github.io/repo/" /></label>
+            <label class="field"><span>Active route</span><select id="mirror-active"></select></label>
+          </div>
+          <div class="mirror-list" id="mirror-list"></div>
+          <div class="panel-actions">
+            <button class="btn ghost sm" id="mirror-add" type="button"><svg viewBox="0 0 24 24"><use href="#i-plus" /></svg>Add mirror</button>
+            <button class="btn danger sm" id="mirror-remove" type="button" hidden><svg viewBox="0 0 24 24"><use href="#i-trash" /></svg>Remove last</button>
+          </div>
+          <p class="panel-note">Origins are plain <code>http(s)</code> URLs without credentials, query strings or hashes. Saving backs up the previous manifest first.</p>
+        </article>
+
+        <div class="stack">
+          <article class="panel">
+            <header class="panel-head"><div><p class="eyebrow">Live comparison</p><h2>Route results</h2></div></header>
+            <div class="backup-list tall" id="mirror-results"></div>
+          </article>
+          <article class="panel">
+            <header class="panel-head"><div><p class="eyebrow">Local truth</p><h2>Fingerprint</h2></div></header>
+            <dl class="facts compact">
+              <div><dt>index.html</dt><dd class="mono ellipsis" id="mirror-index-hash">—</dd></div>
+              <div><dt>library.json</dt><dd class="mono ellipsis" id="mirror-library-hash">—</dd></div>
+              <div><dt>Updated</dt><dd id="mirror-updated">—</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <footer class="deck-foot">
+      <span class="foot-dot" id="foot-dot"></span>
+      <span id="foot-status">Manager starting</span>
+      <span class="foot-sep">/</span>
+      <span class="mono" id="foot-path">No workspace</span>
+      <span class="foot-right">LOCAL ONLY · NO TELEMETRY</span>
+    </footer>
+  </main>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

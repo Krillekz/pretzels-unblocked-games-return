@@ -2,8 +2,20 @@
 .freebuff/
 .freebuff*
 
+# v1.1 test deck — local only, not published yet
+v1.1/
+
 # dependencies
 node_modules/
+
+# managers build output and local test artifacts
+.manager/
+manager/dist/
+manager/.smoke/
+
+# desktop shell build output and smoke artifacts
+release/
+.smoke/
 
 # logs and local artifacts
 *.log

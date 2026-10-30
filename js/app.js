@@ -59,10 +59,15 @@
       search: { label: "DuckDuckGo", endpoint: "https://duckduckgo.com/?q=" },
       proxy: { label: "Unconfigured", endpoint: "", health: "", token: "" },
       hotkeys: {},
-      features: { frameWatchdogMs: 8000 }
+      stealth: { hotkey: "CommandOrControl+Shift+H" },
+      features: { offlineFallback: true, frameWatchdogMs: 8000 }
     },
     fileConfig: null,
     proxyState: "off",
+    cloaked: false,
+    savedTitle: "",
+    offlineCache: "checking",
+    stealthHotkey: "CommandOrControl+Shift+H",
     aiKeepHistory: true,
     aiAutoScroll: true,
     games: [],
@@ -832,6 +837,14 @@
   /* diagnostics                                                        */
   /* ------------------------------------------------------------------ */
 
+  function displayHotkey(accelerator) {
+    return String(accelerator || "CommandOrControl+Shift+H")
+      .replace(/CommandOrControl/g, navigator.platform && /Mac/i.test(navigator.platform) ? "Cmd" : "Ctrl")
+      .replace(/Command|Cmd/g, "Cmd")
+      .replace(/Control/g, "Ctrl")
+      .replace(/\+/g, "+");
+  }
+
   function updateStats() {
     els.diagSession.textContent = state.session;
     els.diagGames.textContent = String(state.games.length);
@@ -869,6 +882,18 @@
     els.diagStorage.textContent = String(countStoredMessages());
     els.diagRenderer.textContent =
       window.pretzelShell && window.pretzelShell.isDesktop ? "Electron shell" : "Browser";
+    if (els.diagOffline) {
+      const labels = {
+        checking: "Checking…",
+        installing: "Installing…",
+        ready: "Active",
+        unsupported: "Unsupported",
+        off: "Off",
+        error: "Error"
+      };
+      els.diagOffline.textContent = labels[state.offlineCache] || "Checking…";
+    }
+    if (els.diagCloak) els.diagCloak.textContent = displayHotkey(state.stealthHotkey);
   }
 
   /* ------------------------------------------------------------------ */
@@ -892,6 +917,10 @@
   function applySettingsRuntime() {
     const s = PretzelSettings.get();
     const fileProxy = (state.fileConfig && state.fileConfig.proxy) || {};
+    state.stealthHotkey = String(s.stealthHotkey || state.config.stealth.hotkey || "CommandOrControl+Shift+H").trim();
+    if (els.cloakHint) els.cloakHint.hidden = !s.cloakHint;
+    if (els.cloakHintKey) els.cloakHintKey.textContent = displayHotkey(state.stealthHotkey);
+    if (els.cloakToggle) els.cloakToggle.title = `Blank document (${displayHotkey(state.stealthHotkey)})`;
 
     if (window.PretzelAI && window.PretzelAI.setOptions) {
       window.PretzelAI.setOptions({
@@ -977,6 +1006,18 @@
       applyLogFilter();
       return;
     }
+    if (key === "stealthHotkey") {
+      applyStealthHotkey(value, true);
+      return;
+    }
+    if (key === "cloakHint") {
+      if (els.cloakHint) els.cloakHint.hidden = !value;
+      return;
+    }
+    if (key === "offlineCache") {
+      setupOfflineCache(true);
+      return;
+    }
     if (key === "logMax") {
       trimLog();
       return;
@@ -986,6 +1027,139 @@
       updateStats();
       if (key === "proxyEndpoint" && String(value || "").trim()) probeProxy({ silent: true });
     }
+  }
+
+  function matchesHotkey(event, accelerator) {
+    const parts = String(accelerator || "").split("+").map((part) => part.trim().toLowerCase()).filter(Boolean);
+    if (parts.length === 0) return false;
+    const key = parts.pop();
+    const wantsCtrl = parts.includes("control") || parts.includes("ctrl") || parts.includes("commandorcontrol");
+    const wantsMeta = parts.includes("command") || parts.includes("cmd") || parts.includes("commandorcontrol");
+    const wantsShift = parts.includes("shift");
+    const wantsAlt = parts.includes("alt") || parts.includes("option");
+    const ctrlOk = wantsCtrl || wantsMeta ? event.ctrlKey || event.metaKey : !event.ctrlKey && !event.metaKey;
+    const shiftOk = wantsShift ? event.shiftKey : !event.shiftKey;
+    const altOk = wantsAlt ? event.altKey : !event.altKey;
+    const target = key === "space" ? " " : key;
+    return ctrlOk && shiftOk && altOk && String(event.key).toLowerCase() === target;
+  }
+
+  function setCloak(active) {
+    const next = Boolean(active);
+    if (next === state.cloaked) return;
+    state.cloaked = next;
+    document.body.classList.toggle("is-cloaked", next);
+    if (els.cloak) els.cloak.hidden = !next;
+    if (els.cloakToggle) els.cloakToggle.setAttribute("aria-pressed", String(next));
+    if (next) {
+      state.savedTitle = document.title;
+      document.title = "Document1 - Word";
+      if (els.cloak) els.cloak.focus();
+    } else {
+      document.title = state.savedTitle || "Pretzel's Unblocked Games: RETURN";
+      state.savedTitle = "";
+    }
+    log("event", `Panic cloak ${next ? "on" : "off"}`);
+  }
+
+  function toggleCloak() {
+    setCloak(!state.cloaked);
+  }
+
+  async function applyStealthHotkey(accelerator, announce) {
+    const value = String(accelerator || "").trim() || "CommandOrControl+Shift+H";
+    state.stealthHotkey = value;
+    updateStats();
+    if (!window.pretzelShell || typeof window.pretzelShell.setStealthHotkey !== "function") {
+      if (announce) log("warn", "Global panic hotkey needs the Electron shell — Ctrl+Shift+H still works in this window");
+      return;
+    }
+    try {
+      const result = await window.pretzelShell.setStealthHotkey(value);
+      if (result.ok) {
+        state.stealthHotkey = result.hotkey || value;
+        updateStats();
+        if (announce) log("event", `Panic hotkey → ${displayHotkey(state.stealthHotkey)}`);
+      } else {
+        log("warn", result.error || "The panic hotkey was refused");
+        if (result.hotkey) {
+          state.stealthHotkey = result.hotkey;
+          updateStats();
+        }
+      }
+    } catch (error) {
+      log("warn", `Panic hotkey unavailable — ${error.message}`);
+    }
+  }
+
+  async function clearShellCaches() {
+    if (!("caches" in window)) return;
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((key) => key.startsWith("pretzel-shell-")).map((key) => caches.delete(key)));
+    } catch {
+      /* cache storage may be unavailable */
+    }
+  }
+
+  async function setupOfflineCache(announce) {
+    const settings = PretzelSettings.get();
+    const enabled = Boolean(settings.offlineCache) && state.config.features.offlineFallback !== false;
+    if (!enabled) {
+      state.offlineCache = "off";
+      if ("serviceWorker" in navigator) {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map((registration) => registration.unregister()));
+        } catch {
+          /* ignore */
+        }
+      }
+      await clearShellCaches();
+      updateStats();
+      if (announce) log("event", "Offline shell cache disabled");
+      return;
+    }
+    if (!("serviceWorker" in navigator) || location.protocol === "file:") {
+      state.offlineCache = "unsupported";
+      updateStats();
+      if (announce) log("warn", "Offline cache needs an http(s) origin");
+      return;
+    }
+
+    state.offlineCache = "installing";
+    updateStats();
+    try {
+      await navigator.serviceWorker.register("sw.js");
+      await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) => window.setTimeout(() => reject(new Error("registration timed out")), 8000))
+      ]);
+      state.offlineCache = "ready";
+      log("event", "Offline shell cache active · shell and catalog cached");
+    } catch (error) {
+      state.offlineCache = "error";
+      log("warn", `Offline cache unavailable — ${error.message}`);
+    }
+    updateStats();
+  }
+
+  async function resetOfflineCache() {
+    if (!("serviceWorker" in navigator)) {
+      log("warn", "Service workers are unavailable in this renderer");
+      return;
+    }
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((registration) => registration.unregister()));
+    } catch {
+      /* ignore */
+    }
+    await clearShellCaches();
+    state.offlineCache = "off";
+    updateStats();
+    log("warn", "Offline shell cache cleared");
+    await setupOfflineCache(false);
   }
 
   function commitSetting(key, value) {
@@ -1202,6 +1376,23 @@
         group.append(actions);
       }
 
+      if (section.id === "stealth") {
+        const actions = document.createElement("div");
+        actions.className = "set-actions";
+        const cloak = document.createElement("button");
+        cloak.type = "button";
+        cloak.className = "btn ghost";
+        cloak.textContent = "Cloak now";
+        cloak.addEventListener("click", () => setCloak(true));
+        const clearCache = document.createElement("button");
+        clearCache.type = "button";
+        clearCache.className = "btn ghost";
+        clearCache.textContent = "Clear offline cache";
+        clearCache.addEventListener("click", () => resetOfflineCache());
+        actions.append(cloak, clearCache);
+        group.append(actions);
+      }
+
         els.settingsBody.append(group);
       });
 
@@ -1288,6 +1479,13 @@
     els.diagProxy = $("#diag-proxy");
     els.diagStorage = $("#diag-storage");
     els.diagRenderer = $("#diag-renderer");
+    els.diagOffline = $("#diag-offline");
+    els.diagCloak = $("#diag-cloak");
+
+    els.cloak = $("#cloak");
+    els.cloakToggle = $("#cloak-toggle");
+    els.cloakHint = $("#cloak-hint");
+    els.cloakHintKey = $("#cloak-hint-key");
 
     els.settingsBody = $("#settings-body");
     els.settingsFile = $("#settings-file");
@@ -1377,6 +1575,11 @@
       event.preventDefault();
       sendChat();
     });
+    els.cloakToggle?.addEventListener("click", toggleCloak);
+    if (window.pretzelShell && typeof window.pretzelShell.onStealthToggle === "function") {
+      window.pretzelShell.onStealthToggle(toggleCloak);
+    }
+
     els.chatInput.addEventListener("input", autoGrow);
     els.chatInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
@@ -1449,6 +1652,16 @@
 
     /* keyboard: Alt+1..5 panels, Escape closes trays */
     document.addEventListener("keydown", (event) => {
+      if (matchesHotkey(event, state.stealthHotkey)) {
+        event.preventDefault();
+        toggleCloak();
+        return;
+      }
+      if (state.cloaked && event.key === "Escape") {
+        event.preventDefault();
+        setCloak(false);
+        return;
+      }
       if (event.key === "Escape" && state.trayName) {
         closeTray();
         return;
@@ -1522,6 +1735,8 @@
     }
 
     applySettingsRuntime();
+    setupOfflineCache(false);
+    applyStealthHotkey(PretzelSettings.get().stealthHotkey, false);
 
     const saved = PretzelSettings.get();
     const availableGenres = new Set(state.games.map((game) => game.genre).filter(Boolean));
@@ -1554,6 +1769,7 @@
     const roster = window.PretzelAI ? window.PretzelAI.fighterCount : 0;
     log("info", `Local AI engines online · ${roster} fighters · ${state.games.length} games indexed`);
     log("info", "Alt+1…5 switches panels · Escape closes trays");
+    log("info", `Panic cloak: ${displayHotkey(state.stealthHotkey)} · offline cache: ${state.offlineCache}`);
 
     if (proxyConfigured()) {
       probeProxy({ silent: true });
@@ -1561,6 +1777,8 @@
       state.proxyState = "off";
       updateStats();
     }
+
+    window.__pretzelReady = true;
   }
 
   init();

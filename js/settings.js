@@ -62,6 +62,11 @@
     proxyHealth: "",
     proxyToken: "",
 
+    /* stealth + offline */
+    stealthHotkey: "CommandOrControl+Shift+H",
+    cloakHint: true,
+    offlineCache: true,
+
     /* diagnostics */
     logLevel: "all",
     logTimestamps: true,
@@ -291,6 +296,22 @@
         { key: "proxyEndpoint", type: "text", label: "Endpoint", hint: "Supports a {url} placeholder.", placeholder: "https://your-proxy/?url={url}" },
         { key: "proxyHealth", type: "text", label: "Health URL", hint: "Probed by Test proxy and at boot.", placeholder: "https://your-proxy/" },
         { key: "proxyToken", type: "text", label: "Token", hint: "Sent as ?token= when the worker requires one.", placeholder: "optional" }
+      ]
+    },
+    {
+      id: "stealth",
+      title: "Stealth & offline",
+      note: "Cloak the whole workspace, rebind the panic key, and keep the shell usable without a network.",
+      items: [
+        {
+          key: "stealthHotkey",
+          type: "text",
+          label: "Panic hotkey",
+          hint: "Electron global shortcut. In a browser only the Ctrl+Shift+H fallback works.",
+          placeholder: "CommandOrControl+Shift+H"
+        },
+        { key: "cloakHint", type: "toggle", label: "Show cloak hint", hint: "The small return-key hint in the corner of the blank document." },
+        { key: "offlineCache", type: "toggle", label: "Offline shell cache", hint: "Cache the local shell, catalog and AI engine for network-free launches. Game frames stay online." }
       ]
     },
     {

@@ -29,6 +29,12 @@ This document serves as the master foundation and architectural framework bluepr
 > **Phase 3 status: COMPLETE (2026-10-29).** Three local persona engines, sixteen frame-verified games and the proxy gateway are all delivered — see *PHASE 3 BUILD LOG*.
 >
 > **Design refresh (2026-10-29).** Shell layout and crest were rebuilt on the same locked palette — see *DESIGN REFRESH* at the end of this document. Behaviour, data and proxy contract are unchanged.
+>
+> **Phase 4 status: COMPLETE (2026-10-29).** The main games shell is wrapped in Electron, packaged as `PretzelGames.exe` and verified — see *PHASE 4 + 6 BUILD LOG*.
+>
+> **Phase 5 status: COMPLETE (2026-10-29).** The standalone Manager dashboard is built, packaged as its own `Manager.exe` and verified — see *PHASE 5 BUILD LOG*.
+>
+> **Phase 6 status: COMPLETE (2026-10-29).** Offline shell cache, panic cloak with a global hotkey, and mirror-route generation in the Manager are delivered and verified — see *PHASE 4 + 6 BUILD LOG*.
 
 1.  **Phase 1: The Design Interview:** FreeBuff AI must present a structured list of questions to discover the user's explicit design, branding, theme, and layout preferences before any layout structure or style sheets are coded.
 2.  **Phase 2: Core Skeleton Scaffold:** Generate the standalone structural framework files matching the explicit parameters chosen during the Phase 1 interview.
@@ -207,7 +213,7 @@ Served locally over http and exercised in a browser: all assets return 200, no u
 
 ### Not yet built (by phase)
 
-Phase 4: Electron `main.js`, preload and packaging. Phase 5: standalone Manager dashboard. Phase 6: offline fallback, stealth hotkeys, mirror generation. (Phase 3 — engines, catalog payload and proxy tunnel — is delivered.)
+Phase 4: Electron `main.js`, preload and packaging for the games shell. Phase 6: offline fallback, stealth hotkeys, mirror generation. (Phase 3 — engines, catalog payload and proxy tunnel — and Phase 5 — standalone Manager dashboard — are delivered.)
 
 ---
 
@@ -372,3 +378,93 @@ Any character name now works. `findFighter` resolves curated sheets first (exact
 
 *   Node harness: `Baki vs Ohma`, `Some Random Guy vs Gojo`, `Naruto or Sasuke`, `Gojo against Makima`, `Levi Ackerman vs Eren Yeager`, `who wins, Guts vs Griffith`, `L vs Light Yagami` all produced matchups; `x vs y` produced the too-short message; a lone name produced a SCOUT CARD.
 *   Browser: the grid scrolled by wheel (300px), `End`/`Home` jumped to the ends, and the fade attribute tracked `below` → `both`; the settings panel rendered 36 rows in 7 groups; accent, density, glow, dock labels, tile size and reverse sort all applied and persisted; the tags toggle hid the chips; "reopen last game" restored the last played title after reload; console clean apart from the known sandbox warning.
+
+---
+
+## 🖥️ PHASE 4 + 6 BUILD LOG — DESKTOP SHELL, OFFLINE CACHE, CLOAK & MIRRORS
+
+**Delivered:** 2026-10-29 · `PretzelGames.exe` for the shell; three runtime modules behind it.
+
+### File map
+
+| Path | Role |
+| --- | --- |
+| `package.json` | Root Electron manifest: `start`, `check`, `smoke`, `package:win` |
+| `electron/main.js` | Window lifecycle, secondary-display placement, global stealth hotkey, IPC, smoke harness |
+| `electron/preload.js` | `window.pretzelShell` bridge — desktop flag, version info, external open, hotkey rebind |
+| `electron/server.js` | Loopback static server so `data/*.json` loads over HTTP, not `file://` |
+| `sw.js` | Offline shell cache, network-first, shell files only |
+| `tools/package-electron.js` | Stages runtime files and builds `release/Pretzel Games-win32-x64/` |
+| `data/mirrors.json` | Route manifest written by the Manager (primary, active, fallbacks, fingerprints) |
+| `manager/lib/mirrors.js` | Manifest validation, SHA-256 fingerprinting, per-origin checks, auto-route |
+
+### Scope delivered
+
+*   **Phase 4 wrapper:** the shell opens as a native window through a loopback-only static server. Context isolation is on, `nodeIntegration` is off, popups and off-origin navigation are denied (http links open in the system browser), and permissions are refused by default.
+*   **Portable build:** `npm run package:win` copies only runtime files into a staged folder, writes a minimal manifest, then packages an asar and a `PretzelGames.exe`. `release/`, `.stage/` and `.smoke/` are excluded from git.
+*   **Offline fallback:** `sw.js` caches `index.html`, CSS, scripts, fonts, `data/config.json`, `data/library.json` and the crest. Reads are network-first with a cache fallback; third-party and frame requests are ignored. Settings exposes an offline-cache toggle and Diagnostics reports registration, scope and cache keys.
+*   **Panic cloak:** `Ctrl/Cmd+Shift+H` (configurable in Settings) toggles a blank overlay and a neutral window title, then restores both. It is registered as a global shortcut and mirrored by an in-page keydown handler, so it still works when another app owns the accelerator.
+*   **Mirror routes:** the Manager's Mirrors page validates origins (plain http(s), no credentials/query/hash, no duplicates, max twelve), saves `data/mirrors.json` behind a timestamped backup, and compares each host's live `index.html` and `library.json` against the workspace with SHA-256. **Auto-route** promotes the first host that matches both files.
+*   **Secondary-display placement:** the shell, Manager, app test window and frame harness all prefer the widest non-primary display.
+
+### Verification performed
+
+*   `npm run check` passes for all seven shell JavaScript files.
+*   `npm run smoke` exits 0 from the Electron shell: desktop bridge detected, 16 tiles, renderer reports **Electron shell**, service worker registered and active with the `pretzel-shell-v1` cache, cloak shows/hides and restores the title, the global hotkey is registered, and the window opens on the secondary display (`onSecondary: true`).
+*   `manager` smoke exits 0 with six routes, a mirror-manifest save/backup/auto-route roundtrip and a rendered Mirrors page; screenshots in `manager/.smoke/`.
+*   Packaged executables were launched with `--smoke` and passed the same suites from inside their asar bundles.
+
+### Known limits
+
+*   Neither executable is code-signed; Windows may warn on first launch.
+*   The offline cache covers the shell only. A game frame needs the network, by design.
+*   Mirror checks are read-only: they verify and record a route, they do not upload the site to any host.
+
+---
+
+## 🎛️ PHASE 5 BUILD LOG — MANAGER DASHBOARD
+
+**Delivered:** 2026-10-29 · standalone Electron utility, packaged as `Manager.exe`.
+
+### File map
+
+| Path | Role |
+| --- | --- |
+| `manager/package.json` | Electron app manifest, `start`, `check`, `smoke`, `package:win` scripts |
+| `manager/main.js` | Window lifecycle, IPC handlers, workspace writes, test window, frame window, static server, smoke harness |
+| `manager/preload.js` | Minimal context-isolated bridge; no Node access in the renderer |
+| `manager/lib/catalog.js` | Schema v1 validation and catalog summary |
+| `manager/lib/workspace.js` | Workspace discovery, settings, backup stack, atomic library writes |
+| `manager/lib/assets.js` | Delivery inventory and local-reference resolution |
+| `manager/lib/frame-check.js` | HTTP fetch and XFO / CSP `frame-ancestors` verdicts |
+| `manager/lib/server.js` | Loopback static server for the app test window |
+| `manager/renderer/` | Six-page control deck, CSS and the copied crest/display fonts |
+| `manager/lab/frame.html` | Normal / blocked / crash frame harness |
+| `manager/dist/Pretzel Manager-win32-x64/` | Portable packaged build; `Manager.exe` is the entry point |
+
+### Scope delivered against the locked Phase 5 decision
+
+*   **Shared catalog file:** the Manager reads and writes `data/library.json`; it never parses or rewrites application JavaScript. The editor covers every schema field, with id/title/genre/platform/URL/cover/tags/`needsProxy`, search and platform filtering.
+*   **Validated saves with backups:** the entire array is validated against schema v1 before disk access. The previous file is copied to `.manager/backups/library-<timestamp>.json`, then the new file is written to a temp file and renamed into place. Invalid saves are rejected before the backup and before the write. Retention is capped at 40 copies.
+*   **Local asset testing:** required shell/engine/data/asset files are checked for presence, size, JSON parseability and local references from `index.html` and `v1.1/index.html`; optional proxy/docs files are reported separately.
+*   **Frame compatibility:** the check follows redirects, reports HTTP status and reads `X-Frame-Options` and CSP `frame-ancestors`. The visual harness opens the same URL in a real iframe and can switch to simulated blocked or crash states.
+*   **Three locked test tools:** external-network dropout for the test session only (local files keep loading), forced frame failure states, and 1440 / 860 / 390 layout presets applied to a live app test window.
+*   **Deployment file management:** the Files page inventories the static payload and reveals the workspace, data, backup and Manager folders. Deploy packaging is deliberately excluded.
+*   **Portable workspace discovery:** the app checks the saved path, current directory, executable directory and parents, and offers a folder picker in the top bar. The choice is stored in the Electron user-data folder, not in the repo.
+*   **Secondary-display placement:** when a non-primary display is connected, the dashboard, app test window and frame harness open on the widest secondary display. The primary display is left untouched; single-display machines fall back to it.
+
+### Verification performed
+
+*   `npm run check` passes for all eight Manager JavaScript files.
+*   `npm run smoke` and the packaged `Manager.exe --smoke` both exit 0. The suite covers the preload bridge, five routes, 16 rendered entries, a deliberately broken catalog (duplicate id and invalid URL both caught), the asset scan, a save → backup → invalid-reject roundtrip in a temporary workspace, a catalog draft that increments the list and discards back, a live frame check of `https://example.com/`, the blocked-frame harness, the app test window loading 16 tiles from the loopback server, 860 px and 390 px resizes, and an external fetch that fails while dropout is on and recovers when it is off.
+*   Screenshots from the real Electron renderer are written to `manager/.smoke/` for visual review at 1460 px and 1040 px.
+*   The smoke report records both displays and confirms the dashboard, harness and app test window are on the secondary display (`onSecondary: true`).
+*   Packaging produced `manager/dist/Pretzel Manager-win32-x64/Manager.exe` on Electron 45.1.0. The asar app boots and passes the same smoke suite.
+
+### Known limits
+
+*   Header checks are advisory. Script-level refusals, authentication walls and unusual header shapes can still fail in the visual harness.
+*   The app test window runs on an ephemeral loopback port; it is local to the machine and closes with the window.
+*   The Manager is unsigned, local-only and carries its own Electron runtime (the portable folder is large). It is not an installer and not part of the static site.
+*   There is no deploy packaging panel, by the locked decision. Publishing the site remains a separate manual step.
+*   Phase 4 and Phase 6 are delivered in their own build log above; the Phase 5 executable only runs the dashboard.

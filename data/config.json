@@ -17,8 +17,11 @@
     "diagnostics": "4",
     "settings": "5"
   },
+  "stealth": {
+    "hotkey": "CommandOrControl+Shift+H"
+  },
   "features": {
-    "offlineFallback": false,
+    "offlineFallback": true,
     "frameWatchdogMs": 8000
   }
 }

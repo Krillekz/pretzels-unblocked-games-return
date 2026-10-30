@@ -1,0 +1,18 @@
+{
+  "name": "pretzels-unblocked-games-return",
+  "productName": "Pretzel Games",
+  "version": "0.1.0",
+  "description": "Local-first unblocked games shell with three offline AI personas and a sandbox browser.",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check electron/main.js && node --check electron/preload.js && node --check electron/server.js && node --check js/app.js && node --check js/settings.js && node --check js/ai.js && node --check sw.js",
+    "smoke": "electron . --smoke",
+    "package:win": "node tools/package-electron.js"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^45.1.0"
+  }
+}

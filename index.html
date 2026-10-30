@@ -16,6 +16,30 @@
   <span>v0.1.0-alpha — unfinished preview. Games, proxy routing and the AI personas are still in progress, so expect rough edges and report them rather than judging the finished product.</span>
 </div>
 
+<div class="cloak" id="cloak" hidden tabindex="-1">
+  <div class="cloak-toolbar">
+    <span>Document1 - Word</span>
+    <span>Saved to this PC</span>
+  </div>
+  <div class="cloak-page">
+    <p class="cloak-kicker">Operations / planning</p>
+    <h1>Weekly planning notes</h1>
+    <p class="cloak-meta">Draft · last edited 9:41 AM</p>
+    <p>Keep the launch checklist short enough that the handoff does not need a second meeting. The open items below are the only ones that block Friday.</p>
+    <h2>Open items</h2>
+    <ul>
+      <li>Confirm the staging review time and send the calendar note.</li>
+      <li>Close the two outstanding copy edits in the handoff section.</li>
+      <li>Re-check the asset list after the final export.</li>
+      <li>Archive last week's notes once the summary is approved.</li>
+    </ul>
+    <h2>Next check-in</h2>
+    <p>Friday, 3:00 PM — same room. Bring the updated checklist and the final asset count.</p>
+    <p class="cloak-signoff">— prepared for the weekly review</p>
+  </div>
+  <div class="cloak-hint" id="cloak-hint">Return to workspace: <kbd id="cloak-hint-key">Ctrl+Shift+H</kbd></div>
+</div>
+
 <svg class="sprite" aria-hidden="true" focusable="false">
   <defs>
     <linearGradient id="crest-stroke" x1="0" y1="0" x2="0.25" y2="1">
@@ -117,6 +141,13 @@
       <path d="M19.4 13.6a7.6 7.6 0 0 0 0-3.2l2-1.5-2-3.5-2.4 1a7.6 7.6 0 0 0-2.8-1.6L13.8 2h-3.6l-.4 2.8A7.6 7.6 0 0 0 7 6.4l-2.4-1-2 3.5 2 1.5a7.6 7.6 0 0 0 0 3.2l-2 1.5 2 3.5 2.4-1a7.6 7.6 0 0 0 2.8 1.6l.4 2.8h3.6l.4-2.8a7.6 7.6 0 0 0 2.8-1.6l2.4 1 2-3.5-2-1.5Z" />
     </g>
   </symbol>
+
+  <symbol id="i-cloak" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h7l5 5v13H6z" />
+      <path d="M13 3v5h5M9 12h6M9 16h6" />
+    </g>
+  </symbol>
 </svg>
 
 <div class="app">
@@ -169,6 +200,10 @@
         <span id="stage-crumb">Library</span>
       </div>
       <div class="stage-meta">
+        <button class="cloak-btn" id="cloak-toggle" type="button" aria-pressed="false" title="Blank document (Ctrl+Shift+H)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cloak" /></svg>
+          <span>Cloak</span>
+        </button>
         <span class="build-tag" id="build-tag" title="Running build">v0.1.0-alpha · b0</span>
         <div class="stage-leds">
           <span class="led" data-state="ok"><i aria-hidden="true"></i>Engines</span>
@@ -353,6 +388,8 @@
           <div class="diag-card"><span>Proxy node</span><strong id="diag-proxy">Unconfigured</strong></div>
           <div class="diag-card"><span>Stored messages</span><strong id="diag-storage">0</strong></div>
           <div class="diag-card"><span>Renderer</span><strong id="diag-renderer">Browser</strong></div>
+          <div class="diag-card"><span>Offline cache</span><strong id="diag-offline">Checking</strong></div>
+          <div class="diag-card"><span>Panic cloak</span><strong id="diag-cloak">Ctrl+Shift+H</strong></div>
         </div>
 
         <div class="log" id="diag-log" role="log" aria-live="polite"></div>
